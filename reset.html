@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ECRA | Set Password</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Rasa" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Noto+Kufi+Arabic" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --page-bg: #f3f0e8;
+      --card-bg: #ebe6dc;
+      --panel-bg: #ffffff;
+      --panel-soft: #f8fafc;
+      --text-main: #0f172a;
+      --text-body: #334155;
+      --text-muted: #64748b;
+      --line: #e2e8f0;
+      --gold: #EACB98;
+      --gold-soft: #efe2c6;
+      --blue: #334159;
+      --blue-soft: #40506c;
+      --success: #15803d;
+      --error: #dc2626;
+      --shadow: 0 14px 35px rgba(15, 23, 42, 0.08);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-pill: 999px;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,0.35), transparent 30%),
+        var(--page-bg);
+      padding: 24px 12px;
+      font-family: Arial, sans-serif;
+      color: var(--text-body);
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid #e7e3d8;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .banner {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 0;
+    }
+
+    .content {
+      padding: 26px;
+    }
+
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 24px 22px;
+      margin-bottom: 22px;
+    }
+
+    .hero-panel {
+      background: linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%);
+      text-align: center;
+    }
+
+    .title-en {
+      margin: 0 0 6px 0;
+      font-family: 'Rasa', serif;
+      font-size: 30px;
+      line-height: 1.2;
+      color: var(--text-main);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .title-ar {
+      margin: 0 0 14px 0;
+      font-family: 'Noto Kufi Arabic', sans-serif;
+      font-size: 24px;
+      line-height: 1.5;
+      color: var(--text-main);
+      font-weight: 700;
+      text-align: center;
+      direction: rtl;
+    }
+
+    .body-en {
+      margin: 0 0 8px 0;
+      font-family: 'Rasa', serif;
+      font-size: 17px;
+      line-height: 1.8;
+      color: var(--text-body);
+      text-align: center;
+    }
+
+    .body-ar {
+      margin: 0;
+      font-family: 'Noto Kufi Arabic', sans-serif;
+      font-size: 15px;
+      line-height: 1.95;
+      color: var(--text-body);
+      text-align: center;
+      direction: rtl;
+    }
+
+    .section-title-en {
+      margin: 0 0 4px 0;
+      font-family: 'Rasa', serif;
+      font-size: 27px;
+      line-height: 1.25;
+      color: var(--text-main);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .section-title-ar {
+      margin: 0 0 14px 0;
+      font-family: 'Noto Kufi Arabic', sans-serif;
+      font-size: 22px;
+      line-height: 1.5;
+      color: var(--text-main);
+      font-weight: 700;
+      text-align: center;
+      direction: rtl;
+    }
+
+    .status-box,
+    .success-box,
+    .error-box,
+    .form-card {
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 18px;
+    }
+
+    .status-box {
+      margin-top: 18px;
+    }
+
+    .status-text-en {
+      margin: 0 0 4px 0;
+      font-family: 'Rasa', serif;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text-body);
+      text-align: center;
+    }
+
+    .status-text-ar {
+      margin: 0;
+      font-family: 'Noto Kufi Arabic', sans-serif;
+      font-size: 14px;
+      line-height: 1.9;
+      color: var(--text-body);
+      text-align: center;
+      direction: rtl;
+    }
+
+    #form {
+      margin-top: 18px;
+    }
+
+    .label-en {
+      margin: 0 0 6px 0;
+      font-family: 'Rasa', serif;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text-main);
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .label-ar {
+      margin: 0 0 14px 0;
+      font-family: 'Noto Kufi Arabic', sans-serif;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text-body);
+      text-align: right;
+      direction: rtl;
+    }
+
+    .field-wrap {
+      position: relative;
+      margin-top: 12px;
+    }
+
+    .field-wrap input {
+      width: 100%;
+      padding: 15px 48px 15px 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 14px;
+      background: #fff;
+      color: var(--text-main);
+      font-size: 15px;
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    .field-wrap input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(51, 65, 89, 0.08);
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 14px;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      padding: 0;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .helper-en {
+      margin: 12px 0 4px 0;
+      font-family: 'Rasa', serif;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      text-align: left;
+    }
+
+    .helper-ar {
+      margin: 0;
+      font-family: 'Noto Kufi Arabic', sans-serif;
+      font-size: 13px;
+      line-height: 1.85;
+      color: var(--text-muted);
+      text-align: right;
+      direction: rtl;
+    }
+
+    .save-btn,
+    .app-link,
+    .secondary-link {
+      display: inline-block;
+      width: 100%;
+      margin-top: 16px;
+      padding: 14px 24px;
+      border: none;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      text-align: center;
+      font-family: 'Noto Kufi Arabic', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      transition: 0.2s ease;
+      cursor: pointer;
+    }
+
+    .save-btn {
+      background: var(--gold);
+      color: var(--blue);
+    }
+
+    .app-link {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .secondary-link {
+      background: var(--gold-soft);
+      color: var(--blue);
+    }
+
+    .save-btn:hover,
+    .app-link:hover,
+    .secondary-link:hover {
+      filter: brightness(0.98);
+    }
+
+    .save-btn[disabled] {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    #message {
+      margin: 14px 0 0 0;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .success {
+      color: var(--success);
+    }
+
+    .error {
+      color: var(--error);
+    }
+
+    .success-box p,
+    .error-box p {
+      margin: 0;
+    }
+
+    .instructions-preview {
+      width: 100%;
+      max-width: 320px;
+      display: block;
+      margin: 16px auto 0 auto;
+      border-radius: 14px;
+      border: 1px solid #CBD5E1;
+      overflow: hidden;
+    }
+
+    .promo-image {
+      width: 100%;
+      display: block;
+      border: 0;
+      border-radius: 18px;
+      margin: 0 0 22px 0;
+    }
+
+    .support-card {
+      background: linear-gradient(180deg, #ffffff 0%, #fafbfd 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .support-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .support-column {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      min-height: 100%;
+    }
+
+    .support-title-en,
+    .support-title-ar {
+      margin: 0 0 8px 0;
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    .support-title-en {
+      font-family: 'Rasa', serif;
+      font-size: 20px;
+      text-align: left;
+    }
+
+    .support-title-ar {
+      font-family: 'Noto Kufi Arabic', sans-serif;
+      font-size: 18px;
+      text-align: right;
+      direction: rtl;
+    }
+
+    .support-body-en,
+    .support-body-ar {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.85;
+      color: var(--text-body);
+    }
+
+    .support-body-en {
+      text-align: left;
+    }
+
+    .support-body-ar {
+      text-align: right;
+      direction: rtl;
+      font-family: 'Noto Kufi Arabic', sans-serif;
+    }
+
+    .support-card a {
+      color: var(--blue);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .support-card a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .footer-en {
+      margin: 0 0 8px 0;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      text-align: left;
+    }
+
+    .footer-ar {
+      margin: 0 0 8px 0;
+      font-size: 13px;
+      line-height: 1.9;
+      color: var(--text-muted);
+      text-align: right;
+      direction: rtl;
+      font-family: 'Noto Kufi Arabic', sans-serif;
+    }
+
+    .footer-small-en,
+    .footer-small-ar {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.7;
+      color: #94a3b8;
+    }
+
+    .footer-small-en {
+      text-align: left;
+    }
+
+    .footer-small-ar {
+      text-align: right;
+      direction: rtl;
+      font-family: 'Noto Kufi Arabic', sans-serif;
+    }
+
+    @media (max-width: 640px) {
+      .content {
+        padding: 18px 14px;
+      }
+
+      .title-en,
+      .section-title-en {
+        font-size: 24px;
+      }
+
+      .title-ar,
+      .section-title-ar {
+        font-size: 20px;
+      }
+
+      .support-grid,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .save-btn,
+      .app-link,
+      .secondary-link {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="card">
+      <img
+        class="banner"
+        src="https://qnfeempfsfymbkysnoik.supabase.co/storage/v1/object/public/email-assets/set-password-banner.png"
+        alt="ECRA Banner"
+      />
+
+      <div class="content">
+        <section class="panel hero-panel">
+          <h1 class="title-en">Welcome to ECRA</h1>
+          <h2 class="title-ar">مرحباً بك في ECRA</h2>
+
+          <p class="body-en">
+            Hello <span id="userNameEn">there</span>, your account has been created successfully.
+          </p>
+
+          <p class="body-ar">
+            تم إنشاء حسابك بنجاح. يرجى تعيين كلمة المرور لتفعيل دخولك إلى المنصة.
+          </p>
+        </section>
+
+        <section class="panel">
+          <h1 class="section-title-en">Set Your Password</h1>
+          <h2 class="section-title-ar">تعيين كلمة المرور</h2>
+
+          <p class="body-en">
+            Please create your password to activate your account and continue using the application.
+          </p>
+
+          <p class="body-ar">
+            يرجى إنشاء كلمة المرور الخاصة بك لتفعيل الحساب ومتابعة استخدام التطبيق.
+          </p>
+
+          <div id="statusArea" class="status-box">
+            <p class="status-text-en">Preparing your secure session...</p>
+            <p class="status-text-ar">جارٍ تجهيز جلستك الآمنة...</p>
+          </div>
+
+          <div id="form" style="display:none;">
+            <div class="form-card">
+              <p class="label-en">Create a secure password for your account</p>
+              <p class="label-ar">أنشئ كلمة مرور آمنة لحسابك</p>
+
+              <div class="field-wrap">
+                <input id="password" type="password" placeholder="New Password" />
+                <button type="button" class="toggle-password" onclick="togglePassword('password', this)">👁</button>
+              </div>
+
+              <div class="field-wrap">
+                <input id="confirmPassword" type="password" placeholder="Confirm Password" />
+                <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword', this)">👁</button>
+              </div>
+
+              <p class="helper-en">Password must be at least 6 characters.</p>
+              <p class="helper-ar">يجب أن تكون كلمة المرور 6 أحرف على الأقل.</p>
+
+              <button id="saveBtn" class="save-btn" onclick="setPassword()">
+                Save Password | حفظ كلمة المرور
+              </button>
+
+              <p id="message"></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="postSuccessInfo" style="display:none;">
+          <h1 class="section-title-en">Password Set Successfully</h1>
+          <h2 class="section-title-ar">تم تعيين كلمة المرور بنجاح</h2>
+
+          <p class="body-en">
+            Your account is ready. You can now open the app and review the instructions file if needed.
+          </p>
+
+          <p class="body-ar">
+            أصبح حسابك جاهزًا. يمكنك الآن فتح التطبيق ومراجعة ملف التعليمات عند الحاجة.
+          </p>
+
+          <a class="app-link" href="https://testflight.apple.com/join/MPsjUZZ7">
+            Open App | فتح التطبيق
+          </a>
+
+          <a
+            href="https://qnfeempfsfymbkysnoik.supabase.co/storage/v1/object/public/email-assets/How%20to%20Download%20the%20App.pdf"
+            style="display:block;"
+          >
+            <img
+              src="https://qnfeempfsfymbkysnoik.supabase.co/storage/v1/object/public/email-assets/How-to-Download-the-App-preview.png"
+              alt="Instructions Preview"
+              class="instructions-preview"
+            />
+          </a>
+
+          <a
+            class="secondary-link"
+            href="https://qnfeempfsfymbkysnoik.supabase.co/storage/v1/object/public/email-assets/How%20to%20Download%20the%20App.pdf"
+          >
+            Open Instructions PDF | فتح ملف التعليمات
+          </a>
+        </section>
+
+        <img
+          class="promo-image"
+          src="https://qnfeempfsfymbkysnoik.supabase.co/storage/v1/object/public/email-assets/Start%20With%20ECRA.png"
+          alt="Start With ECRA"
+        />
+
+        <div class="support-card">
+          <div class="support-grid">
+            <div class="support-column">
+              <h3 class="support-title-en">ECRA Support Team</h3>
+              <p class="support-body-en">
+                Need help?<br />
+                <a href="mailto:support@ecraccreditation.org">support@ecraccreditation.org</a>
+              </p>
+            </div>
+
+            <div class="support-column">
+              <h3 class="support-title-ar">فريق دعم ECRA</h3>
+              <p class="support-body-ar">
+                هل تحتاج إلى المساعدة؟<br />
+                <a href="mailto:support@ecraccreditation.org">support@ecraccreditation.org</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <div class="footer-grid">
+            <div>
+              <p class="footer-en">ECRA | Early Childhood Rating & Accreditation Program</p>
+              <p class="footer-small-en">If this page was opened by mistake, you can safely close it.</p>
+            </div>
+
+            <div>
+              <p class="footer-ar">ECRA | المبادرة الوطنية لتحسين جودة مراكز الطفولة</p>
+              <p class="footer-small-ar">إذا تم فتح هذه الصفحة عن طريق الخطأ، يمكنك إغلاقها بأمان.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://qnfeempfsfymbkysnoik.supabase.co";
+    const SUPABASE_ANON_KEY = "YOUR_ANON_PUBLIC_KEY";
+
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    });
+
+    function showInvalidLink() {
+      document.getElementById("statusArea").innerHTML = `
+        <div class="error-box">
+          <p class="error" style="margin:0 0 8px 0; font-size:16px; font-weight:700; font-family:'Rasa', serif;">
+            Invalid or expired invite link
+          </p>
+          <p class="error" dir="rtl" style="margin:0; font-size:14px; font-family:'Noto Kufi Arabic', sans-serif;">
+            رابط الدعوة غير صالح أو منتهي الصلاحية
+          </p>
+        </div>
+      `;
+      document.getElementById("form").style.display = "none";
+      document.getElementById("postSuccessInfo").style.display = "none";
+    }
+
+    function showReadyState() {
+      document.getElementById("statusArea").innerHTML = "";
+      document.getElementById("form").style.display = "block";
+    }
+
+    function showMessage(text, type) {
+      const message = document.getElementById("message");
+      message.innerText = text;
+      message.className = type;
+    }
+
+    function togglePassword(inputId, buttonEl) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+
+      const isPassword = input.type === "password";
+      input.type = isPassword ? "text" : "password";
+      buttonEl.textContent = isPassword ? "🙈" : "👁";
+    }
+
+    async function init() {
+      try {
+        const { data, error } = await sb.auth.getSession();
+
+        if (error || !data.session) {
+          showInvalidLink();
+          return;
+        }
+
+        const currentUser = data.session.user;
+        const fullName =
+          currentUser?.user_metadata?.full_name ||
+          currentUser?.email ||
+          "there";
+
+        document.getElementById("userNameEn").textContent = fullName;
+        showReadyState();
+      } catch (err) {
+        console.error("Init failed:", err);
+        showInvalidLink();
+      }
+    }
+
+    async function setPassword() {
+      const password = document.getElementById("password").value.trim();
+      const confirmPassword = document.getElementById("confirmPassword").value.trim();
+      const saveBtn = document.getElementById("saveBtn");
+
+      if (!password) {
+        showMessage("Please enter a password.", "error");
+        return;
+      }
+
+      if (password.length < 6) {
+        showMessage("Password must be at least 6 characters.", "error");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showMessage("Passwords do not match.", "error");
+        return;
+      }
+
+      saveBtn.disabled = true;
+      saveBtn.textContent = "Saving... | جارٍ الحفظ...";
+
+      try {
+        const { error } = await sb.auth.updateUser({ password });
+
+        if (error) {
+          showMessage(error.message, "error");
+          saveBtn.disabled = false;
+          saveBtn.textContent = "Save Password | حفظ كلمة المرور";
+          return;
+        }
+
+        document.getElementById("statusArea").innerHTML = `
+          <div class="success-box">
+            <p class="success" style="margin:0 0 8px 0; font-size:18px; font-weight:700; font-family:'Rasa', serif;">
+              Password set successfully
+            </p>
+            <p dir="rtl" style="margin:0; font-size:14px; color:green; font-family:'Noto Kufi Arabic', sans-serif;">
+              تم تعيين كلمة المرور بنجاح
+            </p>
+          </div>
+        `;
+
+        document.getElementById("form").style.display = "none";
+        document.getElementById("postSuccessInfo").style.display = "block";
+      } catch (err) {
+        console.error("Unexpected password update error:", err);
+        showMessage("Something went wrong. Please try again.", "error");
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save Password | حفظ كلمة المرور";
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

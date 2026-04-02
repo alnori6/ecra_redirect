@@ -1,0 +1,678 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css?family=Rasa" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Noto+Kufi+Arabic" rel="stylesheet">
+  <title>ECRA Email</title>
+</head>
+<body style="margin:0; padding:0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0; padding:0;">
+    <tr>
+      <td align="center" style="padding:24px 12px;">
+
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:750px; background-color:#DDD7CD; border-radius:30px; overflow:hidden; border:1px solid #e5e7eb;">
+          
+          <tr>
+            <td align="center" style="padding:0; margin:0;">
+              <img
+                src="https://qnfeempfsfymbkysnoik.supabase.co/storage/v1/object/public/email-assets/invite-user-banner.png"
+                alt="ECRA Banner"
+                width="750"
+                style="display:block; width:100%; height:auto; border:0;"
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:32px 28px 28px 28px; font-family:Arial, sans-serif; color:#334155;">
+
+              <h1 style="margin:0 0 16px 0; font-size:20px; line-height:1.3; color:#0f172a; font-weight:700; font-family:'Rasa', serif;">
+                Welcome to ECRA
+              </h1>
+
+              <p style="margin:0 0 12px 0; font-size:15px; line-height:1.8; color:#334159; font-family:'Rasa', serif;">
+                ECRA is a national initiative dedicated to improving the quality of early childhood centers through assessment, accreditation, and continuous improvement.
+              </p>
+
+              <p style="margin:0 0 14px 0; font-size:14px; line-height:1.8; color:#334159; font-family:'Rasa', serif;">
+                This initiative is implemented in collaboration between the Ministry of Human Resources and Social Development and the Arab Child Organization, supporting centers throughout their journey toward achieving the highest quality standards.
+              </p>
+
+              <h2 dir="rtl" style="margin:0 0 14px 0; font-size:20px; line-height:1.5; color:#0f172a; font-weight:700; font-family:'Noto Kufi Arabic', sans-serif;">
+                مرحباً بك في ECRA
+              </h2>
+
+              <p dir="rtl" style="margin:0 0 12px 0; font-size:15px; line-height:1.8; color:#334159; font-family:'Noto Kufi Arabic', sans-serif;">
+                ECRA هي مبادرة وطنية تهدف إلى تحسين جودة مراكز الطفولة المبكرة من خلال التقييم والاعتماد والتحسين المستمر.
+              </p>
+
+              <p dir="rtl" style="margin:0 0 14px 0; font-size:14px; line-height:1.8; color:#334159; font-family:'Noto Kufi Arabic', sans-serif;">
+                وتُنفَّذ هذه المبادرة بالتعاون بين وزارة الموارد البشرية والتنمية الاجتماعية ومنظمة الطفل العربي، لدعم المراكز في رحلتها نحو تحقيق أعلى معايير الجودة.
+              </p>
+
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px 0; background-color:#f8fafc; border-radius:14px;">
+                <tr>
+                  <td style="padding:18px; text-align:center; font-family:Arial, sans-serif;">
+                    <p style="margin:0 0 12px 0; font-size:15px; line-height:1.8; color:#334159; font-family:Arial, sans-serif;">
+                      {{ .Email }}
+                    </p>
+
+                    <p dir="ltr" style="margin:0 0 12px 0; font-size:15px; line-height:1.8; color:#334159; font-family:'Rasa', serif;">
+                      You have been invited to access the ECRA platform.
+                    </p>
+
+                    <p dir="rtl" style="margin:0 0 12px 0; font-size:15px; line-height:1.8; color:#334159; font-family:'Noto Kufi Arabic', sans-serif;">
+                      لقد تمت دعوتك للدخول إلى منصة ECRA.
+                    </p>
+                    
+                    <p dir="ltr" style="margin:0 0 14px 0; font-size:14px; line-height:1.8; color:#334159; font-family:'Rasa', serif;">
+                      To activate your account and create your password, please click the button below.
+                    </p>
+
+                    <p dir="rtl" style="margin:0 0 14px 0; font-size:14px; line-height:1.8; color:#334159; font-family:'Noto Kufi Arabic', sans-serif;">
+                      لتفعيل حسابك وإنشاء كلمة المرور، يرجى الضغط على الزر أدناه.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 24px auto;">
+                <tr>
+                  <td align="center" style="border-radius:10px;">
+                    <a
+                      href="{{ .ConfirmationURL }}"
+                      style="
+                        font-family:'Noto Kufi Arabic', sans-serif;
+                        display:inline-block;
+                        padding:14px 90px;
+                        font-size:19px;
+                        font-weight:700;
+                        color:#334159;
+                        text-decoration:none;
+                        border-radius:30px;
+                        background-color:#EACB98;
+                      "
+                    >
+                      Set Password | تعيين كلمة المرور
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <img
+                src="https://qnfeempfsfymbkysnoik.supabase.co/storage/v1/object/public/email-assets/Start%20With%20ECRA.png"
+                alt="ECRA Banner"
+                width="750"
+                style="display:block; width:100%; height:auto; border:0; margin:0 0 24px 0;"
+              />
+
+              <p dir="rtl" style="margin:0 0 18px 0; text-align:right; font-size:14px; line-height:1.8; color:#475569; font-family:'Noto Kufi Arabic', sans-serif;">
+                إذا لم يعمل الزر، يمكنك الضغط على الرابط المباشر:
+                <a href="{{ .ConfirmationURL }}" style="color:#334159; font-weight:700; text-decoration:underline;">
+                  إضغط هنا
+                </a>
+              </p>
+
+              <p style="margin:0 0 18px 0; text-align:left; font-size:14px; line-height:1.8; color:#475569; font-family:'Rasa', serif;">
+                If the button does not work, you can use the direct link:
+                <a href="{{ .ConfirmationURL }}" style="color:#334159; font-weight:700; text-decoration:underline;">
+                  Click here
+                </a>
+              </p>
+
+              <hr style="border:none; border-top:1px solid #e2e8f0; margin:0 0 20px 0;" />
+
+              <p style="margin:0 0 8px 0; font-size:13px; line-height:1.7; color:#64748b; font-family:Arial, sans-serif;">
+                ECRA | Early Childhood Rating & Accreditation Program
+              </p>
+
+              <p dir="rtl" style="margin:0 0 8px 0; text-align:right; font-size:13px; line-height:1.9; color:#64748b; font-family:'Noto Kufi Arabic', sans-serif;">
+                ECRA | المبادرة الوطنية لتحسين جودة مراكز الطفولة
+              </p>
+
+              <p style="margin:0; font-size:12px; line-height:1.7; color:#94a3b8; font-family:Arial, sans-serif;">
+                If you were not expecting this email, you can safely ignore it.
+              </p>
+
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ECRA | Set Password</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Rasa" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Noto+Kufi+Arabic" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f3f0e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 12px;
+      font-family: Arial, sans-serif;
+      color: #334155;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 750px;
+    }
+
+    .card {
+      width: 100%;
+      background: #e6e1d7;
+      border-radius: 30px;
+      overflow: hidden;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    .banner {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 0;
+    }
+
+    .content {
+      padding: 32px 28px 28px 28px;
+      color: #334155;
+    }
+
+    .welcome-box,
+    .info-box,
+    .success-box,
+    .loading-box,
+    .error-box,
+    .instructions-box {
+      width: 100%;
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 22px 18px;
+      text-align: center;
+      margin-bottom: 24px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .title {
+      margin: 0 0 16px 0;
+      font-size: 28px;
+      line-height: 1.3;
+      color: #0f172a;
+      font-weight: 700;
+      font-family: 'Noto Kufi Arabic', sans-serif;
+      text-align: center;
+    }
+
+    .subtitle-en,
+    .welcome-text-en,
+    .info-title {
+      margin: 0 0 12px 0;
+      font-size: 16px;
+      line-height: 1.8;
+      color: #334159;
+      font-family: 'Rasa', serif;
+    }
+
+    .subtitle-ar,
+    .welcome-text-ar,
+    .info-title-ar,
+    .note-ar,
+    .footer-ar {
+      direction: rtl;
+      text-align: right;
+      font-family: 'Noto Kufi Arabic', sans-serif;
+    }
+
+    .subtitle-ar,
+    .welcome-text-ar {
+      margin: 0 0 16px 0;
+      font-size: 15px;
+      line-height: 1.9;
+      color: #334159;
+    }
+
+    .info-title-ar {
+      margin: 0 0 16px 0;
+      font-size: 14px;
+      line-height: 1.9;
+      color: #334159;
+    }
+
+    .field-wrap {
+      margin-top: 12px;
+      text-align: left;
+      position: relative;
+    }
+
+    .field-wrap input {
+      width: 100%;
+      padding: 14px 48px 14px 14px;
+      border-radius: 12px;
+      border: 1px solid #d1d5db;
+      font-size: 15px;
+      background: #ffffff;
+      color: #0f172a;
+      outline: none;
+    }
+
+    .field-wrap input:focus {
+      border-color: #334159;
+      box-shadow: 0 0 0 3px rgba(51, 65, 89, 0.08);
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 14px;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 0;
+      width: auto;
+      color: #64748b;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .save-btn,
+    .app-link,
+    .secondary-link {
+      display: inline-block;
+      margin-top: 18px;
+      width: 100%;
+      padding: 14px 24px;
+      font-size: 18px;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Noto Kufi Arabic', sans-serif;
+      transition: 0.2s ease;
+      text-align: center;
+    }
+
+    .save-btn {
+      color: #334159;
+      background: #EACB98;
+    }
+
+    .app-link {
+      color: white;
+      background: #334159;
+    }
+
+    .secondary-link {
+      color: #334159;
+      background: #e9dcc0;
+    }
+
+    .save-btn:hover,
+    .app-link:hover,
+    .secondary-link:hover {
+      filter: brightness(0.98);
+    }
+
+    .save-btn[disabled] {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .helper-text {
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #64748b;
+      text-align: left;
+    }
+
+    .helper-text.rtl {
+      direction: rtl;
+      text-align: right;
+      font-family: 'Noto Kufi Arabic', sans-serif;
+    }
+
+    #message {
+      margin: 14px 0 0 0;
+      font-size: 14px;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .success { color: green; }
+    .error { color: red; }
+
+    .instructions-preview {
+      width: 100%;
+      max-width: 320px;
+      border-radius: 12px;
+      border: 1px solid #CBD5E1;
+      display: block;
+      margin: 12px auto 0 auto;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #e2e8f0;
+      margin: 0 0 20px 0;
+    }
+
+    .footer-en {
+      margin: 0 0 8px 0;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #64748b;
+      font-family: Arial, sans-serif;
+    }
+
+    .footer-small {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.7;
+      color: #94a3b8;
+      font-family: Arial, sans-serif;
+    }
+
+    @media (max-width: 640px) {
+      .content {
+        padding: 24px 18px 22px 18px;
+      }
+
+      .title {
+        font-size: 24px;
+      }
+
+      .save-btn,
+      .app-link,
+      .secondary-link {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="card">
+
+      <img
+        class="banner"
+        src="https://qnfeempfsfymbkysnoik.supabase.co/storage/v1/object/public/email-assets/set-password-banner.png"
+        alt="ECRA Banner"
+      />
+
+      <div class="content">
+        <div class="welcome-box">
+          <h1 class="title">Welcome to ECRA | <span dir="rtl">مرحباً بك في ECRA</span> </h1>
+
+          <p dir="ltr" class="welcome-text-en" style="width: 100%;">
+            Hello <span id="userNameEn">there</span>, your account has been created successfully.
+          </p>
+
+          <p class="welcome-text-ar" style="width: 100%;">
+            تم إنشاء حسابك بنجاح. يرجى تعيين كلمة المرور لتفعيل دخولك إلى المنصة.
+          </p>
+        </div>
+
+        <h1 class="title">Set Your Password | تعيين كلمة المرور</h1>
+
+        <p class="subtitle-en">
+          Please create your password to activate your account and continue using the application.
+        </p>
+
+        <p class="subtitle-ar">
+          يرجى إنشاء كلمة المرور الخاصة بك لتفعيل الحساب ومتابعة استخدام التطبيق.
+        </p>
+
+        <div id="statusArea">
+          <div class="loading-box">
+            <p class="info-title">Preparing your secure session...</p>
+            <p class="info-title-ar">جارٍ تجهيز جلستك الآمنة...</p>
+          </div>
+        </div>
+
+        <div id="form" style="display:none;">
+          <div class="info-box">
+            <p class="info-title">Choose a secure password for your account</p>
+            <p class="info-title-ar">اختر كلمة مرور آمنة لحسابك</p>
+
+            <div class="field-wrap">
+              <input id="password" type="password" placeholder="New Password" />
+              <button type="button" class="toggle-password" onclick="togglePassword('password', this)">👁</button>
+            </div>
+
+            <div class="field-wrap">
+              <input id="confirmPassword" type="password" placeholder="Confirm Password" />
+              <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword', this)">👁</button>
+            </div>
+
+            <div class="helper-text">
+              Password must be at least 6 characters.
+            </div>
+            <div class="helper-text rtl">
+              يجب أن تكون كلمة المرور 6 أحرف على الأقل.
+            </div>
+
+            <button id="saveBtn" class="save-btn" onclick="setPassword()">
+              Save Password | حفظ كلمة المرور
+            </button>
+
+            <p id="message"></p>
+          </div>
+        </div>
+
+        <div class="instructions-box" id="postSuccessInfo" style="display:none;">
+          <p class="subtitle-en">
+            Your account is ready. You can now open the app and review the instructions file if needed.
+          </p>
+
+          <p class="subtitle-ar">
+            أصبح حسابك جاهزًا. يمكنك الآن فتح التطبيق ومراجعة ملف التعليمات عند الحاجة.
+          </p>
+
+          <a class="app-link" href="https://testflight.apple.com/join/MPsjUZZ7">
+            Open App | فتح التطبيق
+          </a>
+
+          <a
+            href="https://qnfeempfsfymbkysnoik.supabase.co/storage/v1/object/public/email-assets/How%20to%20Download%20the%20App.pdf"
+            style="display:block;"
+          >
+            <img
+              src="https://qnfeempfsfymbkysnoik.supabase.co/storage/v1/object/public/email-assets/How-to-Download-the-App-preview.png"
+              alt="Instructions Preview"
+              class="instructions-preview"
+            />
+          </a>
+
+          <a
+            class="secondary-link"
+            href="https://qnfeempfsfymbkysnoik.supabase.co/storage/v1/object/public/email-assets/How%20to%20Download%20the%20App.pdf"
+          >
+            Open Instructions PDF | فتح ملف التعليمات
+          </a>
+        </div>
+
+        <img
+          src="https://qnfeempfsfymbkysnoik.supabase.co/storage/v1/object/public/email-assets/Start%20With%20ECRA.png"
+          style="width:100%;display:block;border:0;border-radius:16px;margin:0 0 24px 0"
+          alt="Start With ECRA"
+        />
+
+        <hr />
+
+        <p class="footer-en">
+          ECRA | Early Childhood Rating & Accreditation Program
+        </p>
+
+        <p class="footer-ar">
+          ECRA | المبادرة الوطنية لتحسين جودة مراكز الطفولة
+        </p>
+
+        <p class="footer-small">
+          If this page was opened by mistake, you can safely close it.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://qnfeempfsfymbkysnoik.supabase.co";
+    const SUPABASE_ANON_KEY = "YOUR_ANON_PUBLIC_KEY";
+
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    });
+
+    function showInvalidLink() {
+      document.getElementById("statusArea").innerHTML = `
+        <div class="error-box">
+          <p class="error" style="margin:0; font-size:15px;">
+            Invalid or expired invite link
+          </p>
+          <p class="error" dir="rtl" style="margin:10px 0 0 0; font-size:14px; font-family:'Noto Kufi Arabic', sans-serif;">
+            رابط الدعوة غير صالح أو منتهي الصلاحية
+          </p>
+        </div>
+      `;
+      document.getElementById("form").style.display = "none";
+    }
+
+    function showReadyState() {
+      document.getElementById("statusArea").innerHTML = "";
+      document.getElementById("form").style.display = "block";
+    }
+
+    function showMessage(text, type) {
+      const message = document.getElementById("message");
+      message.innerText = text;
+      message.className = type;
+    }
+
+    function togglePassword(inputId, buttonEl) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+
+      const isPassword = input.type === "password";
+      input.type = isPassword ? "text" : "password";
+      buttonEl.textContent = isPassword ? "🙈" : "👁";
+    }
+
+    async function init() {
+      try {
+        const { data, error } = await sb.auth.getSession();
+
+        if (error || !data.session) {
+          showInvalidLink();
+          return;
+        }
+
+        const currentUser = data.session.user;
+        const fullName =
+          currentUser?.user_metadata?.full_name ||
+          currentUser?.email ||
+          "there";
+
+        document.getElementById("userNameEn").textContent = fullName;
+        showReadyState();
+      } catch (err) {
+        console.error("Init failed:", err);
+        showInvalidLink();
+      }
+    }
+
+    async function setPassword() {
+      const password = document.getElementById("password").value.trim();
+      const confirmPassword = document.getElementById("confirmPassword").value.trim();
+      const saveBtn = document.getElementById("saveBtn");
+
+      if (!password) {
+        showMessage("Please enter a password.", "error");
+        return;
+      }
+
+      if (password.length < 6) {
+        showMessage("Password must be at least 6 characters.", "error");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showMessage("Passwords do not match.", "error");
+        return;
+      }
+
+      saveBtn.disabled = true;
+      saveBtn.textContent = "Saving... | جارٍ الحفظ...";
+
+      try {
+        const { error } = await sb.auth.updateUser({ password });
+
+        if (error) {
+          showMessage(error.message, "error");
+          saveBtn.disabled = false;
+          saveBtn.textContent = "Save Password | حفظ كلمة المرور";
+          return;
+        }
+
+        document.getElementById("statusArea").innerHTML = `
+          <div class="success-box">
+            <p class="success" style="margin:0 0 10px 0; font-size:18px; font-weight:700; font-family:'Rasa', serif;">
+              Password set successfully
+            </p>
+            <p dir="rtl" style="margin:0; font-size:14px; color:green; font-family:'Noto Kufi Arabic', sans-serif;">
+              تم تعيين كلمة المرور بنجاح
+            </p>
+          </div>
+        `;
+
+        document.getElementById("form").style.display = "none";
+        document.getElementById("postSuccessInfo").style.display = "block";
+      } catch (err) {
+        console.error("Unexpected password update error:", err);
+        showMessage("Something went wrong. Please try again.", "error");
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save Password | حفظ كلمة المرور";
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href='https://fonts.googleapis.com/css?family=Rasa' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Noto Kufi Arabic' rel='stylesheet'>
+  <title>ECRA Email</title>
+</head>
+<body style="margin:0; padding:0">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style=" margin:0; padding:0;">
+    <tr>
+      <td align="center" style="padding:24px 12px;">
+
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:750px; background-color:#DDD7CD; border-radius:30px; overflow:hidden; border:1px solid #e5e7eb;">
+          
+          <!-- Banner -->
+          <tr>
+            <td align="center" style="padding:0; margin:0;">
+              <img
+                src="https://qnfeempfsfymbkysnoik.supabase.co/storage/v1/object/public/email-assets/invite-user-banner.png"
+                alt="ECRA Banner"
+                width="750"
+                style="display:block; width:100%; height:auto; border:0;"
+              />
+            </td>
+          </tr>
+          
+          
+          <!-- Content -->
+          <tr>
+            <td style="padding:32px 28px 28px 28px; font-family:Arial, sans-serif; color:#334155; ">
+
+              <!-- English title -->
+              <h1 style="margin:0 0 16px 0; font-size:20px; line-height:1.3; color:#0f172a; font-weight:700; font-family: 'Rasa', serif;">
+                Welcome to ECRA
+              </h1>
+
+              <!-- English body -->
+            <p style="margin:0 0 12px 0; font-size:15px; line-height:1.8; color:#334159; font-family: 'Rasa', serif;">
+                ECRA is a national initiative dedicated to improving the quality of early childhood centers through assessment, accreditation, and continuous improvement.
+            </p>    
+
+            <p style="margin:0 0 14px 0; font-size:14px; line-height:1.8; color:#334159; font-family: 'Rasa', serif;">
+                This initiative is implemented in collaboration between the Ministry of Human Resources and Social Development and the Arab Child Organization, supporting centers throughout their journey toward achieving the highest quality standards.
+            </p>
+
+            <h2 dir="rtl" style="margin:0 0 14px 0; font-size:20px; line-height:1.5; color:#0f172a; font-weight:700; font-family: 'Noto Kufi Arabic', sans-serif;">
+               مرحباً بك في ECRA
+            </h2>
+
+
+            <p dir="rtl" style="margin:0 0 12px 0; font-size:15px; line-height:1.8; color:#334159; font-family: Noto Kufi Arabic, sans-serif;">
+                ECRA هي مبادرة وطنية تهدف إلى تحسين جودة مراكز الطفولة المبكرة من خلال التقييم والاعتماد والتحسين المستمر.
+            </p>
+
+            <p dir="rtl" style="margin:0 0 14px 0; font-size:14px; line-height:1.8; color:#334159; font-family: 'Noto Kufi Arabic', sans-serif;">
+                وتُنفَّذ هذه المبادرة بالتعاون بين وزارة الموارد البشرية والتنمية الاجتماعية ومنظمة الطفل العربي،
+                لدعم المراكز في رحلتها نحو تحقيق أعلى معايير الجودة.
+            </p>
+
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px 0; background-color:#f8fafc; border-radius:14px;">
+                <tr>
+                  <td dir="rtl" style="padding:18px 18px 18px 18px; text-align:center; font-family:Arial, sans-serif;">
+                        <p dir="rtl" style="margin:0 0 12px 0; font-size:15px; line-height:1.8; color:#334159; font-family:Arial, sans-serif;">
+                            {{ .Email }}
+                        </p>
+                        <p dir="rtl" style="margin:0 0 12px 0; font-size:15px; line-height:1.8; color:#334159; font-family:Arial, sans-serif;">
+                            {{ .password }}
+                        </p>
+
+                        <p dir="ltr" style="margin:0 0 12px 0; font-size:15px; line-height:1.8; color:#334159; font-family: Noto Kufi Arabic, sans-serif;">
+                           You have been invited to access the ECRA platform.
+                        </p>
+
+                        <p dir="rtl" style="margin:0 0 12px 0; font-size:15px; line-height:1.8; color:#334159; font-family: Noto Kufi Arabic, sans-serif;">
+                            لقد تمت دعوتك للدخول إلى منصة ECRA.
+                        </p>
+                        
+                        <p dir="ltr" style="margin:0 0 14px 0; font-size:14px; line-height:1.8; color:#334159; font-family: 'Noto Kufi Arabic', sans-serif;">
+                           To activate your account and create your password, please click the button below.
+                        </p>
+
+                        <p dir="rtl" style="margin:0 0 14px 0; font-size:14px; line-height:1.8; color:#334159; font-family: 'Noto Kufi Arabic', sans-serif;">
+                           لتفعيل حسابك وإنشاء كلمة المرور، يرجى الضغط على الزر أدناه:
+                        </p>
+
+                    </td>
+                </tr>
+            </table>
+
+              <!-- Button -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px 0; display:flex; justify-content:center; ">
+
+                <tr>
+                  <td align="center"  style="border-radius:10px;">
+                    <a
+                      href="{{ .ConfirmationURL }}"
+                      style="
+                      font-family: Noto Kufi Arabic;
+                        display:inline-block;
+                        padding:14px 90px;
+                        font-size:19px;
+                        font-weight:700;
+                        color:#334159;
+                        text-decoration:none;
+                        border-radius:30px;
+                        background-color:#EACB98;
+                      "
+                    >
+                      Activate Account | تفعيل الحساب
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Banner -->
+               
+                <img
+                    src="https://qnfeempfsfymbkysnoik.supabase.co/storage/v1/object/public/email-assets/Start%20With%20ECRA.png"
+                    alt="ECRA Banner"
+                    width="750"
+                    style="display:block; width:100%; height:auto; border:0; margin:0 0 24px 0;"
+                    
+                />
+
+
+              <!-- Arabic CTA note -->
+              <p dir="rtl" style="margin:0 0 18px 0; text-align:right; font-size:14px; line-height:1.8; color:#475569; font-family: Noto Kufi Arabic, sans-serif;">
+                أو يمكنك استخدام الرابط أدناه إذا لم يعمل الزر. <a href="{{ .ConfirmationURL }}"
+                      style="
+                      font-family: Noto Kufi Arabic; "> إضغط هنا.  </a>
+              </p>
+
+              <!-- Divider -->
+              <hr style="border:none; border-top:1px solid #e2e8f0; margin:0 0 20px 0;" />
+
+              <!-- Footer -->
+              <p style="margin:0 0 8px 0; font-size:13px; line-height:1.7; color:#64748b; font-family:Arial, sans-serif;">
+                ECRA | Early Childhood Rating & Accreditation Program
+              </p>
+
+              <p dir="rtl" style="margin:0 0 8px 0; text-align:right; font-size:13px; line-height:1.9; color:#64748b; font-family: Noto Kufi Arabic, sans-serif;">
+                ECRA | المبادرة الوطنية لتحسين جودة مراكز الطفولة
+              </p>
+
+              <p style="margin:0; font-size:12px; line-height:1.7; color:#94a3b8; font-family:Arial, sans-serif;">
+                If you were not expecting this email, you can safely ignore it.
+              </p>
+
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

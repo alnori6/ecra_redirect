@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quality Match Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f4ef;
+      margin: 0;
+      padding: 24px;
+      color: #222;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    p.subtitle {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #555;
+    }
+
+    .game {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    .panel h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .draggable {
+      background: #cfdedb;
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      cursor: grab;
+      font-weight: bold;
+    }
+
+    .dropzone {
+      border: 2px dashed #b8b8b8;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+      min-height: 58px;
+      background: #fafafa;
+      transition: 0.2s;
+    }
+
+    .dropzone.over {
+      border-color: #5a8f86;
+      background: #eef7f5;
+    }
+
+    .dropzone.correct {
+      border-color: #2e7d32;
+      background: #e8f5e9;
+    }
+
+    .dropzone.incorrect {
+      border-color: #c62828;
+      background: #ffebee;
+    }
+
+    .label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    #result {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    button {
+      display: block;
+      margin: 20px auto 0;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      background: #1f5f8b;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .game {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Quality Match Game</h1>
+    <p class="subtitle">Drag each factor to the item where it matters most.</p>
+
+    <div class="game">
+      <div class="panel">
+        <h2>Factors</h2>
+        <div class="draggable" draggable="true" id="brand">Brand</div>
+        <div class="draggable" draggable="true" id="reliability">Reliability</div>
+        <div class="draggable" draggable="true" id="comfort">Comfort</div>
+        <div class="draggable" draggable="true" id="reviews">Reviews</div>
+      </div>
+
+      <div class="panel">
+        <h2>Items</h2>
+
+        <div class="dropzone" data-answer="comfort">
+          <span class="label">A pair of new shoes</span>
+        </div>
+
+        <div class="dropzone" data-answer="brand">
+          <span class="label">A hand bag</span>
+        </div>
+
+        <div class="dropzone" data-answer="comfort">
+          <span class="label">A sofa</span>
+        </div>
+
+        <div class="dropzone" data-answer="reliability">
+          <span class="label">A new car</span>
+        </div>
+      </div>
+    </div>
+
+    <button id="checkBtn">Check Answers</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const draggables = document.querySelectorAll(".draggable");
+    const dropzones = document.querySelectorAll(".dropzone");
+    const result = document.getElementById("result");
+    const checkBtn = document.getElementById("checkBtn");
+
+    let draggedItem = null;
+
+    draggables.forEach(item => {
+      item.addEventListener("dragstart", () => {
+        draggedItem = item;
+        setTimeout(() => {
+          item.style.opacity = "0.5";
+        }, 0);
+      });
+
+      item.addEventListener("dragend", () => {
+        item.style.opacity = "1";
+      });
+    });
+
+    dropzones.forEach(zone => {
+      zone.addEventListener("dragover", e => {
+        e.preventDefault();
+        zone.classList.add("over");
+      });
+
+      zone.addEventListener("dragleave", () => {
+        zone.classList.remove("over");
+      });
+
+      zone.addEventListener("drop", e => {
+        e.preventDefault();
+        zone.classList.remove("over");
+
+        if (!draggedItem) return;
+
+        const existingDraggable = zone.querySelector(".draggable");
+        if (existingDraggable) {
+          document.querySelector(".panel").appendChild(existingDraggable);
+        }
+
+        zone.appendChild(draggedItem);
+      });
+    });
+
+    checkBtn.addEventListener("click", () => {
+      let score = 0;
+
+      dropzones.forEach(zone => {
+        zone.classList.remove("correct", "incorrect");
+
+        const placed = zone.querySelector(".draggable");
+        if (!placed) return;
+
+        if (placed.id === zone.dataset.answer) {
+          zone.classList.add("correct");
+          score++;
+        } else {
+          zone.classList.add("incorrect");
+        }
+      });
+
+      result.textContent = `Your score: ${score} / ${dropzones.length}`;
+    });
+  </script>
+</body>
+</html>
