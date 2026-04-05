@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quality Interactive Activity</title>
+  <style>
+    :root {
+      --bg: #f7f3ec;
+      --card: #ffffff;
+      --text: #1f2430;
+      --muted: #5d6572;
+      --primary: #dcbf8d;
+      --primary-dark: #b68f57;
+      --accent: #a9c2bd;
+      --accent-dark: #6e8d87;
+      --success-bg: #e8f5e9;
+      --success-border: #2e7d32;
+      --danger-bg: #ffebee;
+      --danger-border: #c62828;
+      --shadow: 0 12px 28px rgba(31, 36, 48, 0.08);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #fbf8f3 0%, var(--bg) 100%);
+      color: var(--text);
+    }
+
+    .app {
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 980px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .progress-wrap {
+      width: 100%;
+      height: 10px;
+      background: rgba(0,0,0,0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+      transition: width 0.3s ease;
+    }
+
+    .screen {
+      display: none;
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .screen.active { display: block; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .banner {
+      background: var(--primary);
+      border-radius: 24px;
+      padding: 18px 22px;
+      font-size: clamp(28px, 4vw, 54px);
+      font-weight: 800;
+      line-height: 1.1;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .stack, .panel {
+      background: #faf8f4;
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    .lead {
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .pill-grid, .choice-grid, .items-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .pill-grid {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      margin-top: 16px;
+    }
+
+    .choice-grid {
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      margin-top: 18px;
+    }
+
+    .items-grid {
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      margin-top: 14px;
+    }
+
+    .chip, .option-btn, .item-btn {
+      width: 100%;
+      border: 0;
+      cursor: pointer;
+      border-radius: 18px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .chip, .item-btn {
+      background: #d7e4e1;
+      color: var(--text);
+    }
+
+    .option-btn {
+      background: #f3efe7;
+      color: var(--text);
+      border: 2px solid transparent;
+    }
+
+    .chip:hover, .option-btn:hover, .item-btn:hover, .primary-btn:hover, .secondary-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+    }
+
+    .chip.selected, .item-btn.selected, .option-btn.selected {
+      outline: 3px solid rgba(182, 143, 87, 0.28);
+      background: #ecd7ae;
+    }
+
+    .option-btn.correct {
+      background: var(--success-bg);
+      border-color: var(--success-border);
+    }
+
+    .option-btn.incorrect {
+      background: var(--danger-bg);
+      border-color: var(--danger-border);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .primary-btn, .secondary-btn {
+      border: 0;
+      cursor: pointer;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .primary-btn {
+      background: var(--primary-dark);
+      color: white;
+    }
+
+    .secondary-btn {
+      background: #ece7dd;
+      color: var(--text);
+    }
+
+    .primary-btn:disabled {
+      background: #b5b5b5;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .mini-title {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 18px;
+      font-size: 16px;
+      line-height: 1.6;
+      background: #f7f2e8;
+      border-left: 6px solid var(--primary-dark);
+    }
+
+    .feedback.visible { display: block; }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 18px;
+      padding: 14px;
+      font: inherit;
+      resize: vertical;
+      margin-top: 16px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .summary-card {
+      background: #faf8f4;
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .score {
+      font-size: clamp(34px, 6vw, 60px);
+      font-weight: 800;
+      margin: 12px 0;
+      color: var(--primary-dark);
+    }
+
+    .muted { color: var(--muted); }
+
+    .twist {
+      margin-top: 18px;
+      padding: 18px;
+      background: #eff6ff;
+      border-radius: 18px;
+      border-left: 6px solid #3579f6;
+    }
+
+    .lti-note {
+      margin-top: 18px;
+      font-size: 14px;
+      color: var(--muted);
+      background: #fcfbf8;
+      border: 1px dashed rgba(0,0,0,0.12);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    @media (max-width: 760px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .screen {
+        padding: 18px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="shell">
+      <div class="topbar">
+        <div id="stepLabel">Interactive Quality Activity</div>
+        <div class="progress-wrap" aria-label="Progress">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
+
+      <section class="screen active" id="screen-start">
+        <div class="banner">What do we mean by Quality?</div>
+        <div class="hero">
+          <div>
+            <div class="stack">
+              <div class="mini-title">Objective</div>
+              <p class="lead"><strong>Today we’re not defining quality theoretically — we’re experiencing how people judge quality differently.</strong></p>
+              <p class="lead">This short activity turns the topic into an interactive flow instead of a static slide.</p>
+            </div>
+
+            <div class="stack" style="margin-top: 16px;">
+              <div class="mini-title">How this activity works</div>
+              <p>1. Quick trigger: what comes to your mind first when you hear <strong>quality</strong>?</p>
+              <p>2. Scenario-based voting: choose an item and decide what matters most.</p>
+              <p>3. Reflection: explain why you made your choice.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="mini-title">From the original slide</div>
+            <p><strong>Subjective perception</strong></p>
+            <p class="muted">“It’s perfect”<br>“I like that”<br>“It’s what I need”</p>
+            <hr>
+            <p><strong>Context matters</strong></p>
+            <p class="muted">Shoes · Handbag · Sofa · Car</p>
+            <hr>
+            <p><strong>How we judge quality</strong></p>
+            <p class="muted">Brand · Reliability · Reviews · Recommendations · Price</p>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="primary-btn" id="startBtn">Start Activity</button>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-trigger">
+        <div class="mini-title">Step 1 · Quick Trigger</div>
+        <h2>When you hear <em>quality</em>, what is the first thing that comes to your mind?</h2>
+        <p class="lead">Choose the option that feels closest to your instinctive response.</p>
+
+        <div class="pill-grid" id="triggerOptions"></div>
+
+        <textarea id="triggerCustom" placeholder="Optional: add your own word or short explanation..."></textarea>
+
+        <div class="btn-row">
+          <button class="secondary-btn" data-back="screen-start">Back</button>
+          <button class="primary-btn" id="toScenarioBtn" disabled>Continue</button>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-scenario">
+        <div class="mini-title">Step 2 · Scenario-Based Voting</div>
+        <h2>Imagine you want to buy <span id="scenarioItemLabel"></span></h2>
+        <p class="lead" id="scenarioPrompt"></p>
+
+        <div class="panel">
+          <div class="mini-title">What matters most for this item?</div>
+          <div class="choice-grid" id="factorOptions"></div>
+          <div class="feedback" id="feedbackBox"></div>
+        </div>
+
+        <div class="btn-row">
+          <button class="secondary-btn" id="scenarioBackBtn">Back</button>
+          <button class="primary-btn" id="nextScenarioBtn" disabled>Next</button>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-reflection">
+        <div class="mini-title">Step 3 · Group Discussion / Reflection</div>
+        <h2>Why did you choose what you chose?</h2>
+        <p class="lead">This is the key learning moment. Different people judge quality differently based on needs, expectations, and context.</p>
+
+        <textarea id="reflectionInput" placeholder="Write one or two lines. For example: I chose reviews because I trust real customer experience more than the brand name."></textarea>
+
+        <div class="twist">
+          <strong>Fun twist:</strong> Would you buy a no-brand car with amazing reviews? Why or why not?
+        </div>
+
+        <div class="btn-row">
+          <button class="secondary-btn" id="reflectionBackBtn">Back</button>
+          <button class="primary-btn" id="finishBtn">Finish Activity</button>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-results">
+        <div class="mini-title">Instructor Wrap-Up</div>
+        <h2>Quality is not the same for everyone.</h2>
+        <p class="lead">It depends on <strong>needs</strong>, <strong>expectations</strong>, and <strong>context</strong>.</p>
+
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="mini-title">Final definition</div>
+            <p><strong>Quality = Fitness for use</strong></p>
+            <p class="muted">What the customer actually needs.</p>
+          </div>
+
+          <div class="summary-card">
+            <div class="mini-title">Your score</div>
+            <div class="score" id="finalScore">0 / 0</div>
+            <p class="muted">This score is just a discussion starter, not a rigid judgment.</p>
+          </div>
+
+          <div class="summary-card">
+            <div class="mini-title">Your first thought</div>
+            <p id="finalTriggerAnswer">—</p>
+            <p class="muted" id="finalTriggerCustom"></p>
+          </div>
+        </div>
+
+        <div class="summary-grid" id="answerReview"></div>
+
+        <div class="lti-note">
+          This file is a strong classroom prototype. To send authenticated grades or completion back to an LMS, it still needs a proper LTI wrapper or service on top of this page. A lightweight integration hook is included in the code through <code>postMessage</code> and a placeholder function, but that alone is not full LTI compliance.
+        </div>
+
+        <div class="btn-row">
+          <button class="secondary-btn" id="restartBtn">Restart</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const triggerPool = shuffle([
+      "Expensive",
+      "Brand",
+      "Durable",
+      "Nice design",
+      "Comfort",
+      "Trusted"
+    ]);
+
+    const scenarioBase = [
+      {
+        item: "a pair of new shoes 👟",
+        best: "Comfort",
+        explanation: "Good choice — comfort often becomes the most immediate quality signal for shoes because the item has to fit the user's daily needs.",
+        rationale: "Some people may also value brand or reviews, but for actual use, comfort strongly reflects fitness for use.",
+        options: ["Comfort", "Brand", "Reviews", "Price", "Recommendations"]
+      },
+      {
+        item: "a handbag 👜",
+        best: "Brand",
+        explanation: "Good choice — for a handbag, brand often influences how people judge quality because it signals style, trust, and perceived value.",
+        rationale: "That does not mean everyone must choose brand, but it is a common quality cue in this context.",
+        options: ["Brand", "Reliability", "Reviews", "Price", "Recommendations"]
+      },
+      {
+        item: "a sofa 🛋️",
+        best: "Comfort",
+        explanation: "Good choice — for a sofa, comfort is a core quality factor because the item is judged by how well it serves everyday use.",
+        rationale: "Some learners may mention durability or design, which is also reasonable and useful in discussion.",
+        options: ["Comfort", "Brand", "Durability", "Price", "Reviews"]
+      },
+      {
+        item: "a new car 🚗",
+        best: "Reliability",
+        explanation: "Good choice — reliability is critical for a car because long-term dependability strongly affects safety, trust, and value.",
+        rationale: "This is the clearest example that quality depends on the consequences of failure in real life.",
+        options: ["Reliability", "Brand", "Reviews", "Price", "Recommendations"]
+      }
+    ];
+
+    const screens = {
+      start: document.getElementById('screen-start'),
+      trigger: document.getElementById('screen-trigger'),
+      scenario: document.getElementById('screen-scenario'),
+      reflection: document.getElementById('screen-reflection'),
+      results: document.getElementById('screen-results')
+    };
+
+    const state = {
+      triggerAnswer: null,
+      triggerCustom: "",
+      scenarios: shuffle(scenarioBase).map(s => ({ ...s, options: shuffle([...s.options]) })),
+      currentScenarioIndex: 0,
+      answers: [],
+      reflection: ""
+    };
+
+    const TOTAL_STEPS = 1 + state.scenarios.length + 1 + 1;
+
+    const stepLabel = document.getElementById('stepLabel');
+    const progressBar = document.getElementById('progressBar');
+    const triggerOptions = document.getElementById('triggerOptions');
+    const triggerCustom = document.getElementById('triggerCustom');
+    const toScenarioBtn = document.getElementById('toScenarioBtn');
+    const scenarioItemLabel = document.getElementById('scenarioItemLabel');
+    const scenarioPrompt = document.getElementById('scenarioPrompt');
+    const factorOptions = document.getElementById('factorOptions');
+    const feedbackBox = document.getElementById('feedbackBox');
+    const nextScenarioBtn = document.getElementById('nextScenarioBtn');
+    const reflectionInput = document.getElementById('reflectionInput');
+    const finalScore = document.getElementById('finalScore');
+    const finalTriggerAnswer = document.getElementById('finalTriggerAnswer');
+    const finalTriggerCustom = document.getElementById('finalTriggerCustom');
+    const answerReview = document.getElementById('answerReview');
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      showScreen('trigger');
+      updateProgress(1);
+    });
+
+    document.querySelectorAll('[data-back="screen-start"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        showScreen('start');
+        updateProgress(0);
+      });
+    });
+
+    triggerCustom.addEventListener('input', () => {
+      state.triggerCustom = triggerCustom.value.trim();
+    });
+
+    toScenarioBtn.addEventListener('click', () => {
+      state.currentScenarioIndex = 0;
+      renderScenario();
+      showScreen('scenario');
+      updateProgress(2);
+    });
+
+    document.getElementById('scenarioBackBtn').addEventListener('click', () => {
+      if (state.currentScenarioIndex === 0) {
+        showScreen('trigger');
+        updateProgress(1);
+        return;
+      }
+
+      state.currentScenarioIndex -= 1;
+      renderScenario();
+      updateProgress(2 + state.currentScenarioIndex);
+    });
+
+    nextScenarioBtn.addEventListener('click', () => {
+      if (state.currentScenarioIndex < state.scenarios.length - 1) {
+        state.currentScenarioIndex += 1;
+        renderScenario();
+        updateProgress(2 + state.currentScenarioIndex);
+      } else {
+        reflectionInput.value = state.reflection;
+        showScreen('reflection');
+        updateProgress(2 + state.scenarios.length);
+      }
+    });
+
+    document.getElementById('reflectionBackBtn').addEventListener('click', () => {
+      state.currentScenarioIndex = state.scenarios.length - 1;
+      renderScenario();
+      showScreen('scenario');
+      updateProgress(2 + state.currentScenarioIndex);
+    });
+
+    document.getElementById('finishBtn').addEventListener('click', () => {
+      state.reflection = reflectionInput.value.trim();
+      renderResults();
+      showScreen('results');
+      updateProgress(TOTAL_STEPS);
+      sendResultHook();
+    });
+
+    document.getElementById('restartBtn').addEventListener('click', () => {
+      location.reload();
+    });
+
+    function renderTriggerOptions() {
+      triggerOptions.innerHTML = '';
+      triggerPool.forEach(option => {
+        const btn = document.createElement('button');
+        btn.className = 'chip';
+        btn.textContent = option;
+        btn.type = 'button';
+        btn.addEventListener('click', () => {
+          state.triggerAnswer = option;
+          [...triggerOptions.children].forEach(child => child.classList.remove('selected'));
+          btn.classList.add('selected');
+          toScenarioBtn.disabled = false;
+        });
+        triggerOptions.appendChild(btn);
+      });
+    }
+
+    function renderScenario() {
+      const scenario = state.scenarios[state.currentScenarioIndex];
+      const existing = state.answers[state.currentScenarioIndex];
+
+      scenarioItemLabel.textContent = scenario.item;
+      scenarioPrompt.textContent = 'Choose the factor that matters most to you. There is no single universal answer for all people, but some factors are especially strong in certain contexts.';
+      factorOptions.innerHTML = '';
+      feedbackBox.classList.remove('visible');
+      feedbackBox.innerHTML = '';
+      nextScenarioBtn.disabled = !existing;
+
+      scenario.options.forEach(option => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.type = 'button';
+        btn.textContent = option;
+
+        if (existing && existing.selected === option) {
+          btn.classList.add('selected');
+          if (existing.checked) {
+            if (option === scenario.best) btn.classList.add('correct');
+            else btn.classList.add('incorrect');
+          }
+        }
+
+        btn.addEventListener('click', () => {
+          state.answers[state.currentScenarioIndex] = {
+            item: scenario.item,
+            selected: option,
+            correct: option === scenario.best,
+            best: scenario.best,
+            checked: true,
+            explanation: scenario.explanation,
+            rationale: scenario.rationale
+          };
+
+          [...factorOptions.children].forEach(child => {
+            child.classList.remove('selected', 'correct', 'incorrect');
+            if (child.textContent === option) child.classList.add('selected');
+            if (child.textContent === scenario.best) child.classList.add('correct');
+            if (child.textContent === option && option !== scenario.best) child.classList.add('incorrect');
+          });
+
+          feedbackBox.innerHTML = `
+            <strong>${option === scenario.best ? scenario.explanation : 'That is a valid discussion point.'}</strong><br>
+            ${scenario.rationale}<br><br>
+            <strong>Instructor angle:</strong> This helps learners see that quality depends on context, not only personal preference.
+          `;
+          feedbackBox.classList.add('visible');
+          nextScenarioBtn.disabled = false;
+        });
+
+        factorOptions.appendChild(btn);
+      });
+
+      if (existing && existing.checked) {
+        feedbackBox.innerHTML = `
+          <strong>${existing.correct ? scenario.explanation : 'That is a valid discussion point.'}</strong><br>
+          ${scenario.rationale}<br><br>
+          <strong>Instructor angle:</strong> This helps learners see that quality depends on context, not only personal preference.
+        `;
+        feedbackBox.classList.add('visible');
+
+        [...factorOptions.children].forEach(child => {
+          if (child.textContent === scenario.best) child.classList.add('correct');
+          if (child.textContent === existing.selected && existing.selected !== scenario.best) child.classList.add('incorrect');
+        });
+      }
+    }
+
+    function renderResults() {
+      const score = state.answers.filter(a => a && a.correct).length;
+      finalScore.textContent = `${score} / ${state.scenarios.length}`;
+      finalTriggerAnswer.textContent = state.triggerAnswer || '—';
+      finalTriggerCustom.textContent = state.triggerCustom ? `Your note: ${state.triggerCustom}` : 'No extra note added.';
+
+      answerReview.innerHTML = '';
+      state.answers.forEach(answer => {
+        const card = document.createElement('div');
+        card.className = 'summary-card';
+        card.innerHTML = `
+          <div class="mini-title">${answer.item}</div>
+          <p><strong>You chose:</strong> ${answer.selected}</p>
+          <p><strong>Discussion anchor:</strong> ${answer.best}</p>
+          <p class="muted">${answer.correct ? 'Strong contextual choice.' : 'Useful discussion choice — different learners notice different quality signals.'}</p>
+        `;
+        answerReview.appendChild(card);
+      });
+
+      if (state.reflection) {
+        const card = document.createElement('div');
+        card.className = 'summary-card';
+        card.innerHTML = `
+          <div class="mini-title">Your reflection</div>
+          <p>${escapeHtml(state.reflection)}</p>
+        `;
+        answerReview.appendChild(card);
+      }
+    }
+
+    function showScreen(key) {
+      Object.values(screens).forEach(screen => screen.classList.remove('active'));
+      screens[key].classList.add('active');
+      stepLabel.textContent = labelForScreen(key);
+    }
+
+    function updateProgress(stepIndex) {
+      const pct = Math.max(0, Math.min(100, (stepIndex / TOTAL_STEPS) * 100));
+      progressBar.style.width = `${pct}%`;
+    }
+
+    function labelForScreen(key) {
+      switch (key) {
+        case 'start': return 'Welcome';
+        case 'trigger': return 'Step 1 · Quick Trigger';
+        case 'scenario': return `Step 2 · Scenario ${state.currentScenarioIndex + 1} of ${state.scenarios.length}`;
+        case 'reflection': return 'Step 3 · Reflection';
+        case 'results': return 'Wrap-Up';
+        default: return 'Interactive Quality Activity';
+      }
+    }
+
+    function shuffle(array) {
+      const clone = [...array];
+      for (let i = clone.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [clone[i], clone[j]] = [clone[j], clone[i]];
+      }
+      return clone;
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function sendResultHook() {
+      const score = state.answers.filter(a => a && a.correct).length;
+      const payload = {
+        type: 'QUALITY_ACTIVITY_RESULT',
+        score,
+        total: state.scenarios.length,
+        triggerAnswer: state.triggerAnswer,
+        reflection: state.reflection
+      };
+
+      // Hook for an LMS wrapper or parent window.
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage(payload, '*');
+      }
+
+      // Placeholder for a future LTI/xAPI/custom API sender.
+      if (window.reportActivityResult && typeof window.reportActivityResult === 'function') {
+        window.reportActivityResult(payload);
+      }
+    }
+
+    renderTriggerOptions();
+    updateProgress(0);
+  </script>
+</body>
+</html>
