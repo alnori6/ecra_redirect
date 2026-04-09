@@ -1,757 +1,882 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quality Interactive Activity</title>
+  <title>Quality Activity</title>
   <style>
     :root {
-      --bg: #f7f3ec;
-      --card: #ffffff;
-      --text: #1f2430;
-      --muted: #5d6572;
-      --primary: #dcbf8d;
-      --primary-dark: #b68f57;
-      --accent: #a9c2bd;
-      --accent-dark: #6e8d87;
-      --success-bg: #e8f5e9;
-      --success-border: #2e7d32;
-      --danger-bg: #ffebee;
-      --danger-border: #c62828;
-      --shadow: 0 12px 28px rgba(31, 36, 48, 0.08);
-      --radius: 22px;
+      --bg: #f7f4ef;
+      --surface: #ffffff;
+      --surface-soft: #f2efe8;
+      --text: #1d1d1f;
+      --muted: #666;
+      --primary: #214f7a;
+      --primary-soft: #e9f2fb;
+      --accent: #d8b783;
+      --border: #dfd8cc;
+      --success: #2e7d32;
+      --shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --transition: 260ms ease;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: linear-gradient(180deg, #fbfaf7 0%, var(--bg) 100%);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
     body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(180deg, #fbf8f3 0%, var(--bg) 100%);
-      color: var(--text);
+      padding: 24px;
     }
 
     .app {
-      min-height: 100vh;
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .shell {
-      width: 100%;
       max-width: 980px;
+      margin: 0 auto;
     }
 
     .topbar {
       display: flex;
       justify-content: space-between;
-      gap: 12px;
       align-items: center;
-      margin-bottom: 14px;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
       color: var(--muted);
       font-size: 14px;
+      font-weight: 600;
     }
 
-    .progress-wrap {
-      width: 100%;
-      height: 10px;
-      background: rgba(0,0,0,0.08);
+    .lang-switcher {
+      display: inline-flex;
+      background: var(--surface);
+      padding: 6px;
       border-radius: 999px;
-      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.04);
     }
 
-    .progress-bar {
-      height: 100%;
-      width: 0;
-      background: linear-gradient(90deg, var(--primary-dark), var(--primary));
-      transition: width 0.3s ease;
+    .lang-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition), transform var(--transition);
+    }
+
+    .lang-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .lang-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
     }
 
     .screen {
       display: none;
-      background: var(--card);
-      border-radius: var(--radius);
       padding: 28px;
-      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity var(--transition), transform var(--transition);
     }
 
-    .screen.active { display: block; }
+    .screen.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+      animation: fadeSlideIn 320ms ease;
+    }
+
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
     .hero {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 20px;
-      align-items: stretch;
-    }
-
-    .banner {
-      background: var(--primary);
-      border-radius: 24px;
-      padding: 18px 22px;
-      font-size: clamp(28px, 4vw, 54px);
-      font-weight: 800;
-      line-height: 1.1;
-      text-align: center;
+      background: linear-gradient(135deg, #f6efe1 0%, #fdf9f2 100%);
+      border-radius: var(--radius-xl);
+      padding: 30px;
+      border: 1px solid #eadfcf;
       margin-bottom: 18px;
     }
 
-    .stack, .panel {
-      background: #faf8f4;
-      border: 1px solid rgba(0,0,0,0.06);
-      border-radius: 22px;
-      padding: 18px;
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(33, 79, 122, 0.08);
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
     }
 
-    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3, p {
+      margin-top: 0;
+    }
 
-    .lead {
+    h1 {
+      font-size: clamp(28px, 5vw, 44px);
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+
+    h2 {
+      font-size: clamp(24px, 4vw, 34px);
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+
+    p.lead {
       font-size: 18px;
-      line-height: 1.6;
-      color: var(--muted);
+      line-height: 1.7;
+      color: #373737;
+      margin-bottom: 0;
     }
 
-    .pill-grid, .choice-grid, .items-grid {
+    .steps {
       display: grid;
-      gap: 12px;
-    }
-
-    .pill-grid {
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      margin-top: 16px;
-    }
-
-    .choice-grid {
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
       margin-top: 18px;
     }
 
-    .items-grid {
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      margin-top: 14px;
-    }
-
-    .chip, .option-btn, .item-btn {
-      width: 100%;
-      border: 0;
-      cursor: pointer;
-      border-radius: 18px;
+    .step-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
       padding: 16px;
-      font-size: 16px;
-      font-weight: 700;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
     }
 
-    .chip, .item-btn {
-      background: #d7e4e1;
-      color: var(--text);
+    .step-box strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--primary);
     }
 
-    .option-btn {
-      background: #f3efe7;
-      color: var(--text);
-      border: 2px solid transparent;
-    }
-
-    .chip:hover, .option-btn:hover, .item-btn:hover, .primary-btn:hover, .secondary-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
-    }
-
-    .chip.selected, .item-btn.selected, .option-btn.selected {
-      outline: 3px solid rgba(182, 143, 87, 0.28);
-      background: #ecd7ae;
-    }
-
-    .option-btn.correct {
-      background: var(--success-bg);
-      border-color: var(--success-border);
-    }
-
-    .option-btn.incorrect {
-      background: var(--danger-bg);
-      border-color: var(--danger-border);
-    }
-
-    .btn-row {
+    .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
       margin-top: 22px;
     }
 
-    .primary-btn, .secondary-btn {
-      border: 0;
-      cursor: pointer;
+    .btn {
+      border: none;
       border-radius: 14px;
-      padding: 14px 18px;
+      padding: 14px 20px;
       font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition), color var(--transition);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(33, 79, 122, 0.22);
+    }
+
+    .btn-secondary {
+      background: var(--surface-soft);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .question-wrap {
+      display: grid;
+      gap: 18px;
+    }
+
+    .prompt-box {
+      background: linear-gradient(180deg, #fbfaf8 0%, #f5f1ea 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+    }
+
+    .question-meta {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 8px;
       font-weight: 700;
     }
 
-    .primary-btn {
-      background: var(--primary-dark);
-      color: white;
-    }
-
-    .secondary-btn {
-      background: #ece7dd;
-      color: var(--text);
-    }
-
-    .primary-btn:disabled {
-      background: #b5b5b5;
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
-    }
-
-    .mini-title {
-      font-size: 14px;
+    .question-main {
+      font-size: clamp(24px, 4vw, 34px);
       font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--primary-dark);
-      margin-bottom: 10px;
+      line-height: 1.25;
+      margin: 0;
     }
 
-    .feedback {
-      display: none;
-      margin-top: 18px;
-      padding: 18px;
-      border-radius: 18px;
-      font-size: 16px;
-      line-height: 1.6;
-      background: #f7f2e8;
-      border-left: 6px solid var(--primary-dark);
+    .options-grid {
+      display: grid;
+      gap: 12px;
     }
 
-    .feedback.visible { display: block; }
-
-    textarea {
+    .option-btn {
       width: 100%;
-      min-height: 120px;
-      border: 1px solid rgba(0,0,0,0.12);
-      border-radius: 18px;
-      padding: 14px;
-      font: inherit;
-      resize: vertical;
-      margin-top: 16px;
+      text-align: start;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 18px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 700;
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition), background var(--transition);
+    }
+
+    .option-btn:hover {
+      transform: translateY(-2px);
+      border-color: #bfcddd;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.06);
+      background: #fcfdff;
+    }
+
+    .feedback-panel {
+      background: #f8fbf6;
+      border: 1px solid #d9ead7;
+      border-radius: var(--radius-lg);
+      padding: 18px;
+    }
+
+    .feedback-label {
+      color: var(--success);
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .feedback-text {
+      font-size: 20px;
+      line-height: 1.6;
+      margin-bottom: 0;
     }
 
     .summary-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 14px;
       margin-top: 18px;
     }
 
     .summary-card {
-      background: #faf8f4;
-      border: 1px solid rgba(0,0,0,0.06);
-      border-radius: 20px;
+      border-radius: var(--radius-lg);
+      background: #fcfaf6;
+      border: 1px solid var(--border);
       padding: 18px;
     }
 
-    .score {
-      font-size: clamp(34px, 6vw, 60px);
-      font-weight: 800;
-      margin: 12px 0;
-      color: var(--primary-dark);
+    .summary-card h3 {
+      margin-bottom: 8px;
+      color: var(--primary);
     }
 
-    .muted { color: var(--muted); }
+    .summary-card p,
+    .summary-card ul {
+      margin-bottom: 0;
+      color: #3a3a3a;
+      line-height: 1.7;
+    }
 
-    .twist {
+    .summary-card ul {
+      padding-inline-start: 18px;
+      margin-top: 10px;
+    }
+
+    .discussion-box {
       margin-top: 18px;
       padding: 18px;
-      background: #eff6ff;
-      border-radius: 18px;
-      border-left: 6px solid #3579f6;
+      border-radius: var(--radius-lg);
+      background: var(--primary-soft);
+      border: 1px solid #d6e6f6;
     }
 
-    .lti-note {
-      margin-top: 18px;
-      font-size: 14px;
+    .progress {
+      height: 10px;
+      border-radius: 999px;
+      background: #ece7dd;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--primary) 0%, #5f88af 100%);
+      border-radius: inherit;
+      transition: width 320ms ease;
+    }
+
+    .fade-note {
       color: var(--muted);
-      background: #fcfbf8;
-      border: 1px dashed rgba(0,0,0,0.12);
-      border-radius: 16px;
-      padding: 14px;
+      font-size: 15px;
+      line-height: 1.7;
     }
 
-    @media (max-width: 760px) {
-      .hero {
-        grid-template-columns: 1fr;
+    .rtl {
+      direction: rtl;
+      text-align: right;
+    }
+
+    .rtl .topbar {
+      flex-direction: row-reverse;
+    }
+
+    .rtl .actions {
+      flex-direction: row-reverse;
+    }
+
+    .rtl .option-btn {
+      text-align: right;
+    }
+
+    .rtl .summary-card ul {
+      padding-inline-start: 0;
+      padding-inline-end: 18px;
+    }
+
+    @media (max-width: 820px) {
+      body {
+        padding: 14px;
       }
 
       .screen {
-        padding: 18px;
+        padding: 20px;
       }
 
-      .topbar {
-        flex-direction: column;
-        align-items: stretch;
+      .steps,
+      .summary-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <div class="shell">
-      <div class="topbar">
-        <div id="stepLabel">Interactive Quality Activity</div>
-        <div class="progress-wrap" aria-label="Progress">
-          <div class="progress-bar" id="progressBar"></div>
-        </div>
+  <div class="app" id="appRoot">
+    <div class="topbar">
+      <div class="badge" id="activityBadge"></div>
+      <div class="lang-switcher" aria-label="Language switcher">
+        <button class="lang-btn active" id="langEn" type="button">EN</button>
+        <button class="lang-btn" id="langAr" type="button">العربية</button>
       </div>
+    </div>
 
-      <section class="screen active" id="screen-start">
-        <div class="banner">What do we mean by Quality?</div>
+    <div class="card">
+      <section class="screen active" id="screenStart">
         <div class="hero">
-          <div>
-            <div class="stack">
-              <div class="mini-title">Objective</div>
-              <p class="lead"><strong>Today we’re not defining quality theoretically — we’re experiencing how people judge quality differently.</strong></p>
-              <p class="lead">This short activity turns the topic into an interactive flow instead of a static slide.</p>
-            </div>
+          <div class="eyebrow" id="startEyebrow"></div>
+          <h1 id="startTitle"></h1>
+          <p class="lead" id="startIntro"></p>
+        </div>
 
-            <div class="stack" style="margin-top: 16px;">
-              <div class="mini-title">How this activity works</div>
-              <p>1. Quick trigger: what comes to your mind first when you hear <strong>quality</strong>?</p>
-              <p>2. Scenario-based voting: choose an item and decide what matters most.</p>
-              <p>3. Reflection: explain why you made your choice.</p>
-            </div>
+        <div class="steps">
+          <div class="step-box">
+            <strong id="step1Title"></strong>
+            <p id="step1Body"></p>
           </div>
-
-          <div class="panel">
-            <div class="mini-title">From the original slide</div>
-            <p><strong>Subjective perception</strong></p>
-            <p class="muted">“It’s perfect”<br>“I like that”<br>“It’s what I need”</p>
-            <hr>
-            <p><strong>Context matters</strong></p>
-            <p class="muted">Shoes · Handbag · Sofa · Car</p>
-            <hr>
-            <p><strong>How we judge quality</strong></p>
-            <p class="muted">Brand · Reliability · Reviews · Recommendations · Price</p>
+          <div class="step-box">
+            <strong id="step2Title"></strong>
+            <p id="step2Body"></p>
+          </div>
+          <div class="step-box">
+            <strong id="step3Title"></strong>
+            <p id="step3Body"></p>
           </div>
         </div>
 
-        <div class="btn-row">
-          <button class="primary-btn" id="startBtn">Start Activity</button>
+        <div class="actions">
+          <button class="btn btn-primary" id="startBtn" type="button"></button>
         </div>
       </section>
 
-      <section class="screen" id="screen-trigger">
-        <div class="mini-title">Step 1 · Quick Trigger</div>
-        <h2>When you hear <em>quality</em>, what is the first thing that comes to your mind?</h2>
-        <p class="lead">Choose the option that feels closest to your instinctive response.</p>
+      <section class="screen" id="screenTrigger">
+        <div class="question-wrap">
+          <div class="prompt-box">
+            <div class="question-meta" id="triggerMeta"></div>
+            <p class="question-main" id="triggerQuestion"></p>
+          </div>
 
-        <div class="pill-grid" id="triggerOptions"></div>
+          <div class="options-grid" id="triggerOptions"></div>
 
-        <textarea id="triggerCustom" placeholder="Optional: add your own word or short explanation..."></textarea>
-
-        <div class="btn-row">
-          <button class="secondary-btn" data-back="screen-start">Back</button>
-          <button class="primary-btn" id="toScenarioBtn" disabled>Continue</button>
+          <p class="fade-note" id="triggerNote"></p>
         </div>
       </section>
 
-      <section class="screen" id="screen-scenario">
-        <div class="mini-title">Step 2 · Scenario-Based Voting</div>
-        <h2>Imagine you want to buy <span id="scenarioItemLabel"></span></h2>
-        <p class="lead" id="scenarioPrompt"></p>
+      <section class="screen" id="screenScenario">
+        <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="question-wrap">
+          <div class="prompt-box">
+            <div class="question-meta" id="scenarioMeta"></div>
+            <p class="question-main" id="scenarioQuestion"></p>
+          </div>
 
-        <div class="panel">
-          <div class="mini-title">What matters most for this item?</div>
-          <div class="choice-grid" id="factorOptions"></div>
-          <div class="feedback" id="feedbackBox"></div>
-        </div>
-
-        <div class="btn-row">
-          <button class="secondary-btn" id="scenarioBackBtn">Back</button>
-          <button class="primary-btn" id="nextScenarioBtn" disabled>Next</button>
+          <div class="options-grid" id="scenarioOptions"></div>
         </div>
       </section>
 
-      <section class="screen" id="screen-reflection">
-        <div class="mini-title">Step 3 · Group Discussion / Reflection</div>
-        <h2>Why did you choose what you chose?</h2>
-        <p class="lead">This is the key learning moment. Different people judge quality differently based on needs, expectations, and context.</p>
-
-        <textarea id="reflectionInput" placeholder="Write one or two lines. For example: I chose reviews because I trust real customer experience more than the brand name."></textarea>
-
-        <div class="twist">
-          <strong>Fun twist:</strong> Would you buy a no-brand car with amazing reviews? Why or why not?
+      <section class="screen" id="screenFeedback">
+        <div class="feedback-panel">
+          <div class="feedback-label" id="feedbackLabel"></div>
+          <p class="feedback-text" id="feedbackText"></p>
         </div>
 
-        <div class="btn-row">
-          <button class="secondary-btn" id="reflectionBackBtn">Back</button>
-          <button class="primary-btn" id="finishBtn">Finish Activity</button>
+        <div class="discussion-box">
+          <strong id="discussionLabel"></strong>
+          <p id="discussionPrompt" style="margin:10px 0 0; line-height:1.7;"></p>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="nextBtn" type="button"></button>
         </div>
       </section>
 
-      <section class="screen" id="screen-results">
-        <div class="mini-title">Instructor Wrap-Up</div>
-        <h2>Quality is not the same for everyone.</h2>
-        <p class="lead">It depends on <strong>needs</strong>, <strong>expectations</strong>, and <strong>context</strong>.</p>
+      <section class="screen" id="screenWrapUp">
+        <div class="hero">
+          <div class="eyebrow" id="wrapEyebrow"></div>
+          <h2 id="wrapTitle"></h2>
+          <p class="lead" id="wrapIntro"></p>
+        </div>
 
         <div class="summary-grid">
           <div class="summary-card">
-            <div class="mini-title">Final definition</div>
-            <p><strong>Quality = Fitness for use</strong></p>
-            <p class="muted">What the customer actually needs.</p>
+            <h3 id="summary1Title"></h3>
+            <p id="summary1Body"></p>
           </div>
-
           <div class="summary-card">
-            <div class="mini-title">Your score</div>
-            <div class="score" id="finalScore">0 / 0</div>
-            <p class="muted">This score is just a discussion starter, not a rigid judgment.</p>
+            <h3 id="summary2Title"></h3>
+            <ul id="summary2List"></ul>
           </div>
-
           <div class="summary-card">
-            <div class="mini-title">Your first thought</div>
-            <p id="finalTriggerAnswer">—</p>
-            <p class="muted" id="finalTriggerCustom"></p>
+            <h3 id="summary3Title"></h3>
+            <p id="summary3Body"></p>
           </div>
         </div>
 
-        <div class="summary-grid" id="answerReview"></div>
-
-        <div class="lti-note">
-          This file is a strong classroom prototype. To send authenticated grades or completion back to an LMS, it still needs a proper LTI wrapper or service on top of this page. A lightweight integration hook is included in the code through <code>postMessage</code> and a placeholder function, but that alone is not full LTI compliance.
+        <div class="discussion-box">
+          <strong id="twistTitle"></strong>
+          <p id="twistBody" style="margin:10px 0 0; line-height:1.7;"></p>
         </div>
 
-        <div class="btn-row">
-          <button class="secondary-btn" id="restartBtn">Restart</button>
+        <div class="actions">
+          <button class="btn btn-secondary" id="restartBtn" type="button"></button>
         </div>
       </section>
     </div>
   </div>
 
   <script>
-    const triggerPool = shuffle([
-      "Expensive",
-      "Brand",
-      "Durable",
-      "Nice design",
-      "Comfort",
-      "Trusted"
-    ]);
-
-    const scenarioBase = [
-      {
-        item: "a pair of new shoes 👟",
-        best: "Comfort",
-        explanation: "Good choice — comfort often becomes the most immediate quality signal for shoes because the item has to fit the user's daily needs.",
-        rationale: "Some people may also value brand or reviews, but for actual use, comfort strongly reflects fitness for use.",
-        options: ["Comfort", "Brand", "Reviews", "Price", "Recommendations"]
+    const content = {
+      en: {
+        htmlLang: 'en',
+        dir: 'ltr',
+        activityBadge: 'Interactive classroom activity',
+        startEyebrow: 'Understanding quality through experience',
+        startTitle: 'What do we mean by quality?',
+        startIntro: 'Today we are not defining quality theoretically. We are experiencing how people judge quality differently based on needs, expectations, and context.',
+        steps: [
+          {
+            title: 'Step 1: Quick trigger',
+            body: 'Start with a simple reaction question to surface personal perceptions of quality.'
+          },
+          {
+            title: 'Step 2: Real-life choices',
+            body: 'Participants choose what matters most when buying everyday items.'
+          },
+          {
+            title: 'Step 3: Reflection',
+            body: 'Use the results to discuss why different people define quality differently.'
+          }
+        ],
+        startBtn: 'Start activity',
+        triggerMeta: 'Quick trigger',
+        triggerQuestion: 'When you hear the word “quality”, what comes to your mind first?',
+        triggerOptions: [
+          'It is perfect',
+          'It is exactly what I need',
+          'It feels reliable',
+          'It looks premium'
+        ],
+        triggerNote: 'There is no single correct answer here. This question is meant to show how quality can feel personal before it becomes measurable.',
+        scenarioMeta: 'Scenario-based choice',
+        scenarioQuestionPrefix: 'Imagine you want to buy',
+        scenarioQuestionSuffix: '. What matters most?',
+        feedbackLabel: 'Discussion insight',
+        discussionLabel: 'Ask the group',
+        discussionPrompt: 'Why did you choose this factor? What would make someone else choose a different one?',
+        nextBtn: 'Continue',
+        wrapEyebrow: 'Instructor wrap-up',
+        wrapTitle: 'Quality is not the same for everyone',
+        wrapIntro: 'Quality depends on needs, expectations, and context. A person may value brand, reliability, comfort, reviews, or price differently depending on the situation.',
+        summary1Title: 'Subjective perception',
+        summary1Body: 'People often describe quality with phrases like “I like that,” “it feels right,” or “it is perfect.”',
+        summary2Title: 'How we judge quality',
+        summary2Items: ['Brand', 'Reliability', 'Reviews', 'Recommendations', 'Price', 'Comfort'],
+        summary3Title: 'Simple definition',
+        summary3Body: 'Quality = fitness for use. In other words, the product or service is good when it meets the customer’s actual need.',
+        twistTitle: 'Fun discussion twist',
+        twistBody: 'Would you buy a no-brand car if it had amazing reviews and strong reliability records? Why or why not?',
+        restartBtn: 'Restart activity',
+        scenarios: [
+          {
+            item: 'a mobile phone 📱',
+            factors: ['Reliability', 'Price', 'Reviews', 'Brand'],
+            feedback: 'For a mobile phone, people often balance reliability, price, and reviews depending on how they plan to use it.'
+          },
+          {
+            item: 'a laptop 💻',
+            factors: ['Reliability', 'Performance', 'Reviews', 'Price'],
+            feedback: 'For a laptop, some focus on performance and reliability, while others prioritize price or feedback from other users.'
+          },
+          {
+            item: 'a chair for work 🪑',
+            factors: ['Comfort', 'Durability', 'Price', 'Reviews'],
+            feedback: 'For a work chair, comfort and durability usually matter most because it is used for long periods.'
+          },
+          {
+            item: 'a service (like delivery or cleaning) 🚚',
+            factors: ['Trust', 'Recommendations', 'Reviews', 'Price'],
+            feedback: 'For a service, trust and recommendations often shape the perception of quality more than brand alone.'
+          }
+        ]
       },
-      {
-        item: "a handbag 👜",
-        best: "Brand",
-        explanation: "Good choice — for a handbag, brand often influences how people judge quality because it signals style, trust, and perceived value.",
-        rationale: "That does not mean everyone must choose brand, but it is a common quality cue in this context.",
-        options: ["Brand", "Reliability", "Reviews", "Price", "Recommendations"]
-      },
-      {
-        item: "a sofa 🛋️",
-        best: "Comfort",
-        explanation: "Good choice — for a sofa, comfort is a core quality factor because the item is judged by how well it serves everyday use.",
-        rationale: "Some learners may mention durability or design, which is also reasonable and useful in discussion.",
-        options: ["Comfort", "Brand", "Durability", "Price", "Reviews"]
-      },
-      {
-        item: "a new car 🚗",
-        best: "Reliability",
-        explanation: "Good choice — reliability is critical for a car because long-term dependability strongly affects safety, trust, and value.",
-        rationale: "This is the clearest example that quality depends on the consequences of failure in real life.",
-        options: ["Reliability", "Brand", "Reviews", "Price", "Recommendations"]
+      ar: {
+        htmlLang: 'ar',
+        dir: 'rtl',
+        activityBadge: 'نشاط تفاعلي داخل الصف',
+        startEyebrow: 'فهم الجودة من خلال التجربة',
+        startTitle: 'ماذا نقصد بالجودة؟',
+        startIntro: 'اليوم لن نعرّف الجودة بشكل نظري فقط، بل سنختبر كيف يقيّم الناس الجودة بشكل مختلف حسب الحاجة والتوقع والسياق.',
+        steps: [
+          {
+            title: 'الخطوة 1: سؤال تمهيدي',
+            body: 'نبدأ بسؤال سريع يكشف التصورات الشخصية الأولى عن الجودة.'
+          },
+          {
+            title: 'الخطوة 2: اختيارات من الواقع',
+            body: 'يختار المشاركون ما العامل الأهم عند شراء منتجات من الحياة اليومية.'
+          },
+          {
+            title: 'الخطوة 3: النقاش',
+            body: 'نستخدم النتائج لفهم لماذا يختلف الناس في تعريف الجودة.'
+          }
+        ],
+        startBtn: 'ابدأ النشاط',
+        triggerMeta: 'سؤال تمهيدي',
+        triggerQuestion: 'عندما تسمع كلمة «الجودة»، ما أول شيء يخطر في بالك؟',
+        triggerOptions: [
+          'إنه شيء مثالي',
+          'إنه ما أحتاجه تمامًا',
+          'يبدو موثوقًا',
+          'يبدو فخمًا'
+        ],
+        triggerNote: 'لا توجد إجابة واحدة صحيحة هنا. الهدف من هذا السؤال هو إظهار أن الجودة قد تبدأ كتجربة شخصية قبل أن تصبح شيئًا يمكن قياسه.',
+        scenarioMeta: 'اختيار مبني على موقف',
+        scenarioQuestionPrefix: 'تخيّل أنك تريد شراء',
+        scenarioQuestionSuffix: '. ما العامل الأهم بالنسبة لك؟',
+        feedbackLabel: 'فكرة للنقاش',
+        discussionLabel: 'اسأل المجموعة',
+        discussionPrompt: 'لماذا اخترت هذا العامل؟ وما الذي قد يجعل شخصًا آخر يختار عاملًا مختلفًا؟',
+        nextBtn: 'التالي',
+        wrapEyebrow: 'الخلاصة',
+        wrapTitle: 'الجودة ليست الشيء نفسه عند الجميع',
+        wrapIntro: 'الجودة تعتمد على الحاجة والتوقع والسياق. قد يرى شخص أن العلامة التجارية هي الأهم، بينما يركز آخر على الاعتمادية أو الراحة أو التقييمات أو السعر.',
+        summary1Title: 'الإدراك الشخصي',
+        summary1Body: 'غالبًا ما يصف الناس الجودة بعبارات مثل: «أعجبني»، «هذا مناسب لي»، أو «هذا ممتاز».',
+        summary2Title: 'كيف نحكم على الجودة',
+        summary2Items: ['العلامة التجارية', 'الاعتمادية', 'التقييمات', 'التوصيات', 'السعر', 'الراحة'],
+        summary3Title: 'تعريف بسيط',
+        summary3Body: 'الجودة = ملاءمة الاستخدام. أي أن المنتج أو الخدمة تكون جيدة عندما تلبي حاجة العميل الفعلية.',
+        twistTitle: 'سؤال ممتع للنقاش',
+        twistBody: 'هل ستشتري سيارة بدون علامة تجارية معروفة إذا كانت تقييماتها ممتازة وسجل اعتماديّتها قوي جدًا؟ ولماذا؟',
+        restartBtn: 'إعادة النشاط',
+        scenarios: [
+          {
+            item: 'هاتف جوال 📱',
+            factors: ['الاعتمادية', 'السعر', 'التقييمات', 'العلامة التجارية'],
+            feedback: 'في الهاتف الجوال، يوازن الناس غالبًا بين الاعتمادية والسعر والتقييمات حسب طريقة الاستخدام.'
+          },
+          {
+            item: 'جهاز لابتوب 💻',
+            factors: ['الاعتمادية', 'الأداء', 'التقييمات', 'السعر'],
+            feedback: 'في اللابتوب، قد يركز البعض على الأداء والاعتمادية، بينما يهتم آخرون بالسعر أو آراء المستخدمين.'
+          },
+          {
+            item: 'كرسي للعمل 🪑',
+            factors: ['الراحة', 'المتانة', 'السعر', 'التقييمات'],
+            feedback: 'في كرسي العمل، تصبح الراحة والمتانة من أهم عوامل الجودة لأنه يُستخدم لفترات طويلة.'
+          },
+          {
+            item: 'خدمة (مثل التوصيل أو التنظيف) 🚚',
+            factors: ['الثقة', 'التوصيات', 'التقييمات', 'السعر'],
+            feedback: 'في الخدمات، تلعب الثقة والتوصيات دورًا كبيرًا في الحكم على الجودة أكثر من العلامة التجارية.'
+          }
+        ]
       }
-    ];
+    };
+
+    let state = {
+      lang: 'en',
+      scenarioIndex: 0,
+      scenarios: [],
+      lastChoice: null,
+      completionPosted: false
+    };
 
     const screens = {
-      start: document.getElementById('screen-start'),
-      trigger: document.getElementById('screen-trigger'),
-      scenario: document.getElementById('screen-scenario'),
-      reflection: document.getElementById('screen-reflection'),
-      results: document.getElementById('screen-results')
+      start: document.getElementById('screenStart'),
+      trigger: document.getElementById('screenTrigger'),
+      scenario: document.getElementById('screenScenario'),
+      feedback: document.getElementById('screenFeedback'),
+      wrapUp: document.getElementById('screenWrapUp')
     };
 
-    const state = {
-      triggerAnswer: null,
-      triggerCustom: "",
-      scenarios: shuffle(scenarioBase).map(s => ({ ...s, options: shuffle([...s.options]) })),
-      currentScenarioIndex: 0,
-      answers: [],
-      reflection: ""
-    };
+    function shuffleArray(input) {
+      const array = [...input];
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
 
-    const TOTAL_STEPS = 1 + state.scenarios.length + 1 + 1;
+    function setLanguage(lang) {
+      state.lang = lang;
+      const locale = content[lang];
+      document.documentElement.lang = locale.htmlLang;
+      document.documentElement.dir = locale.dir;
+      document.getElementById('appRoot').classList.toggle('rtl', locale.dir === 'rtl');
+      document.getElementById('langEn').classList.toggle('active', lang === 'en');
+      document.getElementById('langAr').classList.toggle('active', lang === 'ar');
+      renderStaticText();
+      renderCurrentScreen();
+    }
 
-    const stepLabel = document.getElementById('stepLabel');
-    const progressBar = document.getElementById('progressBar');
-    const triggerOptions = document.getElementById('triggerOptions');
-    const triggerCustom = document.getElementById('triggerCustom');
-    const toScenarioBtn = document.getElementById('toScenarioBtn');
-    const scenarioItemLabel = document.getElementById('scenarioItemLabel');
-    const scenarioPrompt = document.getElementById('scenarioPrompt');
-    const factorOptions = document.getElementById('factorOptions');
-    const feedbackBox = document.getElementById('feedbackBox');
-    const nextScenarioBtn = document.getElementById('nextScenarioBtn');
-    const reflectionInput = document.getElementById('reflectionInput');
-    const finalScore = document.getElementById('finalScore');
-    const finalTriggerAnswer = document.getElementById('finalTriggerAnswer');
-    const finalTriggerCustom = document.getElementById('finalTriggerCustom');
-    const answerReview = document.getElementById('answerReview');
+    function renderStaticText() {
+      const locale = content[state.lang];
+      document.getElementById('activityBadge').textContent = locale.activityBadge;
+      document.getElementById('startEyebrow').textContent = locale.startEyebrow;
+      document.getElementById('startTitle').textContent = locale.startTitle;
+      document.getElementById('startIntro').textContent = locale.startIntro;
+      document.getElementById('step1Title').textContent = locale.steps[0].title;
+      document.getElementById('step1Body').textContent = locale.steps[0].body;
+      document.getElementById('step2Title').textContent = locale.steps[1].title;
+      document.getElementById('step2Body').textContent = locale.steps[1].body;
+      document.getElementById('step3Title').textContent = locale.steps[2].title;
+      document.getElementById('step3Body').textContent = locale.steps[2].body;
+      document.getElementById('startBtn').textContent = locale.startBtn;
+      document.getElementById('feedbackLabel').textContent = locale.feedbackLabel;
+      document.getElementById('discussionLabel').textContent = locale.discussionLabel;
+      document.getElementById('discussionPrompt').textContent = locale.discussionPrompt;
+      document.getElementById('nextBtn').textContent = locale.nextBtn;
+      document.getElementById('wrapEyebrow').textContent = locale.wrapEyebrow;
+      document.getElementById('wrapTitle').textContent = locale.wrapTitle;
+      document.getElementById('wrapIntro').textContent = locale.wrapIntro;
+      document.getElementById('summary1Title').textContent = locale.summary1Title;
+      document.getElementById('summary1Body').textContent = locale.summary1Body;
+      document.getElementById('summary2Title').textContent = locale.summary2Title;
+      document.getElementById('summary3Title').textContent = locale.summary3Title;
+      document.getElementById('summary3Body').textContent = locale.summary3Body;
+      document.getElementById('twistTitle').textContent = locale.twistTitle;
+      document.getElementById('twistBody').textContent = locale.twistBody;
+      document.getElementById('restartBtn').textContent = locale.restartBtn;
 
-    document.getElementById('startBtn').addEventListener('click', () => {
-      showScreen('trigger');
-      updateProgress(1);
-    });
-
-    document.querySelectorAll('[data-back="screen-start"]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        showScreen('start');
-        updateProgress(0);
+      const list = document.getElementById('summary2List');
+      list.innerHTML = '';
+      locale.summary2Items.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        list.appendChild(li);
       });
-    });
+    }
 
-    triggerCustom.addEventListener('input', () => {
-      state.triggerCustom = triggerCustom.value.trim();
-    });
+    function showScreen(screenKey) {
+      Object.values(screens).forEach(screen => screen.classList.remove('active'));
+      screens[screenKey].classList.add('active');
+      state.currentScreen = screenKey;
+    }
 
-    toScenarioBtn.addEventListener('click', () => {
-      state.currentScenarioIndex = 0;
-      renderScenario();
-      showScreen('scenario');
-      updateProgress(2);
-    });
+    function startActivity() {
+      state.completionPosted = false;
+      state.scenarioIndex = 0;
+      state.lastChoice = null;
+      state.scenarios = shuffleArray(content[state.lang].scenarios).map(scenario => ({
+        ...scenario,
+        factors: shuffleArray(scenario.factors)
+      }));
+      renderTrigger();
+      showScreen('trigger');
+    }
 
-    document.getElementById('scenarioBackBtn').addEventListener('click', () => {
-      if (state.currentScenarioIndex === 0) {
-        showScreen('trigger');
-        updateProgress(1);
-        return;
-      }
+    function renderTrigger() {
+      const locale = content[state.lang];
+      document.getElementById('triggerMeta').textContent = locale.triggerMeta;
+      document.getElementById('triggerQuestion').textContent = locale.triggerQuestion;
+      document.getElementById('triggerNote').textContent = locale.triggerNote;
 
-      state.currentScenarioIndex -= 1;
-      renderScenario();
-      updateProgress(2 + state.currentScenarioIndex);
-    });
+      const container = document.getElementById('triggerOptions');
+      container.innerHTML = '';
 
-    nextScenarioBtn.addEventListener('click', () => {
-      if (state.currentScenarioIndex < state.scenarios.length - 1) {
-        state.currentScenarioIndex += 1;
-        renderScenario();
-        updateProgress(2 + state.currentScenarioIndex);
-      } else {
-        reflectionInput.value = state.reflection;
-        showScreen('reflection');
-        updateProgress(2 + state.scenarios.length);
-      }
-    });
-
-    document.getElementById('reflectionBackBtn').addEventListener('click', () => {
-      state.currentScenarioIndex = state.scenarios.length - 1;
-      renderScenario();
-      showScreen('scenario');
-      updateProgress(2 + state.currentScenarioIndex);
-    });
-
-    document.getElementById('finishBtn').addEventListener('click', () => {
-      state.reflection = reflectionInput.value.trim();
-      renderResults();
-      showScreen('results');
-      updateProgress(TOTAL_STEPS);
-      sendResultHook();
-    });
-
-    document.getElementById('restartBtn').addEventListener('click', () => {
-      location.reload();
-    });
-
-    function renderTriggerOptions() {
-      triggerOptions.innerHTML = '';
-      triggerPool.forEach(option => {
-        const btn = document.createElement('button');
-        btn.className = 'chip';
-        btn.textContent = option;
-        btn.type = 'button';
-        btn.addEventListener('click', () => {
-          state.triggerAnswer = option;
-          [...triggerOptions.children].forEach(child => child.classList.remove('selected'));
-          btn.classList.add('selected');
-          toScenarioBtn.disabled = false;
+      shuffleArray(locale.triggerOptions).forEach(optionText => {
+        const button = document.createElement('button');
+        button.className = 'option-btn';
+        button.type = 'button';
+        button.textContent = optionText;
+        button.addEventListener('click', () => {
+          renderScenario();
+          showScreen('scenario');
         });
-        triggerOptions.appendChild(btn);
+        container.appendChild(button);
       });
     }
 
     function renderScenario() {
-      const scenario = state.scenarios[state.currentScenarioIndex];
-      const existing = state.answers[state.currentScenarioIndex];
+      const locale = content[state.lang];
+      const current = state.scenarios[state.scenarioIndex];
+      const progress = ((state.scenarioIndex) / state.scenarios.length) * 100;
+      document.getElementById('progressBar').style.width = `${progress}%`;
+      document.getElementById('scenarioMeta').textContent = `${locale.scenarioMeta} ${state.scenarioIndex + 1}/${state.scenarios.length}`;
+      document.getElementById('scenarioQuestion').textContent = `${locale.scenarioQuestionPrefix} ${current.item}${locale.scenarioQuestionSuffix}`;
 
-      scenarioItemLabel.textContent = scenario.item;
-      scenarioPrompt.textContent = 'Choose the factor that matters most to you. There is no single universal answer for all people, but some factors are especially strong in certain contexts.';
-      factorOptions.innerHTML = '';
-      feedbackBox.classList.remove('visible');
-      feedbackBox.innerHTML = '';
-      nextScenarioBtn.disabled = !existing;
+      const container = document.getElementById('scenarioOptions');
+      container.innerHTML = '';
 
-      scenario.options.forEach(option => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.type = 'button';
-        btn.textContent = option;
-
-        if (existing && existing.selected === option) {
-          btn.classList.add('selected');
-          if (existing.checked) {
-            if (option === scenario.best) btn.classList.add('correct');
-            else btn.classList.add('incorrect');
-          }
-        }
-
-        btn.addEventListener('click', () => {
-          state.answers[state.currentScenarioIndex] = {
-            item: scenario.item,
-            selected: option,
-            correct: option === scenario.best,
-            best: scenario.best,
-            checked: true,
-            explanation: scenario.explanation,
-            rationale: scenario.rationale
-          };
-
-          [...factorOptions.children].forEach(child => {
-            child.classList.remove('selected', 'correct', 'incorrect');
-            if (child.textContent === option) child.classList.add('selected');
-            if (child.textContent === scenario.best) child.classList.add('correct');
-            if (child.textContent === option && option !== scenario.best) child.classList.add('incorrect');
-          });
-
-          feedbackBox.innerHTML = `
-            <strong>${option === scenario.best ? scenario.explanation : 'That is a valid discussion point.'}</strong><br>
-            ${scenario.rationale}<br><br>
-            <strong>Instructor angle:</strong> This helps learners see that quality depends on context, not only personal preference.
-          `;
-          feedbackBox.classList.add('visible');
-          nextScenarioBtn.disabled = false;
+      current.factors.forEach(factor => {
+        const button = document.createElement('button');
+        button.className = 'option-btn';
+        button.type = 'button';
+        button.textContent = factor;
+        button.addEventListener('click', () => {
+          state.lastChoice = factor;
+          renderFeedback();
+          showScreen('feedback');
         });
-
-        factorOptions.appendChild(btn);
+        container.appendChild(button);
       });
+    }
 
-      if (existing && existing.checked) {
-        feedbackBox.innerHTML = `
-          <strong>${existing.correct ? scenario.explanation : 'That is a valid discussion point.'}</strong><br>
-          ${scenario.rationale}<br><br>
-          <strong>Instructor angle:</strong> This helps learners see that quality depends on context, not only personal preference.
-        `;
-        feedbackBox.classList.add('visible');
+    function renderFeedback() {
+      const current = state.scenarios[state.scenarioIndex];
+      document.getElementById('feedbackText').textContent = current.feedback;
+    }
 
-        [...factorOptions.children].forEach(child => {
-          if (child.textContent === scenario.best) child.classList.add('correct');
-          if (child.textContent === existing.selected && existing.selected !== scenario.best) child.classList.add('incorrect');
-        });
+    function nextStep() {
+      state.scenarioIndex += 1;
+      if (state.scenarioIndex >= state.scenarios.length) {
+        document.getElementById('progressBar').style.width = '100%';
+        renderWrapUp();
+        showScreen('wrapUp');
+        postCompletion();
+        return;
       }
+      renderScenario();
+      showScreen('scenario');
     }
 
-    function renderResults() {
-      const score = state.answers.filter(a => a && a.correct).length;
-      finalScore.textContent = `${score} / ${state.scenarios.length}`;
-      finalTriggerAnswer.textContent = state.triggerAnswer || '—';
-      finalTriggerCustom.textContent = state.triggerCustom ? `Your note: ${state.triggerCustom}` : 'No extra note added.';
+    function renderWrapUp() {
+      // Static text already rendered.
+    }
 
-      answerReview.innerHTML = '';
-      state.answers.forEach(answer => {
-        const card = document.createElement('div');
-        card.className = 'summary-card';
-        card.innerHTML = `
-          <div class="mini-title">${answer.item}</div>
-          <p><strong>You chose:</strong> ${answer.selected}</p>
-          <p><strong>Discussion anchor:</strong> ${answer.best}</p>
-          <p class="muted">${answer.correct ? 'Strong contextual choice.' : 'Useful discussion choice — different learners notice different quality signals.'}</p>
-        `;
-        answerReview.appendChild(card);
-      });
+    function restartActivity() {
+      startActivity();
+    }
 
-      if (state.reflection) {
-        const card = document.createElement('div');
-        card.className = 'summary-card';
-        card.innerHTML = `
-          <div class="mini-title">Your reflection</div>
-          <p>${escapeHtml(state.reflection)}</p>
-        `;
-        answerReview.appendChild(card);
+    function renderCurrentScreen() {
+      if (!state.currentScreen || state.currentScreen === 'start') {
+        showScreen('start');
+        return;
       }
-    }
 
-    function showScreen(key) {
-      Object.values(screens).forEach(screen => screen.classList.remove('active'));
-      screens[key].classList.add('active');
-      stepLabel.textContent = labelForScreen(key);
-    }
-
-    function updateProgress(stepIndex) {
-      const pct = Math.max(0, Math.min(100, (stepIndex / TOTAL_STEPS) * 100));
-      progressBar.style.width = `${pct}%`;
-    }
-
-    function labelForScreen(key) {
-      switch (key) {
-        case 'start': return 'Welcome';
-        case 'trigger': return 'Step 1 · Quick Trigger';
-        case 'scenario': return `Step 2 · Scenario ${state.currentScenarioIndex + 1} of ${state.scenarios.length}`;
-        case 'reflection': return 'Step 3 · Reflection';
-        case 'results': return 'Wrap-Up';
-        default: return 'Interactive Quality Activity';
+      if (state.currentScreen === 'trigger') {
+        renderTrigger();
+      } else if (state.currentScreen === 'scenario') {
+        renderScenario();
+      } else if (state.currentScreen === 'feedback') {
+        renderFeedback();
+      } else if (state.currentScreen === 'wrapUp') {
+        renderWrapUp();
       }
+
+      showScreen(state.currentScreen);
     }
 
-    function shuffle(array) {
-      const clone = [...array];
-      for (let i = clone.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [clone[i], clone[j]] = [clone[j], clone[i]];
-      }
-      return clone;
-    }
+    function postCompletion() {
+      if (state.completionPosted) return;
+      state.completionPosted = true;
 
-    function escapeHtml(str) {
-      return str
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
-    }
-
-    function sendResultHook() {
-      const score = state.answers.filter(a => a && a.correct).length;
-      const payload = {
-        type: 'QUALITY_ACTIVITY_RESULT',
-        score,
-        total: state.scenarios.length,
-        triggerAnswer: state.triggerAnswer,
-        reflection: state.reflection
+      const completionPayload = {
+        type: 'quality-activity-complete',
+        status: 'completed',
+        activity: 'quality-activity',
+        lang: state.lang,
+        completedAt: new Date().toISOString()
       };
 
-      // Hook for an LMS wrapper or parent window.
       if (window.parent && window.parent !== window) {
-        window.parent.postMessage(payload, '*');
+        window.parent.postMessage(completionPayload, '*');
       }
 
-      // Placeholder for a future LTI/xAPI/custom API sender.
-      if (window.reportActivityResult && typeof window.reportActivityResult === 'function') {
-        window.reportActivityResult(payload);
+      if (window.console) {
+        console.log('Activity completion payload:', completionPayload);
       }
     }
 
-    renderTriggerOptions();
-    updateProgress(0);
+    document.getElementById('langEn').addEventListener('click', () => setLanguage('en'));
+    document.getElementById('langAr').addEventListener('click', () => setLanguage('ar'));
+    document.getElementById('startBtn').addEventListener('click', startActivity);
+    document.getElementById('nextBtn').addEventListener('click', nextStep);
+    document.getElementById('restartBtn').addEventListener('click', restartActivity);
+
+    renderStaticText();
+    showScreen('start');
   </script>
 </body>
 </html>
