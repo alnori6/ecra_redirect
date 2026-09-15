@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Activity 2 - Quality Reflection</title>
+<style>
+body{font-family:Arial;margin:0;background:#f6f4ef;padding:20px}
+.container{max-width:900px;margin:auto}
+.screen{display:none}
+.active{display:block}
+h1{text-align:center}
+.card{background:white;padding:20px;border-radius:16px;box-shadow:0 6px 20px rgba(0,0,0,0.08)}
+.option{padding:12px;margin:10px 0;background:#eee;border-radius:10px;cursor:pointer}
+button{padding:12px 18px;margin-top:20px;border:none;border-radius:10px;background:#1f5f8b;color:white;cursor:pointer}
+.rtl{direction:rtl;text-align:right}
+</style>
+</head>
+<body>
+<div class="container" id="app">
+
+<div id="start" class="screen active card">
+<h1 id="title"></h1>
+<p id="intro"></p>
+<button onclick="nextScreen('role')" id="startBtn"></button>
+</div>
+
+<div id="role" class="screen card">
+<h2 id="roleQ"></h2>
+<div id="roleOptions"></div>
+</div>
+
+<div id="scenario" class="screen card">
+<h2 id="scenarioQ"></h2>
+<div id="scenarioOptions"></div>
+</div>
+
+<div id="reflection" class="screen card">
+<h2 id="reflectionText"></h2>
+<button onclick="nextScenario()" id="nextBtn"></button>
+</div>
+
+<div id="final" class="screen card">
+<h2 id="finalTitle"></h2>
+<p id="finalText"></p>
+</div>
+
+</div>
+
+<script>
+let lang='en'
+let step=0
+
+const content={
+en:{
+ title:"Activity: How Do I Improve Quality?",
+ intro:"Think about your role and how you contribute to quality.",
+ start:"Start",
+ roleQ:"In your role, what do you focus on most?",
+ roles:["Teaching","Safety","Communication","Development"],
+ scenarioQ:"What would you prioritize in this situation?",
+ scenarios:[
+ "Supporting children's learning",
+ "Ensuring safety and wellbeing",
+ "Communicating with parents",
+ "Improving staff performance"
+ ],
+ options:["Consistency","Care","Trust","Improvement"],
+ reflection:"There is no single answer. Your choice reflects your understanding of quality.",
+ next:"Next",
+ finalTitle:"Key Idea",
+ finalText:"Quality depends on your role, your priorities, and the needs of children."
+},
+ar:{
+ title:"نشاط: كيف أحسّن الجودة؟",
+ intro:"فكّر في دورك وكيف تساهم في تحقيق الجودة.",
+ start:"ابدأ",
+ roleQ:"في دورك، ما الذي تركز عليه أكثر؟",
+ roles:["التعليم","السلامة","التواصل","التطوير"],
+ scenarioQ:"ما الذي ستعطيه الأولوية في هذا الموقف؟",
+ scenarios:[
+ "دعم تعلم الأطفال",
+ "ضمان السلامة والرفاهية",
+ "التواصل مع أولياء الأمور",
+ "تطوير أداء الموظفين"
+ ],
+ options:["الاستمرارية","الرعاية","الثقة","التحسين"],
+ reflection:"لا توجد إجابة واحدة صحيحة. اختيارك يعكس فهمك للجودة.",
+ next:"التالي",
+ finalTitle:"الفكرة الأساسية",
+ finalText:"تعتمد الجودة على دورك وأولوياتك واحتياجات الأطفال."
+}
+}
+
+function setLang(l){
+ lang=l
+ document.getElementById('app').classList.toggle('rtl',l==='ar')
+ renderStart()
+}
+
+function renderStart(){
+ const c=content[lang]
+ document.getElementById('title').innerText=c.title
+ document.getElementById('intro').innerText=c.intro
+ document.getElementById('startBtn').innerText=c.start
+}
+
+function nextScreen(id){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
+ document.getElementById(id).classList.add('active')
+ if(id==='role') renderRoles()
+}
+
+function renderRoles(){
+ const c=content[lang]
+ document.getElementById('roleQ').innerText=c.roleQ
+ const container=document.getElementById('roleOptions')
+ container.innerHTML=''
+ c.roles.forEach(r=>{
+ let div=document.createElement('div')
+ div.className='option'
+ div.innerText=r
+ div.onclick=()=>nextScreen('scenario')
+ container.appendChild(div)
+ })
+ renderScenario()
+}
+
+function renderScenario(){
+ const c=content[lang]
+ document.getElementById('scenarioQ').innerText=c.scenarios[step]
+ const container=document.getElementById('scenarioOptions')
+ container.innerHTML=''
+ c.options.forEach(o=>{
+ let div=document.createElement('div')
+ div.className='option'
+ div.innerText=o
+ div.onclick=()=>showReflection()
+ container.appendChild(div)
+ })
+}
+
+function showReflection(){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
+ document.getElementById('reflection').classList.add('active')
+ document.getElementById('reflectionText').innerText=content[lang].reflection
+ document.getElementById('nextBtn').innerText=content[lang].next
+}
+
+function nextScenario(){
+ step++
+ if(step>=content[lang].scenarios.length){
+ showFinal()
+ return
+ }
+ nextScreen('scenario')
+}
+
+function showFinal(){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
+ document.getElementById('final').classList.add('active')
+ document.getElementById('finalTitle').innerText=content[lang].finalTitle
+ document.getElementById('finalText').innerText=content[lang].finalText
+}
+
+renderStart()
+</script>
+</body>
+</html>
