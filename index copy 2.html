@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>ECRA | Registration Received</title>
+  <title>ECRA | Registration Confirmed</title>
 
   <link
     href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&family=Rasa:wght@400;500;600;700&display=swap"
@@ -157,21 +157,6 @@
 
     .arabic .status-text {
       font-size: 10.5px;
-      line-height: 2;
-    }
-
-    /* "Meanwhile" note under the verification status */
-    .status-note {
-      margin: 14px 0 0;
-      padding-top: 14px;
-      border-top: 1px solid rgba(234, 203, 152, 0.35);
-      font-size: 13px;
-      line-height: 1.7;
-      color: #eacb98;
-    }
-
-    .arabic .status-note {
-      font-size: 10px;
       line-height: 2;
     }
 
@@ -337,14 +322,6 @@
         font-size: 9px;
       }
 
-      .status-note {
-        font-size: 11.5px;
-      }
-
-      .arabic .status-note {
-        font-size: 9px;
-      }
-
       .actions {
         flex-direction: column;
       }
@@ -372,7 +349,7 @@
       <div class="content">
 
         <!-- =====================================================
-             REGISTRATION RECEIVED
+             REGISTRATION CONFIRMED
         ====================================================== -->
 
         <table
@@ -388,11 +365,11 @@
             <td class="english">
 
               <h1 class="main-title">
-                Welcome to ECRA
+                Registration Confirmed
               </h1>
 
               <p class="main-text">
-                Thank you for registering your center. Your account has been created.
+                Your registration was successful.
               </p>
 
             </td>
@@ -402,11 +379,11 @@
             <td class="arabic" dir="rtl">
 
               <h1 class="main-title">
-                مرحبًا بك في ECRA
+                تم تأكيد التسجيل
               </h1>
 
               <p class="main-text">
-                شكرًا لتسجيل مركزك. تم إنشاء حسابك بنجاح.
+                تم تسجيلك بنجاح.
               </p>
 
             </td>
@@ -416,7 +393,7 @@
 
 
         <!-- =====================================================
-             VERIFICATION STATUS
+             APPROVAL STATUS
         ====================================================== -->
 
         <section class="status-card">
@@ -438,15 +415,11 @@
                 </p>
 
                 <h2 class="status-title">
-                  We're Verifying Your Center
+                  Awaiting Approval
                 </h2>
 
                 <p class="status-text">
-                  We're confirming that your account belongs to an early-childhood center. This usually doesn't take long, and we'll email you as soon as it's done.
-                </p>
-
-                <p class="status-note">
-                  In the meantime, you can sign in and explore the learning resources. The self-assessment unlocks once your center is verified.
+                  We’ll notify you once your account is approved.
                 </p>
 
               </td>
@@ -460,15 +433,11 @@
                 </p>
 
                 <h2 class="status-title">
-                  نتحقق من مركزك
+                  في انتظار الموافقة
                 </h2>
 
                 <p class="status-text">
-                  نتأكد من أن حسابك يتبع مركزًا لرعاية الطفولة المبكرة. لن يستغرق ذلك وقتًا طويلًا عادةً، وسنرسل لك بريدًا إلكترونيًا فور الانتهاء.
-                </p>
-
-                <p class="status-note">
-                  وفي الأثناء، يمكنك تسجيل الدخول وتصفّح مصادر التعلّم. سيُتاح التقييم الذاتي بعد التحقق من مركزك.
+                  سيتم إشعارك بعد الموافقة على حسابك.
                 </p>
 
               </td>
@@ -496,7 +465,7 @@
 
           <div class="actions">
 
-            <!-- iPhone: replace with the App Store link once the app is approved -->
+            <!-- iPhone -->
             <a
               class="btn btn-primary"
               href="https://testflight.apple.com/join/x3wG4fc7"
