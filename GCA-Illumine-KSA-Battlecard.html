@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Illumine (GCA) — KSA Competitive Battlecard</title>
+<style>
+  :root{
+    --bg-primary:#0a0d14;
+    --bg-elevated:#0f131c;
+    --bg-surface:#161b28;
+    --bg-hover:#1e2536;
+    --text-primary:#ffffff;
+    --text-secondary:rgba(255,255,255,0.72);
+    --text-muted:rgba(255,255,255,0.5);
+    --accent:#a855f7;
+    --accent-hover:#9333ea;
+    --accent2:#22d3ee;
+    --you-win:#10b981;
+    --they-win:#ef4444;
+    --tie:#f59e0b;
+    --border:rgba(255,255,255,0.09);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg-primary);
+    color:var(--text-primary);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5;
+  }
+  header{
+    padding:28px 32px 20px;
+    background:linear-gradient(135deg,#1a0f2e 0%,var(--bg-elevated) 60%);
+    border-bottom:1px solid var(--border);
+  }
+  header .brandrow{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+  .logo-glyph{width:26px;height:26px;border-radius:6px;background:conic-gradient(from 90deg,#ec4899,#22d3ee,#a855f7,#f59e0b,#ec4899);flex-shrink:0;}
+  header h1{margin:0;font-size:22px;font-weight:700;letter-spacing:-0.02em;}
+  header p{margin:4px 0 0;color:var(--text-muted);font-size:13px;}
+  header .meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:12.5px;color:var(--text-secondary);}
+  header .meta span b{color:var(--text-primary);}
+
+  nav.tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    padding:14px 32px;
+    background:var(--bg-elevated);
+    border-bottom:1px solid var(--border);
+    position:sticky;top:0;z-index:20;
+  }
+  .tab{
+    padding:9px 16px;
+    border-radius:10px;
+    border:1px solid var(--border);
+    background:var(--bg-surface);
+    color:var(--text-secondary);
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all .18s ease;
+    white-space:nowrap;
+  }
+  .tab:hover{background:var(--bg-hover);color:var(--text-primary);}
+  .tab.active{background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;border-color:transparent;}
+  .tab .flag{display:inline-block;margin-left:6px;font-size:10px;padding:1px 6px;border-radius:999px;background:rgba(239,68,68,0.18);color:#fca5a5;font-weight:700;}
+  .tab .flag.watch{background:rgba(245,158,11,0.18);color:#fcd34d;}
+
+  main{padding:26px 32px 60px;max-width:1280px;margin:0 auto;}
+  .tab-content{display:none;}
+  .tab-content.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+  h2.section-title{font-size:19px;margin:0 0 4px;letter-spacing:-0.01em;}
+  p.section-sub{color:var(--text-muted);font-size:13px;margin:0 0 18px;}
+
+  .card{
+    background:var(--bg-surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px 22px;
+    margin-bottom:18px;
+  }
+  .card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;}
+  .card h3 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+  @media (max-width:820px){.grid2,.grid3{grid-template-columns:1fr;}}
+
+  table{width:100%;border-collapse:collapse;font-size:12.8px;}
+  th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;}
+  thead th{position:sticky;top:0;background:var(--bg-surface);color:var(--text-secondary);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em;}
+  tbody tr:hover{background:var(--bg-hover);}
+  .center{text-align:center;}
+  .yes{color:var(--you-win);font-weight:800;}
+  .no{color:var(--they-win);font-weight:800;}
+  .partial{color:var(--tie);font-weight:800;}
+
+  .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:700;}
+  .pill.us{background:rgba(168,85,247,0.18);color:#d8b4fe;}
+  .pill.threat-high{background:rgba(239,68,68,0.16);color:#fca5a5;}
+  .pill.threat-med{background:rgba(245,158,11,0.16);color:#fcd34d;}
+  .pill.threat-low{background:rgba(255,255,255,0.08);color:var(--text-muted);}
+
+  ul.clean{margin:0;padding-left:0;list-style:none;}
+  ul.clean li{padding:6px 0 6px 20px;position:relative;font-size:13.5px;color:var(--text-secondary);border-bottom:1px dashed var(--border);}
+  ul.clean li:last-child{border-bottom:none;}
+  ul.clean.win li:before{content:"▲";position:absolute;left:0;color:var(--you-win);font-size:10px;top:9px;}
+  ul.clean.lose li:before{content:"▼";position:absolute;left:0;color:var(--they-win);font-size:10px;top:9px;}
+  ul.clean.plain li:before{content:"–";position:absolute;left:0;color:var(--text-muted);}
+  ul.clean.mine li:before{content:"⚠";position:absolute;left:0;color:var(--tie);font-size:11px;top:6px;}
+
+  .badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+  .badge{background:var(--bg-hover);border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:11.5px;color:var(--text-secondary);}
+  .badge b{color:var(--text-primary);}
+
+  .profile-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:6px;}
+  .profile-head h2{margin:0;font-size:24px;}
+  .profile-head .sub{color:var(--text-muted);font-size:13px;margin-top:4px;}
+  .threat-box{border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:18px;background:var(--bg-elevated);}
+  .talk-track{border-left:3px solid var(--accent);padding:10px 14px;background:var(--bg-elevated);border-radius:0 8px 8px 0;margin-bottom:10px;font-size:13.5px;color:var(--text-secondary);}
+  .talk-track b{color:var(--text-primary);}
+  .landmine{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;padding:10px 14px;margin-bottom:8px;font-size:13.5px;color:#fde68a;}
+  .objection{border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:10px;background:var(--bg-elevated);}
+  .objection .q{font-size:13.5px;color:#fca5a5;font-weight:600;margin-bottom:4px;}
+  .objection .a{font-size:13.5px;color:var(--text-secondary);}
+
+  .stat-tile{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center;}
+  .stat-tile .num{font-size:22px;font-weight:800;color:var(--accent2);}
+  .stat-tile .label{font-size:11.5px;color:var(--text-muted);margin-top:2px;}
+
+  .logo-strip{display:flex;flex-wrap:wrap;gap:8px;}
+  .logo-chip{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--text-secondary);}
+
+  footer{padding:20px 32px 40px;color:var(--text-muted);font-size:11.5px;border-top:1px solid var(--border);}
+  .caveat{font-size:11.5px;color:var(--text-muted);margin-top:10px;font-style:italic;}
+  a{color:var(--accent2);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brandrow">
+    <div class="logo-glyph"></div>
+    <h1>Illumine — KSA Competitive Battlecard</h1>
+  </div>
+  <p>Prepared for Arabian Child / Global Childhood Academy (GCA) — Illumine reseller (VAR), Saudi Arabia</p>
+  <div class="meta">
+    <span>Generated: <b>August 19, 2026</b></span>
+    <span>Owner: <b>Noora Amer</b></span>
+    <span>Competitors tracked: <b>7</b> (Rekaz, Ynmo, Kanaf, Banan, Naashah, Bounce, ClassDojo)</span>
+    <span>Sources: <b>internal KSA reseller sheet + live competitor site re-checks, Aug 19 2026</b></span>
+  </div>
+</header>
+
+<nav class="tabs" id="tabnav"></nav>
+
+<main id="maincontent"></main>
+
+<footer>
+  Built from Illumine's official KSA reseller Feature Matrix & pricing sheet (Aug 2026), the Illumine KSA Competitors brief, the Illumine KSA Competitive Brief (re-verified Aug 19 2026), the Illumine product deck, and 6 demo-call transcripts (15 Jun–16 Jul 2026). Every competitor "✗" means "not found in public sources as of this check," not "confirmed absent." Refresh monthly for new entrants/announcements, quarterly for a full revision.
+</footer>
+
+<script>
+const ILLUMINE = {
+  pricingTiers:[
+    {tier:"Standard",usd:"$1.50 / student / mo",sar:"SAR 5.63 / student / mo"},
+    {tier:"Business",usd:"$2.75 / student / mo",sar:"SAR 10.31 / student / mo"},
+    {tier:"Enterprise",usd:"$4.25 / student / mo",sar:"SAR 15.94 / student / mo"},
+  ],
+  bands:[
+    {band:"Under 50",std:"SAR 375",biz:"SAR 656",ent:"SAR 938"},
+    {band:"50 – 150",std:"SAR 1,125",biz:"SAR 1,969",ent:"SAR 2,813"},
+    {band:"150 – 300",std:"SAR 2,138",biz:"SAR 3,769",ent:"SAR 5,456"},
+    {band:"300 – 500",std:"SAR 3,375",biz:"SAR 6,000",ent:"SAR 8,813"},
+  ],
+  discounts:"Annual 15% · Half-year 10% · Quarterly 5% (base subscription only — add-ons/onboarding are flat-rate, not discountable)",
+  packages:[
+    {name:"Standard",desc:"Single centres — streamline daily ops & consistency.",items:["Parent Communication App","Digital Attendance","Food Menu & Meal Tracking","Events & Holiday Calendar","Contactless Check-in/out","Daily Reports & News Feed","Unlimited Messaging","Voice Note & Document Sharing","20GB Storage","Up to 5 Staff","Incident & Accident Report"],addons:["Tour Scheduling","AI Writing Assistant"]},
+    {name:"Business",desc:"Centralize operations & brand consistency.",items:["Everything in Standard, plus:","Childcare Billing & Invoicing","Online Fee Payment & Reports","Automated Recurring Payment","Child Ratios & Alerts (AI)","Lesson Planning","Parent Concerns Management","Allergy Tracking","100GB Storage","Programs & Capacity Planning","Bulk Onboarding Support"],addons:["Assessment 2.0","Tour Management","AI Writing Assistant","AI-Powered Lesson Planner"]},
+    {name:"Enterprise",desc:"Large enterprises — informed decisions at scale.",items:["Everything in Business, plus:","Multicenter Management","Child Assessments (25+ curricula)","AI-Enabled Newsletter","Staff Leave Management","Inquiry Management (CRM)","Subsidy Management","Form Builder","200GB Storage","Custom Reports","Dedicated Account Manager"],addons:["Assessment 2.0","Tour Management","AI Writing Assistant","AI-Powered Lesson Planner"]},
+  ],
+  proofStats:[
+    {num:"3,000+",label:"centres worldwide (global)"},
+    {num:"50+",label:"countries"},
+    {num:"50+",label:"curriculum frameworks (global claim)"},
+    {num:"96%+",label:"payment collection within 3 days of invoice"},
+    {num:"70%",label:"reported increase in admissions"},
+    {num:"1.7x",label:"increase in staff retention"},
+  ],
+  customers:["Earthlings Early Years","Dibber","Woodland Pre-Schools (since 1978)","Kuwait Reggio Center","Falcon British Nursery","Golden Montessori Kindergarten","The Kids Castle","Guidepost","Feather Touch International","Bright Horizons","Shomoukh","Kids Kingdom Learning Centre","R.E.A.L Kids Preschool","Little Ashford","Cognita","Highgate House School"],
+  security:["GDPR compliance (global) — audited by Genpact, Goldman Sachs, PwC for GDPR & InfoSec","99.99% uptime with SLA monitoring","Daily incremental backups, dedicated database","Regular penetration testing by Synopsys","⚠ Not addressed in the official KSA reseller sheet: SOC 2, ZATCA e-invoicing, HRSD compliance — don't promise these in a live KSA deal without reconfirming"],
+  support:["Channels: WhatsApp group, email, live chat & tickets","Personalised live training for all staff, sessions recorded & shared","Help portal with product guides & videos","Paid Enterprise support: SLA tracking, ticket access & reports, escalation matrix, service credits on SLA"],
+  aiConfirmedKSA:["AI Translation — 15+ languages (incl. Arabic), every tier from Standard up","AI Child-to-Staff Ratio Alerts, every tier from Standard up"],
+  aiGlobalUnconfirmed:["Broader AI writing assistant (sold separately as an add-on: Standard add-on; Business/Enterprise add-on)","AI-Powered Lesson Planner (Business/Enterprise add-on)","AI-Enabled Newsletter (Enterprise, included)","Global site claims '50+ frameworks', 20+ languages, broader AI activity/lesson generation — treat as unconfirmed at KSA reseller tier"],
+  gaps:["No KSA e-invoicing (ZATCA) in the official reseller sheet","Inquiry/Waitlist CRM is Enterprise-tier only — Standard & Business have no built-in lead capture","No named local regulatory compliance (e.g. HRSD) in the reseller sheet","No parent-facing marketplace/discovery channel"],
+  faqs:[
+    {cat:"Pricing & Packages",qs:[
+      {q:"How much does it cost, what's included in each package?",a:"Walk through the tier table by student-count bracket (30 / 40–60 / 1,000+) so this is answered in seconds. Have the one-pager ready before it's asked."},
+      {q:"Per-student or per-center pricing?",a:"Both: a per-student monthly subscription PLUS a flat per-center fee banded by enrollment size."},
+      {q:"Annual/semi-annual/quarterly discount?",a:"15% / 10% / 5% respectively — base subscription only, not add-ons or onboarding."},
+      {q:"Can we exclude a feature we don't need and get it cheaper?",a:"Packages are fixed per tier; add-ons are separate flat fees ($250/yr individually, $350/yr for any two bundled)."},
+    ]},
+    {cat:"Trial & Onboarding",qs:[
+      {q:"Can we get a free trial?",a:"Yes — 15 days. Lead with this proactively in the first meeting rather than waiting to be asked; it consistently speeds up the decision cycle."},
+      {q:"Can we trial during a specific window (e.g. summer camp)?",a:"Yes, the 15-day trial can be scheduled around a specific window before a year-long commitment."},
+    ]},
+    {cat:"Migration & Replacing Current Systems",qs:[
+      {q:"Can this fully replace our accountant / current app (e.g. Ynmo, a competitor)?",a:"Yes for Business/Enterprise tiers (billing, invoicing, reminders). Treat this as a trust objection, not a feature question — walk through migration week-by-week rather than just listing features."},
+      {q:"How does data migration from paper or another app work?",a:"Have a dedicated 'what migration looks like, week by week' asset ready — this is the #1 unspoken risk for anyone leaving a manual or competing system."},
+    ]},
+    {cat:"Security, Compliance & IT",qs:[
+      {q:"MFA, backups, hosting, audit logs, SSO?",a:"Have the one-page Security & Compliance fact sheet ready the moment an IT stakeholder joins a call — this arrives as a full cluster of questions, not one at a time."},
+      {q:"What security certifications does Illumine hold?",a:"Global marketing cites SOC 2 Type 2 — confirm this is still current before repeating it in a KSA deal, since the official KSA reseller sheet doesn't address certifications."},
+      {q:"Microsoft SSO?",a:"Yes — requires domain whitelisting only."},
+    ]},
+    {cat:"Enterprise / Multi-branch",qs:[
+      {q:"Single dashboard across multiple branches?",a:"Yes — Business tier and up (program dashboard + single login across centres)."},
+      {q:"More than one Super Admin?",a:"Confirm current permission-model detail with product before promising specifics."},
+    ]},
+  ],
+};
+
+const COMPETITORS = [
+  {
+    id:"rekaz", name:"Rekaz", tagline:"Horizontal SMB booking/subscription SaaS with a nursery vertical",
+    website:"rekaz.io/home/en/childrens-centers", threat:"med", threatLabel:"Price-sensitive threat",
+    scale:"30,000+ businesses & 1M+ bookings across ALL Rekaz verticals (not nursery-only) · $5M seed led by COTU Ventures, closed July 2025",
+    target:"Single-location Saudi nursery owners wanting a simple, low-cost booking/payments tool (also sells to salons, gyms, clinics)",
+    recent:"$5M seed round independently corroborated across 5 outlets (Forbes ME, Wamda, MenaBytes, TheSaaSNews, IBS Intelligence); nursery-vertical page re-verified Aug 2026 confirms multi-branch (single-country) support — corrects an earlier note that Rekaz had none.",
+    win:["ZATCA Phase 2 compliant e-invoicing","Mada / Visa / Mastercard / Apple Pay + Tamara / Tabby BNPL","Self-serve branded nursery landing page for direct parent enrollment & payment","Multi-branch management within Saudi Arabia (single country)","Built-in marketing tools (offers, discounts, abandoned-cart recovery) + WhatsApp","12+ operational reports","Zero-commission flat annual subscription — attractive for small single-location nurseries","CITC-registered, registered with Saudi Business Center"],
+    lose:["No curriculum, lesson planning, or developmental assessment of any kind","No staff/HR, payroll, or ratio management","No multi-country enterprise tooling (single-country multi-branch only, vs. Illumine's 50+ country footprint)","Nursery is one of ~15 verticals — not a childcare specialist"],
+    pricing:"Simple flat annual subscription, zero commission — priced for small single-location nurseries. Not publicly itemized.",
+    talk:[
+      {label:"If mentioned early",text:"Rekaz is not an early-childhood company — it's a generic booking/payments SaaS also selling to gyms and car washes. Illumine is built by and for early-childhood educators, with pedagogy and true multi-country operations Rekaz simply doesn't attempt."},
+      {label:"If displacing them",text:"If they're using Rekaz today, ask what they use for curriculum, lesson plans, and staff/ratio management — usually nothing, because Rekaz doesn't offer it."},
+      {label:"If added late on price",text:"Its multi-branch feature covers several Saudi locations, not the multi-country enterprise operations Illumine runs. Reframe from 'cheaper invoicing tool' to 'pedagogy + operations platform.'"},
+    ],
+    objections:[{q:"\"Rekaz is ZATCA-compliant and cheaper.\"",a:"Fair — flag internally, our KSA sheet doesn't have native ZATCA yet. But ask what Rekaz does for lesson planning, staff ratios, or multi-branch reporting: nothing. They'd be buying two separate tools eventually."}],
+    landmines:["How does Rekaz help your teachers plan lessons against a curriculum like EYFS or Montessori?","If you open a second nursery in another city, does Rekaz give you one login and one dashboard across both?","Does Rekaz track staff-to-child ratios or manage staff leave and payroll?"],
+  },
+  {
+    id:"ynmo", name:"Ynmo (ينمو)", tagline:"Full daycare admin platform + separate clinical assessment/SEN line",
+    website:"ynmodata.com/daycare", threat:"high", threatLabel:"Bigger threat than previously credited",
+    scale:"200+ named Saudi daycare customers (Kurrass, Qurrah Day Care, Hoya, Bandoon, RZN Juniors, Alerteqa, Little Kid, Time Kids Center, Riyadh Schools, Super Nanny, Little Wings, Sea Stars, Mahd, Kid's Homes, and more) — confirmed via Ynmo's own company profile deck, Aug 2026",
+    target:"Single-location Saudi daycares; centers also needing clinical/SEN developmental assessment",
+    recent:"Substantially revised profile Aug 2026 after Ynmo shared its own company deck & pricing graphics directly: real scale, real banded pricing, and a fuller feature set (staff/HR, billing, classrooms, website builder) than the public site showed. Two live promos: 25% off (2-yr lock) or 40% off via 2-yr referral.",
+    win:["ASQ-3 (Brookes, 3rd ed.) clinical/developmental assessment built directly into the daycare product — 21 questionnaires × 30 questions, feeding a screen → specialist → early-intervention pipeline","Dedicated disability-rehabilitation product line (Ynmo Plan)","Staff/HR with document storage, role-based permissions, attendance/departure tracking","Billing with invoicing, barcode check-in/out, website builder, control-panel dashboard","Transparent banded annual pricing with active 25%/40% two-year-locked promotions","8-language localization"],
+    lose:["No named early-childhood curriculum/framework (Montessori/EYFS-style) — its \"units\" are a generic program tracker","No multi-branch or multi-country enterprise tooling","No parent-facing marketplace or CRM/lead-capture","Flat annual pricing isn't feature-tiered like Illumine's Standard/Business/Enterprise"],
+    pricing:"Flat annual subscription by enrollment band: 1–50 children SAR 6,440 · 51–100 SAR 11,270 · 101–200 SAR 15,410 — with 25% off (2-yr lock) or 40% off via referral (2-yr lock) promos, plus a free trial.",
+    talk:[
+      {label:"If mentioned early",text:"If clinical/SEN screening is the actual need, Ynmo has real depth there. For everyday curriculum and multi-center operations, Illumine is still the stronger, more complete system."},
+      {label:"If displacing them",text:"Ask specifically what curriculum their teachers use day-to-day — Ynmo's 'units' are a generic activity tracker, not a named framework like EYFS or Montessori."},
+      {label:"If price comes up",text:"Watch their 40%-off two-year referral promo — it's a real price anchor. Don't compete purely on price; compete on curriculum depth and enterprise scale. Build a per-band price/feature comparison at Ynmo's own bands (1–50 / 51–100 / 101–200) so you can answer on the spot."},
+    ],
+    objections:[{q:"\"Ynmo is cheaper and has a 40% promo.\"",a:"Their pricing is a flat annual fee, not tiered — a center that only needs basic admin still pays for the whole bundle. Illumine lets you start at Standard and grow into Business/Enterprise as needs grow."}],
+    landmines:["Beyond the ASQ-3 screening, what does your team use day-to-day for lesson planning against a named curriculum?","If you open a second location, does Ynmo give you one login across both centers?","Do you need CRM/lead capture for admissions — how does Ynmo handle that today?"],
+  },
+  {
+    id:"kanaf", name:"Kanaf (كنف)", tagline:"Small nursery/kindergarten admin tool — thin public presence",
+    website:"kanafapp.com", threat:"low", threatLabel:"Low-information — re-verify before citing",
+    scale:"No public figures found. Client-rendered single-page app with almost no indexable content; one 2020-era freelance job posting shows the product being prototyped then.",
+    target:"Presumably single-location Saudi nursery owners wanting a free-to-start baseline tool (unconfirmed).",
+    recent:"No changes found on re-check, Aug 2026. Still the least-verifiable profile in the set alongside Naashah.",
+    win:["Free-to-start entry point (per site meta description)","Covers baseline admin: registration, attendance, e-invoicing, parent portal"],
+    lose:["No visible curriculum, assessment, staff/HR, multi-branch, or AI features","No scale, funding, or maturity signals found publicly — hard to gauge how established it is"],
+    pricing:"Free-to-start per meta description; no further detail available.",
+    talk:[{label:"If it comes up",text:"Lowest-information competitor in this set. Treat as a small/early-stage local tool until proven otherwise — worth a fresh look (live demo or trial) before any deal where it's a live alternative."}],
+    objections:[{q:"\"Kanaf is free to start.\"",a:"Ask to see it live — there's almost no public information to verify feature depth, scale, or reliability. A free tool with no visible curriculum, staff tools, or support structure is a real risk for a prospect, not just a cheaper option."}],
+    landmines:["Could I see a live demo or trial account? There's very little public information to go on."],
+    note:"An unrelated app also named \"Kanaf\" exists on the App Store (a co-parenting visitation tool by a different developer) — don't confuse the two in any deck or claim."
+  },
+  {
+    id:"banan", name:"Banan (بنان)", tagline:"Two-sided marketplace + provider/center management system",
+    website:"usebanan.com", threat:"high", threatLabel:"Most complete KSA-local threat",
+    scale:"Marketplace: 1,500+ providers, 30+ cities, 10K+ families, 4.8 app rating. Management system: 20+ nurseries, 800+ children, 1,400+ parents, 35K+ daily events.",
+    target:"Two-sided: parents searching/booking childcare & activity providers, and providers wanting both new-family discovery and back-office management.",
+    recent:"Marketplace-level figures reconfirmed directly on usebanan.com, Aug 2026. Management-system figures carried over from original research, not independently re-verified this round.",
+    win:["The only KSA-local player with a real parent-facing marketplace driving new enrollments — not just admin for existing families","Lesson planning + recording/sharing of children's achievements","Staff/HR layer including leave requests through payroll calculation","Explicitly built compliant with HRSD regulations, inspection-ready reports","Local payment rails (Mada, STC Pay, Apple Pay), Saudi-based support, fully Arabic UI","Light AI layer: provider matching, auto-generated reports, growth insights"],
+    lose:["No named curriculum or accreditation framework (no EYFS-equivalent, no 25+ framework library)","Smaller scale on the management system itself (~20 centers, 800 children) vs. Illumine's global base","No visible multi-country enterprise dashboarding or multi-center reporting depth","AI features lighter than Illumine's confirmed translation + ratio-alert set"],
+    pricing:"Not publicly detailed for the provider/management side.",
+    talk:[{label:"The honest pitch",text:"This is the one to take seriously. If a prospect is choosing Banan for its marketplace exposure, be honest: Illumine wins on curriculum depth, multi-center enterprise tooling, and AI-assisted parent communication — but Banan's new-customer discovery angle is real, and we don't currently offer an equivalent. Flag this as a genuine feature gap rather than dismissing it."}],
+    objections:[{q:"\"Banan gets us new families through their marketplace.\"",a:"That's a real and fair point — worth flagging internally as a genuine gap. In the meantime, ask how they document a child's progress against a named curriculum, and how their system scales past ~20 centers."}],
+    landmines:["How does Banan help your teachers document a child's progress against a curriculum like EYFS or Montessori?","As you grow past 20 centers, how does Banan's dashboard and reporting scale across all of them?","Does Banan offer AI-powered translation for parent communication across multiple languages?"],
+  },
+  {
+    id:"naashah", name:"Naashah (نشأة)", tagline:"Comprehensive Saudi nursery/kindergarten platform — newly flagged, thin public presence",
+    website:"naashah.com", threat:"low", threatLabel:"Newly flagged — treat provisionally",
+    scale:"No public customer counts, testimonials, app-store listings, pricing, or funding information found. Public presence limited to a marketing homepage.",
+    target:"Nursery operators, kindergarten administrators, and childcare facility managers in Saudi Arabia wanting a single digital management platform.",
+    recent:"Newly flagged competitor as of this brief (Aug 2026) — no prior tracking history.",
+    win:["Bundles admin, communication, billing, assessment and an AI claim into one branded Saudi-market product","Clear, simple Arabic-first brand identity"],
+    lose:["No verifiable scale, customer base, or funding","No visible curriculum or pedagogical framework detail behind the \"assessments\" claim","No staff/HR, multi-branch, or enterprise features found","No ZATCA/HRSD or other KSA compliance claims found","\"AI integration\" is named but not described anywhere public — cannot be substantiated"],
+    pricing:"Not displayed publicly.",
+    talk:[{label:"If it comes up",text:"Newly flagged competitor with a public profile as thin as Kanaf's. Treat provisionally — re-verify features, scale, and pricing directly (e.g. request a live demo) before citing anything specific about Naashah in a deal."}],
+    objections:[{q:"\"Naashah has AI built in.\"",a:"Ask them to show it live — 'AI integration' is named on their site but never described. Until proven otherwise, treat this as an unsubstantiated marketing claim, not a differentiator."}],
+    landmines:["What exactly does the 'AI' in your platform do — could you show me a live example?","Which named curriculum or assessment framework sits behind your 'assessments' feature?"],
+  },
+  {
+    id:"bounce", name:"Bounce", tagline:"Global, mobile-first childcare management SaaS with real Gulf traction",
+    website:"hellobounce.com", threat:"high", threatLabel:"Closest like-for-like competitor",
+    scale:"Self-reports \"thousands\" of centers worldwide; markets a data model built from experience with 100,000+ child care centers (a market-research claim, not a disclosed customer count — don't repeat as a customer base). Named Gulf customers (re-verified Aug 2026): Little House Nursery & Kids Gardens Nursery (Saudi Arabia), Al Basateen Kindergarten (Dubai, UAE), Little Stars (Oman), Little Scholars Nursery (Bahrain).",
+    target:"Segments its own funnel by Single Location / Multi-Location / Enterprise / Dayhome — the same size range Illumine targets.",
+    recent:"Named Gulf customer list expanded from 2 to 5 on re-verification (Aug 2026), confirmed directly on hellobounce.com.",
+    win:["Real breadth to match Illumine on paper: curriculum management, lesson planning, milestone tracking, virtual classrooms, attendance, billing, staff scheduling — all in one product","Already has verifiable, named customers inside Saudi Arabia and the wider Gulf","Segments sales funnel by location size/type, same range Illumine targets","Arabic, English and Spanish; 24-hour setup claimed; dedicated enterprise sales channel"],
+    lose:["No AI features found anywhere on the site — no writing assistant, translation, or lead scoring","No named curriculum/accreditation framework (no EYFS-equivalent, no framework-count claim)","No KSA-specific compliance or e-invoicing (ZATCA) messaging","No marketplace/parent-discovery layer","\"100,000+ child care centers\" is a calculator basis, not a disclosed customer count"],
+    pricing:"Demo-led B2B SaaS sale to center owners; 24-hour setup claimed; no public self-serve pricing.",
+    talk:[{label:"Treat as serious, not a footnote",text:"Of everything researched, Bounce is the closest like-for-like competitor to Illumine feature-for-feature, and it already has real Saudi customers. Illumine's edges: AI-assisted parent communication and a named accreditation framework library. Bounce's edge: already proven inside Gulf nurseries with public testimonials to point to. Use Bounce's own Single/Multi-Location/Enterprise/Dayhome segmentation as a cue for messaging our own tiering."}],
+    objections:[{q:"\"Bounce already has Saudi customers and comparable features.\"",a:"True, and worth taking seriously. Ask them to name their specific curriculum framework (EYFS/Montessori/etc.) and how they handle multilingual parent messaging with AI — neither is publicly documented for Bounce."}],
+    landmines:["Which named curriculum framework — EYFS, Montessori, or similar — does Bounce use for lesson planning?","Does Bounce translate parent messages automatically, or is that a manual process for your Arabic and English-speaking families?","Is there a local Saudi support team, or does support route through the US?"],
+  },
+  {
+    id:"classdojo", name:"ClassDojo", tagline:"Free, teacher-adopted K-12 classroom communication app — not a business platform",
+    website:"classdojo.com", threat:"low", threatLabel:"Bottom-up substitution risk, not an RFP line item",
+    scale:"Used in 95% of US schools (re-verified Aug 2026, no longer scoped to K-8); \"loved by more than 45 million students and parents\"; messages auto-translate into 190+ languages. Founded 2011.",
+    target:"Individual K-12 (mostly K-8) classroom teachers who adopt it bottom-up for free; monetized via a parent-paid \"Plus\" subscription, not an institutional sale.",
+    recent:"Re-verified Aug 2026: usage figures refreshed to 95% of US schools + 45M+ users; 190+ language translation reconfirmed.",
+    win:["Extremely strong, low-friction parent-communication experience","Zero cost to teachers — frictionless bottom-up adoption","Massive global brand recognition among teachers and parents"],
+    lose:["Not a business-management platform at all: no enrollment, billing, real attendance system, staff/HR, or multi-branch reporting","No curriculum or developmental-assessment framework — \"Big Ideas\" is social-emotional content, not an ECE curriculum","Adopted classroom-by-classroom, not sold to center/school ownership — no enterprise deal to win or lose in the usual sense","Monetizes through a parent-paid add-on, not a sale to the institution"],
+    pricing:"Free forever for teachers; revenue comes from an optional parent-paid \"Plus\" subscription — a fundamentally different go-to-market from an institutional sale.",
+    talk:[{label:"Reframe, don't compete on messaging",text:"ClassDojo will basically never appear as a line item a nursery owner is choosing between alongside Illumine — it doesn't do what Illumine does. The real risk is narrower: if teachers at a prospect center are already using it for free parent updates, that can blunt the parent-communication part of the pitch. Reframe toward what ClassDojo can't do: enrollment, billing, attendance, staff management, curriculum."}],
+    objections:[{q:"\"Our teachers already use ClassDojo for free — why pay for Illumine's messaging?\"",a:"Great — that's one feature of many. Ask: how are you tracking enrollment, invoicing parents, managing staff ratios, or documenting curriculum progress? ClassDojo doesn't do any of that."}],
+    landmines:["How are you currently handling admissions, billing, and staff scheduling — since ClassDojo doesn't do any of that?","Is anyone tracking each child's progress against a curriculum framework, or is ClassDojo just for day-to-day updates?"],
+  },
+];
+
+// Feature matrix (subset of the verified feature-by-feature comparison)
+const MATRIX_ROWS = [
+  {feat:"Named curriculum framework (Montessori, EYFS, etc.)", vals:["y1","n","n","n","n","n","p","n"]},
+  {feat:"Lesson planning / observation records", vals:["y1","n","n","n","y","n","y","n"]},
+  {feat:"Clinical / SEN accredited assessment batteries", vals:["n","n","y","n","n","n","n","n"]},
+  {feat:"Attendance / check-in-out tracking", vals:["y","y","y","y","y","y","y","p"]},
+  {feat:"AI child-to-staff ratio alerts", vals:["y","n","n","n","n","n","n","n"]},
+  {feat:"Staff/HR management (leave, scheduling)", vals:["y","n","y","n","y","n","y","n"]},
+  {feat:"Payroll calculation", vals:["n","n","n","n","y","n","p","n"]},
+  {feat:"Billing & invoicing automation", vals:["y1","y","y","y","y","y","y","n"]},
+  {feat:"ZATCA e-invoicing (KSA)", vals:["n","y","n","y","n","n","n","n"]},
+  {feat:"Local KSA payment rails (Mada/STC Pay/Tamara/Tabby)", vals:["n","y","n","p","y","n","n","n"]},
+  {feat:"Multi-branch management (single country)", vals:["y","y","n","n","n","n","y","n"]},
+  {feat:"Multi-country enterprise tooling (single login/dashboard)", vals:["y","n","n","n","n","n","p","n"]},
+  {feat:"Inquiry / lead-capture CRM", vals:["y2","y","n","n","y","n","y","n"]},
+  {feat:"Parent-facing marketplace / discovery channel", vals:["n","n","n","n","y","n","n","n"]},
+  {feat:"AI-driven multilingual parent communication", vals:["y","n","n","n","n","p","n","y"]},
+  {feat:"Named local regulatory compliance (e.g. HRSD)", vals:["n","n","n","n","y","n","n","n"]},
+  {feat:"Virtual classrooms", vals:["n","n","n","n","n","n","y","n"]},
+  {feat:"Free-to-start / free tier", vals:["n","n","p","y","y","p","n","y"]},
+];
+const MATRIX_COLS = ["Illumine","Rekaz","Ynmo","Kanaf","Banan","Naashah","Bounce","ClassDojo"];
+
+function symbol(v){
+  if(v==="y"||v==="y1"||v==="y2") return '<span class="yes">✓</span>'+(v==="y1"?'<sup style="color:var(--text-muted)">1</sup>':v==="y2"?'<sup style="color:var(--text-muted)">2</sup>':"");
+  if(v==="n") return '<span class="no">✗</span>';
+  if(v==="p") return '<span class="partial">~</span>';
+  return v;
+}
+
+function threatPill(t,label){
+  const cls = t==="high"?"threat-high":t==="med"?"threat-med":"threat-low";
+  return `<span class="pill ${cls}">${label}</span>`;
+}
+
+function renderMatrixTab(){
+  let rows = MATRIX_ROWS.map(r=>`<tr><td>${r.feat}</td>${r.vals.map(v=>`<td class="center">${symbol(v)}</td>`).join("")}</tr>`).join("");
+  let head = MATRIX_COLS.map(c=>`<th class="center">${c==="Illumine"?'<span class="pill us">Illumine</span>':c}</th>`).join("");
+
+  let threatCards = COMPETITORS.map(c=>`
+    <div class="card">
+      <h3><span class="dot" style="background:${c.threat==='high'?'var(--they-win)':c.threat==='med'?'var(--tie)':'var(--text-muted)'}"></span>${c.name} ${threatPill(c.threat,c.threatLabel)}</h3>
+      <p style="color:var(--text-secondary);font-size:13px;margin:0 0 8px;">${c.tagline}</p>
+      <p style="color:var(--text-muted);font-size:12.5px;margin:0;">${c.scale}</p>
+    </div>`).join("");
+
+  return `
+    <h2 class="section-title">Comparison Matrix</h2>
+    <p class="section-sub">Illumine vs. all 7 tracked KSA-market competitors. ¹ Business tier and up on Illumine, not Standard. ² Enterprise tier only on Illumine.</p>
+
+    <div class="card">
+      <h3><span class="dot" style="background:var(--accent)"></span>Executive Summary</h3>
+      <p style="font-size:13.5px;color:var(--text-secondary)">Seven competitors show up around Illumine in the KSA early-childhood market. Four are KSA-local, admin-and-payments-first tools built for a single Saudi nursery owner — <b style="color:#fff">Rekaz, Ynmo, Kanaf, and Banan</b> — strong on local plumbing (ZATCA e-invoicing, Mada/STC Pay/Apple Pay, Tamara/Tabby BNPL) but mostly silent on named pedagogy and multi-center enterprise operations, Illumine's core strengths. <b style="color:#fff">Naashah</b> is a newly flagged fifth local player with a thin public profile. Two sit outside the KSA-local set: <b style="color:#fff">Bounce</b> is a genuine global competitor with real, verifiable Gulf traction and the closest feature-for-feature overlap with Illumine; <b style="color:#fff">ClassDojo</b> is a free communication app that can quietly undercut the parent-comms part of a pitch without ever appearing as an RFP line item.</p>
+      <p style="font-size:13.5px;color:var(--text-secondary)"><b style="color:#fff">Biggest opportunity:</b> none of the seven combines Illumine's pedagogy depth (25+ named curricula, customizable frameworks, observation records) with multi-center enterprise tooling (3,000+ centers, 50+ countries) — that combination remains uncontested. <b style="color:#fff">Biggest threats:</b> Banan (marketplace + HRSD compliance + center management), Bounce (closest global feature match with named Saudi customers), and Ynmo (200+ real customers, transparent pricing with live promos, fuller admin than previously credited).</p>
+    </div>
+
+    <div class="grid2" style="margin-bottom:18px;">
+      <div class="card">
+        <h3><span class="dot" style="background:var(--you-win)"></span>Illumine's exposure</h3>
+        <ul class="clean mine">
+          ${ILLUMINE.gaps.map(g=>`<li>${g}</li>`).join("")}
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="dot" style="background:var(--accent2)"></span>Quick wins (this week)</h3>
+        <ul class="clean plain">
+          <li>Brief the sales team on tier-accurate talking points — 25+ curricula are Business/Enterprise only, not Standard</li>
+          <li>Build a one-page Banan objection-response — it's the most-watched, most complete KSA-local competitor</li>
+          <li>Add a ZATCA/HRSD-readiness talking point to the standard deck — acknowledge the gap directly, don't deflect</li>
+          <li>Prepare a short "Illumine vs. ClassDojo" reframe script focused on what ClassDojo can't do</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin-top:28px;">Threat Level by Competitor</h3>
+    <div class="grid3">${threatCards}</div>
+
+    <h3 style="margin-top:28px;">Feature-by-Feature Matrix</h3>
+    <div class="card" style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>Feature</th>${head}</tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:28px;">Pricing Snapshot</h3>
+    <div class="grid2">
+      <div class="card">
+        <h3>Illumine — per-student subscription</h3>
+        <table>
+          <thead><tr><th>Tier</th><th>USD/student/mo</th><th>SAR/student/mo</th></tr></thead>
+          <tbody>${ILLUMINE.pricingTiers.map(t=>`<tr><td>${t.tier}</td><td>${t.usd}</td><td>${t.sar}</td></tr>`).join("")}</tbody>
+        </table>
+        <p class="caveat">Plus a flat per-center fee banded by enrollment (see Illumine tab). ${ILLUMINE.discounts}</p>
+      </div>
+      <div class="card">
+        <h3>Known competitor pricing</h3>
+        <ul class="clean plain">
+          <li><b style="color:#fff">Rekaz:</b> flat annual subscription, zero commission (amount not public)</li>
+          <li><b style="color:#fff">Ynmo:</b> flat annual by band — 1–50 kids SAR 6,440 · 51–100 SAR 11,270 · 101–200 SAR 15,410 (25%/40% 2-yr promos active)</li>
+          <li><b style="color:#fff">Kanaf:</b> free-to-start (unverified depth)</li>
+          <li><b style="color:#fff">Banan, Naashah, Bounce, ClassDojo:</b> not publicly disclosed (ClassDojo is free to teachers; monetizes via parent-paid add-on)</li>
+        </ul>
+      </div>
+    </div>
+  `;
+}
+
+function renderIllumineTab(){
+  return `
+    <div class="profile-head">
+      <div>
+        <h2>Illumine <span class="pill us">Us</span></h2>
+        <p class="sub">Enterprise childcare management platform, sold in three tiers — Standard / Business / Enterprise. GCA / Arabian Child is the authorized KSA reseller (VAR).</p>
+      </div>
+    </div>
+
+    <div class="grid3" style="margin-bottom:8px;">
+      ${ILLUMINE.proofStats.map(s=>`<div class="stat-tile"><div class="num">${s.num}</div><div class="label">${s.label}</div></div>`).join("")}
+    </div>
+    <p class="caveat">Global company figures per public marketing (illumine.app) — treat as company-wide, not KSA-specific, unless reconfirmed.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="dot" style="background:var(--you-win)"></span>AI — confirmed at KSA reseller tier</h3>
+        <ul class="clean win">${ILLUMINE.aiConfirmedKSA.map(a=>`<li>${a}</li>`).join("")}</ul>
+      </div>
+      <div class="card">
+        <h3><span class="dot" style="background:var(--tie)"></span>AI — global marketing, unconfirmed for KSA</h3>
+        <ul class="clean mine">${ILLUMINE.aiGlobalUnconfirmed.map(a=>`<li>${a}</li>`).join("")}</ul>
+      </div>
+    </div>
+
+    <h3 style="margin-top:24px;">Packages</h3>
+    <div class="grid3">
+      ${ILLUMINE.packages.map(p=>`
+        <div class="card">
+          <h3>${p.name}</h3>
+          <p style="color:var(--text-muted);font-size:12.5px;margin-top:-6px;">${p.desc}</p>
+          <ul class="clean plain">${p.items.map(i=>`<li>${i}</li>`).join("")}</ul>
+          <p style="font-size:12px;color:var(--accent2);margin:10px 0 4px;font-weight:700;">Add-ons</p>
+          <ul class="clean plain">${p.addons.map(i=>`<li>${i}</li>`).join("")}</ul>
+        </div>`).join("")}
+    </div>
+
+    <div class="card" style="margin-top:8px;">
+      <h3>Per-center flat fee by enrollment band (excl. VAT)</h3>
+      <table>
+        <thead><tr><th>Band (max enrolled)</th><th>Standard</th><th>Business</th><th>Enterprise</th></tr></thead>
+        <tbody>${ILLUMINE.bands.map(b=>`<tr><td>${b.band}</td><td>${b.std}</td><td>${b.biz}</td><td>${b.ent}</td></tr>`).join("")}</tbody>
+      </table>
+      <p class="caveat">${ILLUMINE.discounts}. Tour management is an add-on on Standard, included on Business/Enterprise. Standard has no billing or CRM — any center invoicing parents or running admissions needs Business+.</p>
+    </div>
+
+    <div class="grid2" style="margin-top:8px;">
+      <div class="card">
+        <h3>Security & Compliance</h3>
+        <ul class="clean plain">${ILLUMINE.security.map(s=>`<li>${s}</li>`).join("")}</ul>
+      </div>
+      <div class="card">
+        <h3>Support</h3>
+        <ul class="clean plain">${ILLUMINE.support.map(s=>`<li>${s}</li>`).join("")}</ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Customers (proof points)</h3>
+      <div class="logo-strip">${ILLUMINE.customers.map(c=>`<span class="logo-chip">${c}</span>`).join("")}</div>
+    </div>
+
+    <h3 style="margin-top:24px;">Demo Objection Bank <span style="color:var(--text-muted);font-size:12px;font-weight:400;">— compiled from 6 live demo transcripts, 15 Jun–16 Jul 2026</span></h3>
+    ${ILLUMINE.faqs.map(cat=>`
+      <div class="card">
+        <h3>${cat.cat}</h3>
+        ${cat.qs.map(q=>`<div class="objection"><div class="q">${q.q}</div><div class="a">${q.a}</div></div>`).join("")}
+      </div>`).join("")}
+  `;
+}
+
+function renderCompetitorTab(c){
+  return `
+    <div class="profile-head">
+      <div>
+        <h2>${c.name}</h2>
+        <p class="sub">${c.tagline} — <a href="https://${c.website}" target="_blank">${c.website}</a></p>
+      </div>
+      ${threatPill(c.threat,c.threatLabel)}
+    </div>
+
+    <div class="badge-row">
+      <span class="badge">Target: <b>${c.target}</b></span>
+    </div>
+
+    <div class="card"><h3>Scale / maturity</h3><p style="font-size:13.5px;color:var(--text-secondary);margin:0">${c.scale}</p></div>
+    <div class="card"><h3>What's new / recently re-verified (Aug 2026)</h3><p style="font-size:13.5px;color:var(--text-secondary);margin:0">${c.recent}</p></div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="dot" style="background:var(--they-win)"></span>Where they win</h3>
+        <ul class="clean lose">${c.win.map(w=>`<li>${w}</li>`).join("")}</ul>
+      </div>
+      <div class="card">
+        <h3><span class="dot" style="background:var(--you-win)"></span>Where Illumine wins</h3>
+        <ul class="clean win">${c.lose.map(l=>`<li>${l}</li>`).join("")}</ul>
+      </div>
+    </div>
+
+    <div class="card"><h3>Pricing intel</h3><p style="font-size:13.5px;color:var(--text-secondary);margin:0">${c.pricing}</p></div>
+
+    <h3 style="margin-top:24px;">Talk tracks</h3>
+    ${c.talk.map(t=>`<div class="talk-track"><b>${t.label}:</b> ${t.text}</div>`).join("")}
+
+    ${c.objections?`<h3 style="margin-top:20px;">Objection handling</h3>${c.objections.map(o=>`<div class="objection"><div class="q">${o.q}</div><div class="a">${o.a}</div></div>`).join("")}`:""}
+
+    <h3 style="margin-top:20px;">Landmine questions <span style="color:var(--text-muted);font-size:12px;font-weight:400;">— ask, don't badmouth</span></h3>
+    ${c.landmines.map(l=>`<div class="landmine">"${l}"</div>`).join("")}
+
+    ${c.note?`<p class="caveat">Note: ${c.note}</p>`:""}
+  `;
+}
+
+// ---- render tabs & content ----
+const nav = document.getElementById("tabnav");
+const main = document.getElementById("maincontent");
+
+const TABS = [
+  {id:"matrix", label:"Comparison Matrix", render: renderMatrixTab},
+  {id:"illumine", label:"Illumine (Us)", render: renderIllumineTab},
+  ...COMPETITORS.map(c=>({id:c.id, label:c.name, flag: c.threat==="high"?"watch":null, render: ()=>renderCompetitorTab(c)})),
+];
+
+TABS.forEach((t,i)=>{
+  const btn = document.createElement("button");
+  btn.className = "tab" + (i===0?" active":"");
+  btn.dataset.tab = t.id;
+  btn.innerHTML = t.label + (t.flag?` <span class="flag watch">watch</span>`:"");
+  btn.onclick = ()=> activate(t.id);
+  nav.appendChild(btn);
+
+  const sec = document.createElement("div");
+  sec.className = "tab-content" + (i===0?" active":"");
+  sec.id = "panel-"+t.id;
+  sec.innerHTML = t.render();
+  main.appendChild(sec);
+});
+
+function activate(id){
+  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active", b.dataset.tab===id));
+  document.querySelectorAll(".tab-content").forEach(p=>p.classList.toggle("active", p.id==="panel-"+id));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+</script>
+</body>
+</html>
