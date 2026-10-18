@@ -1,26 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Illumine (GCA) — KSA Competitive Battlecard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* ---------- Theme tokens: light default, dark via system preference or manual toggle ---------- */
   :root{
-    --bg-primary:#0a0d14;
-    --bg-elevated:#0f131c;
-    --bg-surface:#161b28;
-    --bg-hover:#1e2536;
-    --text-primary:#ffffff;
-    --text-secondary:rgba(255,255,255,0.72);
-    --text-muted:rgba(255,255,255,0.5);
-    --accent:#a855f7;
-    --accent-hover:#9333ea;
-    --accent2:#22d3ee;
-    --you-win:#10b981;
-    --they-win:#ef4444;
-    --tie:#f59e0b;
-    --border:rgba(255,255,255,0.09);
+    --bg-primary:#f5f6fa;
+    --bg-elevated:#ffffff;
+    --bg-surface:#ffffff;
+    --bg-hover:#eef0f6;
+    --text-primary:#14182a;
+    --text-secondary:rgba(20,24,42,0.78);
+    --text-muted:rgba(20,24,42,0.58);
+    --accent:#7c3aed;
+    --accent-hover:#6d28d9;
+    --accent2:#0e7490;
+    --you-win:#047857;
+    --they-win:#b91c1c;
+    --tie:#b45309;
+    --border:rgba(20,24,42,0.12);
+    --header-wash:linear-gradient(135deg,#ede9fe 0%,#ffffff 60%);
+    --pill-us-bg:rgba(124,58,237,0.12);   --pill-us-text:#5b21b6;
+    --danger-bg:rgba(185,28,28,0.10);     --danger-text:#991b1b;  --danger-border:rgba(185,28,28,0.28);
+    --warn-bg:rgba(180,83,9,0.10);        --warn-text:#92400e;    --warn-border:rgba(180,83,9,0.30);
+    --low-bg:rgba(20,24,42,0.07);
   }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg-primary:#0a0d14; --bg-elevated:#0f131c; --bg-surface:#161b28; --bg-hover:#1e2536;
+      --text-primary:#ffffff; --text-secondary:rgba(255,255,255,0.72); --text-muted:rgba(255,255,255,0.5);
+      --accent:#a855f7; --accent-hover:#9333ea; --accent2:#22d3ee;
+      --you-win:#10b981; --they-win:#ef4444; --tie:#f59e0b; --border:rgba(255,255,255,0.09);
+      --header-wash:linear-gradient(135deg,#1a0f2e 0%,#0f131c 60%);
+      --pill-us-bg:rgba(168,85,247,0.18);  --pill-us-text:#d8b4fe;
+      --danger-bg:rgba(239,68,68,0.16);    --danger-text:#fca5a5;  --danger-border:rgba(239,68,68,0.3);
+      --warn-bg:rgba(245,158,11,0.10);     --warn-text:#fde68a;    --warn-border:rgba(245,158,11,0.28);
+      --low-bg:rgba(255,255,255,0.08);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg-primary:#0a0d14; --bg-elevated:#0f131c; --bg-surface:#161b28; --bg-hover:#1e2536;
+    --text-primary:#ffffff; --text-secondary:rgba(255,255,255,0.72); --text-muted:rgba(255,255,255,0.5);
+    --accent:#a855f7; --accent-hover:#9333ea; --accent2:#22d3ee;
+    --you-win:#10b981; --they-win:#ef4444; --tie:#f59e0b; --border:rgba(255,255,255,0.09);
+    --header-wash:linear-gradient(135deg,#1a0f2e 0%,#0f131c 60%);
+    --pill-us-bg:rgba(168,85,247,0.18);  --pill-us-text:#d8b4fe;
+    --danger-bg:rgba(239,68,68,0.16);    --danger-text:#fca5a5;  --danger-border:rgba(239,68,68,0.3);
+    --warn-bg:rgba(245,158,11,0.10);     --warn-text:#fde68a;    --warn-border:rgba(245,158,11,0.28);
+    --low-bg:rgba(255,255,255,0.08);
+  }
+
   *{box-sizing:border-box;}
+  html{color-scheme:light dark;}
+  :root[data-theme="light"]{color-scheme:light;}
+  :root[data-theme="dark"]{color-scheme:dark;}
   body{
     margin:0;
     background:var(--bg-primary);
@@ -28,88 +66,91 @@
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     line-height:1.5;
   }
-  header{
-    padding:28px 32px 20px;
-    background:linear-gradient(135deg,#1a0f2e 0%,var(--bg-elevated) 60%);
-    border-bottom:1px solid var(--border);
+  /* Arabic: dedicated font stack, roomier leading, no letter-spacing (it breaks Arabic joining) */
+  html[lang="ar"] body{
+    font-family:"IBM Plex Sans Arabic","Noto Sans Arabic","Noto Naskh Arabic","Segoe UI",Tahoma,"Geeza Pro","Arabic Typesetting",sans-serif;
+    line-height:1.75;
   }
-  header .brandrow{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+  html[dir="rtl"] *{letter-spacing:0 !important;}
+
+  header{padding:24px 32px 20px;background:var(--header-wash);border-bottom:1px solid var(--border);}
+  header .brandrow{display:flex;align-items:center;gap:12px;margin-bottom:6px;flex-wrap:wrap;}
   .logo-glyph{width:26px;height:26px;border-radius:6px;background:conic-gradient(from 90deg,#ec4899,#22d3ee,#a855f7,#f59e0b,#ec4899);flex-shrink:0;}
   header h1{margin:0;font-size:22px;font-weight:700;letter-spacing:-0.02em;}
   header p{margin:4px 0 0;color:var(--text-muted);font-size:13px;}
-  header .meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:12.5px;color:var(--text-secondary);}
+  header .meta{display:flex;gap:6px 18px;flex-wrap:wrap;margin-top:14px;font-size:12.5px;color:var(--text-secondary);}
   header .meta span b{color:var(--text-primary);}
+  .toolbar{margin-inline-start:auto;display:flex;gap:8px;}
+  .tbtn{
+    font:inherit;font-size:12.5px;font-weight:600;padding:6px 14px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--border);background:var(--bg-surface);color:var(--text-primary);
+    transition:background .15s ease;
+  }
+  .tbtn:hover{background:var(--bg-hover);}
+  .tbtn:focus-visible,.tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 
   nav.tabs{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-    padding:14px 32px;
-    background:var(--bg-elevated);
-    border-bottom:1px solid var(--border);
+    display:flex;flex-wrap:wrap;gap:6px;padding:14px 32px;
+    background:var(--bg-elevated);border-bottom:1px solid var(--border);
     position:sticky;top:0;z-index:20;
   }
   .tab{
-    padding:9px 16px;
-    border-radius:10px;
-    border:1px solid var(--border);
-    background:var(--bg-surface);
-    color:var(--text-secondary);
-    font-size:13px;
-    font-weight:600;
-    cursor:pointer;
-    transition:all .18s ease;
-    white-space:nowrap;
+    font:inherit;padding:9px 16px;border-radius:10px;border:1px solid var(--border);
+    background:var(--bg-surface);color:var(--text-secondary);
+    font-size:13px;font-weight:600;cursor:pointer;transition:all .18s ease;white-space:nowrap;
   }
   .tab:hover{background:var(--bg-hover);color:var(--text-primary);}
   .tab.active{background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;border-color:transparent;}
-  .tab .flag{display:inline-block;margin-left:6px;font-size:10px;padding:1px 6px;border-radius:999px;background:rgba(239,68,68,0.18);color:#fca5a5;font-weight:700;}
-  .tab .flag.watch{background:rgba(245,158,11,0.18);color:#fcd34d;}
+  .tab .flag{display:inline-block;margin-inline-start:6px;font-size:10px;padding:1px 6px;border-radius:999px;background:var(--warn-bg);color:var(--warn-text);font-weight:700;}
+  .tab.active .flag{background:rgba(255,255,255,0.22);color:#fff;}
 
   main{padding:26px 32px 60px;max-width:1280px;margin:0 auto;}
   .tab-content{display:none;}
   .tab-content.active{display:block;animation:fade .25s ease;}
   @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+  @media (prefers-reduced-motion:reduce){.tab-content.active{animation:none;}}
 
   h2.section-title{font-size:19px;margin:0 0 4px;letter-spacing:-0.01em;}
   p.section-sub{color:var(--text-muted);font-size:13px;margin:0 0 18px;}
+  .hl{color:var(--text-primary);}
+  .sect{margin-top:24px;}
+  .sect-lg{margin-top:28px;}
+  .hint{color:var(--text-muted);font-size:12px;font-weight:400;}
 
-  .card{
-    background:var(--bg-surface);
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:20px 22px;
-    margin-bottom:18px;
-  }
-  .card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;}
+  .card{background:var(--bg-surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:18px;}
+  .card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
   .card h3 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .card p.body{font-size:13.5px;color:var(--text-secondary);margin:0 0 8px;}
+  .card p.body:last-child{margin-bottom:0;}
 
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
   .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
-  @media (max-width:820px){.grid2,.grid3{grid-template-columns:1fr;}}
+  @media (max-width:820px){.grid2,.grid3{grid-template-columns:1fr;}header,nav.tabs,main,footer{padding-inline:16px;}}
 
   table{width:100%;border-collapse:collapse;font-size:12.8px;}
-  th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;}
+  th,td{padding:9px 10px;text-align:start;border-bottom:1px solid var(--border);vertical-align:top;}
   thead th{position:sticky;top:0;background:var(--bg-surface);color:var(--text-secondary);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em;}
   tbody tr:hover{background:var(--bg-hover);}
   .center{text-align:center;}
+  th.center,td.center{text-align:center;}
   .yes{color:var(--you-win);font-weight:800;}
   .no{color:var(--they-win);font-weight:800;}
   .partial{color:var(--tie);font-weight:800;}
+  sup.fn{color:var(--text-muted);}
 
   .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:700;}
-  .pill.us{background:rgba(168,85,247,0.18);color:#d8b4fe;}
-  .pill.threat-high{background:rgba(239,68,68,0.16);color:#fca5a5;}
-  .pill.threat-med{background:rgba(245,158,11,0.16);color:#fcd34d;}
-  .pill.threat-low{background:rgba(255,255,255,0.08);color:var(--text-muted);}
+  .pill.us{background:var(--pill-us-bg);color:var(--pill-us-text);}
+  .pill.threat-high{background:var(--danger-bg);color:var(--danger-text);}
+  .pill.threat-med{background:var(--warn-bg);color:var(--warn-text);}
+  .pill.threat-low{background:var(--low-bg);color:var(--text-muted);}
 
-  ul.clean{margin:0;padding-left:0;list-style:none;}
-  ul.clean li{padding:6px 0 6px 20px;position:relative;font-size:13.5px;color:var(--text-secondary);border-bottom:1px dashed var(--border);}
+  ul.clean{margin:0;padding:0;list-style:none;}
+  ul.clean li{padding-block:6px;padding-inline-start:20px;position:relative;font-size:13.5px;color:var(--text-secondary);border-bottom:1px dashed var(--border);}
   ul.clean li:last-child{border-bottom:none;}
-  ul.clean.win li:before{content:"▲";position:absolute;left:0;color:var(--you-win);font-size:10px;top:9px;}
-  ul.clean.lose li:before{content:"▼";position:absolute;left:0;color:var(--they-win);font-size:10px;top:9px;}
-  ul.clean.plain li:before{content:"–";position:absolute;left:0;color:var(--text-muted);}
-  ul.clean.mine li:before{content:"⚠";position:absolute;left:0;color:var(--tie);font-size:11px;top:6px;}
+  ul.clean.win li:before{content:"▲";position:absolute;inset-inline-start:0;color:var(--you-win);font-size:10px;top:9px;}
+  ul.clean.lose li:before{content:"▼";position:absolute;inset-inline-start:0;color:var(--they-win);font-size:10px;top:9px;}
+  ul.clean.plain li:before{content:"–";position:absolute;inset-inline-start:0;color:var(--text-muted);}
+  ul.clean.mine li:before{content:"⚠";position:absolute;inset-inline-start:0;color:var(--tie);font-size:11px;top:6px;}
 
   .badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
   .badge{background:var(--bg-hover);border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:11.5px;color:var(--text-secondary);}
@@ -118,49 +159,37 @@
   .profile-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:6px;}
   .profile-head h2{margin:0;font-size:24px;}
   .profile-head .sub{color:var(--text-muted);font-size:13px;margin-top:4px;}
-  .threat-box{border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:18px;background:var(--bg-elevated);}
-  .talk-track{border-left:3px solid var(--accent);padding:10px 14px;background:var(--bg-elevated);border-radius:0 8px 8px 0;margin-bottom:10px;font-size:13.5px;color:var(--text-secondary);}
+  .talk-track{
+    border-inline-start:3px solid var(--accent);padding:10px 14px;background:var(--bg-elevated);
+    border-start-end-radius:8px;border-end-end-radius:8px;margin-bottom:10px;font-size:13.5px;color:var(--text-secondary);
+  }
   .talk-track b{color:var(--text-primary);}
-  .landmine{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;padding:10px 14px;margin-bottom:8px;font-size:13.5px;color:#fde68a;}
+  .landmine{background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:8px;padding:10px 14px;margin-bottom:8px;font-size:13.5px;color:var(--warn-text);}
   .objection{border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:10px;background:var(--bg-elevated);}
-  .objection .q{font-size:13.5px;color:#fca5a5;font-weight:600;margin-bottom:4px;}
+  .objection .q{font-size:13.5px;color:var(--danger-text);font-weight:600;margin-bottom:4px;}
   .objection .a{font-size:13.5px;color:var(--text-secondary);}
 
   .stat-tile{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center;}
-  .stat-tile .num{font-size:22px;font-weight:800;color:var(--accent2);}
+  .stat-tile .num{font-size:22px;font-weight:800;color:var(--accent2);direction:ltr;unicode-bidi:isolate;}
   .stat-tile .label{font-size:11.5px;color:var(--text-muted);margin-top:2px;}
 
   .logo-strip{display:flex;flex-wrap:wrap;gap:8px;}
-  .logo-chip{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--text-secondary);}
+  .logo-chip{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--text-secondary);direction:ltr;unicode-bidi:isolate;}
 
   footer{padding:20px 32px 40px;color:var(--text-muted);font-size:11.5px;border-top:1px solid var(--border);}
   .caveat{font-size:11.5px;color:var(--text-muted);margin-top:10px;font-style:italic;}
+  html[lang="ar"] .caveat{font-style:normal;}
   a{color:var(--accent2);text-decoration:none;}
+  a.site{direction:ltr;unicode-bidi:isolate;display:inline-block;}
+  .addons-label{font-size:12px;color:var(--accent2);margin:10px 0 4px;font-weight:700;}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="brandrow">
-    <div class="logo-glyph"></div>
-    <h1>Illumine — KSA Competitive Battlecard</h1>
-  </div>
-  <p>Prepared for Arabian Child / Global Childhood Academy (GCA) — Illumine reseller (VAR), Saudi Arabia</p>
-  <div class="meta">
-    <span>Generated: <b>August 19, 2026</b></span>
-    <span>Owner: <b>Noora Amer</b></span>
-    <span>Competitors tracked: <b>7</b> (Rekaz, Ynmo, Kanaf, Banan, Naashah, Bounce, ClassDojo)</span>
-    <span>Sources: <b>internal KSA reseller sheet + live competitor site re-checks, Aug 19 2026</b></span>
-  </div>
-</header>
-
-<nav class="tabs" id="tabnav"></nav>
-
+<header id="hdr"></header>
+<nav class="tabs" id="tabnav" role="tablist"></nav>
 <main id="maincontent"></main>
-
-<footer>
-  Built from Illumine's official KSA reseller Feature Matrix & pricing sheet (Aug 2026), the Illumine KSA Competitors brief, the Illumine KSA Competitive Brief (re-verified Aug 19 2026), the Illumine product deck, and 6 demo-call transcripts (15 Jun–16 Jul 2026). Every competitor "✗" means "not found in public sources as of this check," not "confirmed absent." Refresh monthly for new entrants/announcements, quarterly for a full revision.
-</footer>
+<footer id="ftr"></footer>
 
 <script>
 const ILLUMINE = {
@@ -348,23 +377,446 @@ const MATRIX_ROWS = [
 ];
 const MATRIX_COLS = ["Illumine","Rekaz","Ynmo","Kanaf","Banan","Naashah","Bounce","ClassDojo"];
 
+// ======================= ARABIC OVERLAYS (Modern Standard Arabic) =======================
+// Same shape as the English data; merged over it at render time. Proper nouns and customer names stay in Latin script.
+const ILLUMINE_AR = {
+  pricingTiers:[
+    {tier:"الأساسية (Standard)", usd:"1.50 دولار", sar:"5.63 ر.س"},
+    {tier:"الأعمال (Business)", usd:"2.75 دولار", sar:"10.31 ر.س"},
+    {tier:"المؤسسات (Enterprise)", usd:"4.25 دولار", sar:"15.94 ر.س"},
+  ],
+  bands:[
+    {band:"أقل من 50",  std:"375 ر.س",   biz:"656 ر.س",   ent:"938 ر.س"},
+    {band:"50 – 150",   std:"1,125 ر.س", biz:"1,969 ر.س", ent:"2,813 ر.س"},
+    {band:"150 – 300",  std:"2,138 ر.س", biz:"3,769 ر.س", ent:"5,456 ر.س"},
+    {band:"300 – 500",  std:"3,375 ر.س", biz:"6,000 ر.س", ent:"8,813 ر.س"},
+  ],
+  discounts:"سنوي 15% · نصف سنوي 10% · ربع سنوي 5% (على الاشتراك الأساسي فقط — الإضافات والتهيئة رسوم ثابتة غير قابلة للخصم)",
+  packages:[
+    {name:"الأساسية (Standard)", desc:"للمراكز المنفردة — تبسيط العمليات اليومية وضمان الاتساق.",
+     items:["تطبيق التواصل مع أولياء الأمور","الحضور الرقمي","قائمة الطعام وتتبع الوجبات","تقويم الفعاليات والعطلات","تسجيل الدخول والخروج دون تلامس","التقارير اليومية وخلاصة الأخبار","مراسلة غير محدودة","الرسائل الصوتية ومشاركة المستندات","مساحة تخزين 20 جيجابايت","حتى 5 موظفين","تقارير الحوادث والإصابات"],
+     addons:["جدولة الجولات التعريفية","مساعد الكتابة بالذكاء الاصطناعي"]},
+    {name:"الأعمال (Business)", desc:"مركزة العمليات وتوحيد هوية العلامة.",
+     items:["كل ما في الأساسية، بالإضافة إلى:","الفوترة وإصدار الفواتير لرسوم الحضانة","سداد الرسوم إلكترونيًا والتقارير","الدفع المتكرر الآلي","نسب الأطفال إلى الموظفين والتنبيهات (ذكاء اصطناعي)","تخطيط الدروس","إدارة ملاحظات أولياء الأمور","تتبع الحساسية الغذائية","مساحة تخزين 100 جيجابايت","البرامج وتخطيط الطاقة الاستيعابية","دعم التهيئة الجماعية"],
+     addons:["التقييم 2.0 (Assessment 2.0)","إدارة الجولات التعريفية","مساعد الكتابة بالذكاء الاصطناعي","مخطط الدروس بالذكاء الاصطناعي"]},
+    {name:"المؤسسات (Enterprise)", desc:"للمؤسسات الكبيرة — قرارات مدروسة على نطاق واسع.",
+     items:["كل ما في الأعمال، بالإضافة إلى:","إدارة المراكز المتعددة","تقييمات الأطفال (أكثر من 25 منهجًا)","النشرة الإخبارية بالذكاء الاصطناعي","إدارة إجازات الموظفين","إدارة الاستفسارات (CRM)","إدارة الدعم والإعانات","منشئ النماذج","مساحة تخزين 200 جيجابايت","تقارير مخصصة","مدير حساب مخصص"],
+     addons:["التقييم 2.0 (Assessment 2.0)","إدارة الجولات التعريفية","مساعد الكتابة بالذكاء الاصطناعي","مخطط الدروس بالذكاء الاصطناعي"]},
+  ],
+  proofStats:[
+    {num:"3,000+", label:"مركز حول العالم (عالميًا)"},
+    {num:"50+",    label:"دولة"},
+    {num:"50+",    label:"إطار منهجي (ادعاء عالمي)"},
+    {num:"96%+",   label:"تحصيل المدفوعات خلال 3 أيام من إصدار الفاتورة"},
+    {num:"70%",    label:"زيادة مُبلَّغ عنها في القبول"},
+    {num:"1.7×",   label:"ارتفاع في معدل الاحتفاظ بالموظفين"},
+  ],
+  security:[
+    "الامتثال للائحة GDPR (عالميًا) — دقّقت في الامتثال لها وفي أمن المعلومات جهات منها Genpact و Goldman Sachs و PwC",
+    "جاهزية الخدمة بنسبة 99.99% مع مراقبة اتفاقية مستوى الخدمة (SLA)",
+    "نسخ احتياطية تزايدية يومية وقاعدة بيانات مخصصة",
+    "اختبارات اختراق دورية تجريها Synopsys",
+    "⚠ لم تتناولها ورقة الموزّع الرسمية للسوق السعودي: SOC 2 والفوترة الإلكترونية ZATCA والامتثال لمتطلبات HRSD — لا تَعِد بها في صفقة سعودية قائمة دون إعادة التأكد"
+  ],
+  support:[
+    "قنوات الدعم: مجموعة واتساب، البريد الإلكتروني، الدردشة المباشرة والتذاكر",
+    "تدريب مباشر مخصص لجميع الموظفين، مع تسجيل الجلسات ومشاركتها",
+    "بوابة مساعدة تضم أدلة المنتج ومقاطع الفيديو",
+    "دعم مدفوع لباقة المؤسسات: متابعة اتفاقية مستوى الخدمة، والاطلاع على التذاكر وتقاريرها، ومصفوفة تصعيد، وأرصدة تعويض عند الإخلال بالاتفاقية"
+  ],
+  aiConfirmedKSA:[
+    "الترجمة بالذكاء الاصطناعي — أكثر من 15 لغة (بما فيها العربية)، في جميع الباقات ابتداءً من الأساسية",
+    "تنبيهات نسبة الأطفال إلى الموظفين بالذكاء الاصطناعي، في جميع الباقات ابتداءً من الأساسية"
+  ],
+  aiGlobalUnconfirmed:[
+    "مساعد كتابة أوسع بالذكاء الاصطناعي (يُباع منفصلًا كإضافة: إضافة في الأساسية؛ وإضافة في الأعمال والمؤسسات)",
+    "مخطط الدروس بالذكاء الاصطناعي (إضافة في الأعمال والمؤسسات)",
+    "النشرة الإخبارية بالذكاء الاصطناعي (مضمّنة في المؤسسات)",
+    "يدّعي الموقع العالمي «أكثر من 50 إطارًا منهجيًا» وأكثر من 20 لغة وتوليدًا أوسع للأنشطة والدروس بالذكاء الاصطناعي — تُعامَل كغير مؤكدة ضمن باقات موزّع السوق السعودي"
+  ],
+  gaps:[
+    "لا توجد فوترة إلكترونية سعودية (ZATCA) في ورقة الموزّع الرسمية",
+    "إدارة الاستفسارات وقوائم الانتظار (CRM) متاحة في باقة المؤسسات فقط — لا التقاط للعملاء المحتملين في الأساسية والأعمال",
+    "لا يوجد امتثال تنظيمي محلي مسمّى (مثل HRSD) في ورقة الموزّع",
+    "لا توجد قناة سوق/اكتشاف موجّهة لأولياء الأمور"
+  ],
+  faqs:[
+    {cat:"الأسعار والباقات", qs:[
+      {q:"كم التكلفة، وماذا تتضمن كل باقة؟", a:"اعرض جدول الباقات بحسب شريحة عدد الطلاب (30 / 40–60 / 1,000+) لتُجيب في ثوانٍ. أبقِ الورقة التعريفية الموجزة جاهزة قبل أن يُطلب منك ذلك."},
+      {q:"تسعير لكل طالب أم لكل مركز؟", a:"كلاهما: اشتراك شهري لكل طالب بالإضافة إلى رسم ثابت لكل مركز بحسب شريحة التسجيل."},
+      {q:"هل يوجد خصم للدفع السنوي أو نصف السنوي أو الربع سنوي؟", a:"15% و10% و5% على التوالي — على الاشتراك الأساسي فقط، وليس على الإضافات أو التهيئة."},
+      {q:"هل يمكننا استبعاد ميزة لا نحتاجها والحصول على سعر أقل؟", a:"الباقات ثابتة لكل مستوى؛ والإضافات رسوم ثابتة منفصلة (250 دولارًا سنويًا للإضافة الواحدة، و350 دولارًا سنويًا لأي إضافتين معًا)."},
+    ]},
+    {cat:"التجربة والتهيئة", qs:[
+      {q:"هل يمكننا الحصول على تجربة مجانية؟", a:"نعم — 15 يومًا. اطرحها بنفسك في أول اجتماع بدل انتظار السؤال؛ فهي تسرّع دورة القرار باستمرار."},
+      {q:"هل يمكننا التجربة خلال فترة محددة (مثل المخيم الصيفي)؟", a:"نعم، يمكن جدولة التجربة (15 يومًا) حول فترة محددة قبل الالتزام بسنة كاملة."},
+    ]},
+    {cat:"الانتقال واستبدال الأنظمة الحالية", qs:[
+      {q:"هل يمكنها أن تحل محل محاسبنا أو تطبيقنا الحالي بالكامل (مثل ينمو أو أي منافس آخر)؟", a:"نعم في باقتي الأعمال والمؤسسات (الفوترة وإصدار الفواتير والتذكيرات). تعامل مع هذا كاعتراض ثقة لا كسؤال عن الميزات — اشرح الانتقال أسبوعًا بأسبوع بدل الاكتفاء بسرد الميزات."},
+      {q:"كيف يتم نقل البيانات من الورق أو من تطبيق آخر؟", a:"جهّز مادة مخصصة بعنوان «كيف يبدو الانتقال أسبوعًا بأسبوع» — فهو الخطر الأول غير المعلَن لكل من يترك نظامًا يدويًا أو منافسًا."},
+    ]},
+    {cat:"الأمان والامتثال وتقنية المعلومات", qs:[
+      {q:"المصادقة متعددة العوامل (MFA)، النسخ الاحتياطي، الاستضافة، سجلات التدقيق، تسجيل الدخول الموحد (SSO)؟", a:"أبقِ ورقة حقائق الأمان والامتثال من صفحة واحدة جاهزة لحظة انضمام معني بتقنية المعلومات إلى المكالمة — فالأسئلة تصل كمجموعة كاملة لا واحدًا تلو الآخر."},
+      {q:"ما شهادات الأمان التي تحملها إيلومين؟", a:"يذكر التسويق العالمي شهادة SOC 2 Type 2 — تأكد من أنها لا تزال سارية قبل تكرارها في صفقة سعودية، فورقة الموزّع الرسمية للسوق السعودي لا تتناول الشهادات."},
+      {q:"هل يتوفر تسجيل الدخول الموحد عبر Microsoft؟", a:"نعم — ويتطلب فقط إضافة النطاق إلى القائمة المسموح بها."},
+    ]},
+    {cat:"المؤسسات / الفروع المتعددة", qs:[
+      {q:"هل توجد لوحة تحكم واحدة لعدة فروع؟", a:"نعم — في باقة الأعمال فما فوق (لوحة البرامج + تسجيل دخول واحد عبر المراكز)."},
+      {q:"هل يمكن وجود أكثر من مدير عام (Super Admin)؟", a:"أكّد تفاصيل نموذج الصلاحيات الحالي مع فريق المنتج قبل الوعد بتفاصيل محددة."},
+    ]},
+  ],
+};
+
+const COMPETITORS_AR = {
+  rekaz:{
+    name:"ركاز",
+    tagline:"منصة SaaS أفقية للحجز والاشتراكات للمنشآت الصغيرة، مع قطاع مخصص للحضانات",
+    threatLabel:"تهديد حسّاس للسعر",
+    scale:"أكثر من 30,000 منشأة وأكثر من مليون حجز عبر جميع قطاعات ركاز (وليس الحضانات وحدها) · تمويل أولي بقيمة 5 ملايين دولار بقيادة COTU Ventures أُغلق في يوليو 2025",
+    target:"ملّاك الحضانات السعودية ذات الفرع الواحد الراغبون في أداة حجز ومدفوعات بسيطة منخفضة التكلفة (وتبيع أيضًا لصالونات وصالات رياضية وعيادات)",
+    recent:"تأكدت جولة التمويل الأولي (5 ملايين دولار) من خمس جهات مستقلة (Forbes ME و Wamda و MenaBytes و TheSaaSNews و IBS Intelligence)؛ وأكدت مراجعة صفحة قطاع الحضانات في أغسطس 2026 دعم الفروع المتعددة (داخل دولة واحدة) — وهذا يصحّح ملاحظة سابقة بأن ركاز لا تملكه.",
+    win:[
+      "فوترة إلكترونية متوافقة مع ZATCA المرحلة الثانية",
+      "مدى وفيزا وماستركارد و Apple Pay + الدفع الآجل عبر تمارا وتابي",
+      "صفحة هبوط خاصة بالحضانة بعلامتها للتسجيل المباشر وسداد أولياء الأمور بأنفسهم",
+      "إدارة الفروع المتعددة داخل السعودية (دولة واحدة)",
+      "أدوات تسويق مدمجة (عروض وخصومات واسترجاع السلات المتروكة) + واتساب",
+      "أكثر من 12 تقريرًا تشغيليًا",
+      "اشتراك سنوي ثابت دون عمولة — جذاب للحضانات الصغيرة ذات الفرع الواحد",
+      "مسجّلة لدى CITC وفي المركز السعودي للأعمال"
+    ],
+    lose:[
+      "لا منهج ولا تخطيط دروس ولا تقييم نمائي من أي نوع",
+      "لا إدارة للموظفين/الموارد البشرية أو الرواتب أو النسب",
+      "لا أدوات مؤسسية متعددة الدول (فروع متعددة داخل دولة واحدة فقط، مقابل حضور إيلومين في أكثر من 50 دولة)",
+      "الحضانات قطاع واحد من نحو 15 قطاعًا — فليست متخصصة في رعاية الطفولة"
+    ],
+    pricing:"اشتراك سنوي ثابت دون عمولة — مُسعَّر للحضانات الصغيرة ذات الفرع الواحد. غير مفصّل علنًا.",
+    talk:[
+      {label:"إن ذُكرت مبكرًا", text:"ركاز ليست شركة طفولة مبكرة — إنها منصة حجز ومدفوعات عامة تبيع أيضًا للصالات الرياضية ومغاسل السيارات. إيلومين بُنيت بأيدي مختصين في الطفولة المبكرة ولأجلهم، بمنهج تربوي وعمليات متعددة الدول حقيقية لا تحاول ركاز الاقتراب منها."},
+      {label:"إن كان العميل يستخدمها حاليًا", text:"إن كانوا يستخدمون ركاز اليوم، فاسألهم ماذا يستخدمون للمنهج وخطط الدروس وإدارة الموظفين والنسب — غالبًا لا شيء، لأن ركاز لا تقدّم ذلك."},
+      {label:"إن أُضيفت متأخرًا بسبب السعر", text:"ميزة الفروع المتعددة لديها تغطي عدة مواقع داخل السعودية، لا العمليات المؤسسية متعددة الدول التي تديرها إيلومين. أعِد صياغة الطرح من «أداة فوترة أرخص» إلى «منصة تربوية وتشغيلية»."},
+    ],
+    objections:[{q:"«ركاز متوافقة مع ZATCA وأرخص.»", a:"صحيح — ارفعه داخليًا، فورقتنا السعودية لا تتضمن ZATCA أصيلة بعد. لكن اسأل: ماذا تفعل ركاز لتخطيط الدروس أو نسب الموظفين أو تقارير الفروع المتعددة؟ لا شيء. وسينتهي بهم الأمر بشراء أداتين منفصلتين."}],
+    landmines:[
+      "كيف تساعد ركاز معلميكم على تخطيط الدروس وفق منهج مثل EYFS أو مونتيسوري؟",
+      "إذا افتتحتم حضانة ثانية في مدينة أخرى، هل تمنحكم ركاز تسجيل دخول واحدًا ولوحة تحكم واحدة للحضانتين؟",
+      "هل تتتبع ركاز نسب الموظفين إلى الأطفال أو تدير إجازات الموظفين والرواتب؟"
+    ],
+  },
+  ynmo:{
+    name:"ينمو",
+    tagline:"منصة إدارة حضانات متكاملة + خط مستقل للتقييم السريري والاحتياجات الخاصة",
+    threatLabel:"تهديد أكبر مما كان يُظن",
+    scale:"أكثر من 200 عميل حضانة سعودي معروف بالاسم (Kurrass و Qurrah Day Care و Hoya و Bandoon و RZN Juniors و Alerteqa و Little Kid و Time Kids Center و Riyadh Schools و Super Nanny و Little Wings و Sea Stars و Mahd و Kid's Homes وغيرهم) — تأكد ذلك من العرض التعريفي لشركة ينمو نفسها، أغسطس 2026",
+    target:"الحضانات السعودية ذات الفرع الواحد؛ والمراكز التي تحتاج أيضًا إلى تقييم نمائي سريري / احتياجات خاصة",
+    recent:"مراجعة جوهرية للملف في أغسطس 2026 بعد أن شاركت ينمو عرضها التعريفي ورسوماتها التسعيرية مباشرة: حجم فعلي، وتسعير حقيقي بحسب الشرائح، ومجموعة ميزات أوسع (الموظفون/الموارد البشرية، الفوترة، الفصول، منشئ المواقع) مما أظهره الموقع العام. عرضان ترويجيان ساريان: خصم 25% (مع التزام لسنتين) أو 40% عبر الإحالة (التزام لسنتين).",
+    win:[
+      "تقييم نمائي/سريري ASQ-3 (Brookes، الإصدار الثالث) مدمج مباشرة في منتج الحضانة — 21 استبيانًا × 30 سؤالًا، يغذّي مسار الفحص ثم الأخصائي ثم التدخل المبكر",
+      "خط منتجات مخصص لتأهيل ذوي الإعاقة (Ynmo Plan)",
+      "إدارة الموظفين/الموارد البشرية مع تخزين المستندات وصلاحيات بحسب الدور وتتبع الحضور والانصراف",
+      "فوترة مع إصدار الفواتير وتسجيل دخول/خروج بالباركود ومنشئ مواقع ولوحة تحكم",
+      "تسعير سنوي شفاف بحسب الشرائح مع عروض ترويجية سارية بخصم 25% / 40% مرتبطة بالتزام سنتين",
+      "دعم 8 لغات"
+    ],
+    lose:[
+      "لا منهج أو إطار طفولة مبكرة مسمّى (على نمط مونتيسوري/EYFS) — «وحداتها» مجرد متتبع برامج عام",
+      "لا أدوات مؤسسية للفروع المتعددة أو الدول المتعددة",
+      "لا سوق موجّه لأولياء الأمور ولا CRM/التقاط للعملاء المحتملين",
+      "التسعير السنوي الثابت غير مقسّم بحسب الميزات مثل باقات إيلومين الأساسية والأعمال والمؤسسات"
+    ],
+    pricing:"اشتراك سنوي ثابت بحسب شريحة التسجيل: من 1 إلى 50 طفلًا 6,440 ر.س · من 51 إلى 100: 11,270 ر.س · من 101 إلى 200: 15,410 ر.س — مع عرضَي خصم 25% (التزام سنتين) أو 40% عبر الإحالة (التزام سنتين)، إضافة إلى تجربة مجانية.",
+    talk:[
+      {label:"إن ذُكر مبكرًا", text:"إن كانت الحاجة الفعلية هي الفحص السريري/الاحتياجات الخاصة، فلدى ينمو عمق حقيقي هناك. أما المنهج اليومي والعمليات متعددة المراكز فإيلومين هي الأقوى والأكمل."},
+      {label:"إن كان العميل يستخدمه حاليًا", text:"اسأل تحديدًا عن المنهج الذي يستخدمه معلموهم يوميًا — «وحدات» ينمو متتبع أنشطة عام وليست إطارًا مسمّى مثل EYFS أو مونتيسوري."},
+      {label:"إن طُرح السعر", text:"انتبه لعرض الإحالة بخصم 40% لسنتين — فهو مرتكز سعري حقيقي. لا تنافس على السعر وحده؛ نافس بعمق المنهج والحجم المؤسسي. أعدّ مقارنة سعر/ميزات لكل شريحة بحسب شرائح ينمو نفسها (1–50 / 51–100 / 101–200) لتجيب فورًا."},
+    ],
+    objections:[{q:"«ينمو أرخص ولديه عرض خصم 40%.»", a:"تسعيره رسم سنوي ثابت وليس مقسّمًا بحسب الباقات — فالمركز الذي يحتاج الإدارة الأساسية فقط يدفع ثمن الحزمة كاملة. أما إيلومين فتتيح لك البدء بالأساسية والنمو نحو الأعمال/المؤسسات مع نمو احتياجاتك."}],
+    landmines:[
+      "بخلاف فحص ASQ-3، ماذا يستخدم فريقكم يوميًا لتخطيط الدروس وفق منهج مسمّى؟",
+      "إذا افتتحتم فرعًا ثانيًا، هل يمنحكم ينمو تسجيل دخول واحدًا للفرعين؟",
+      "هل تحتاجون إلى CRM/التقاط للعملاء المحتملين لأغراض القبول — وكيف يعالج ينمو ذلك اليوم؟"
+    ],
+  },
+  kanaf:{
+    name:"كنف",
+    tagline:"أداة إدارية صغيرة للحضانات/رياض الأطفال — حضور عام ضعيف",
+    threatLabel:"معلومات قليلة — أعد التحقق قبل الاستشهاد",
+    scale:"لم نجد أرقامًا معلنة. تطبيق من صفحة واحدة يُعرض من جهة العميل بمحتوى قابل للفهرسة شبه معدوم؛ وإعلان وظيفة مستقل يعود إلى نحو 2020 يُظهر أن المنتج كان قيد النمذجة آنذاك.",
+    target:"يُفترض أنهم ملّاك حضانات سعودية ذات فرع واحد يريدون أداة أساسية مجانية البداية (غير مؤكد).",
+    recent:"لم نجد تغييرات عند إعادة الفحص، أغسطس 2026. لا يزال الملف الأصعب تحققًا في المجموعة إلى جانب نشأة.",
+    win:[
+      "نقطة دخول مجانية البداية (بحسب الوصف التعريفي للموقع)",
+      "يغطي الإدارة الأساسية: التسجيل والحضور والفوترة الإلكترونية وبوابة أولياء الأمور"
+    ],
+    lose:[
+      "لا يظهر منهج أو تقييم أو موظفون/موارد بشرية أو فروع متعددة أو ميزات ذكاء اصطناعي",
+      "لا مؤشرات حجم أو تمويل أو نضج معلنة — يصعب تقدير مدى رسوخه"
+    ],
+    pricing:"مجاني للبدء بحسب الوصف التعريفي؛ لا تفاصيل أخرى متاحة.",
+    talk:[{label:"إن ذُكر", text:"هو أقل المنافسين معلومات في المجموعة. تعامل معه كأداة محلية صغيرة/ناشئة ما لم يثبت العكس — ويستحق نظرة جديدة (عرضًا مباشرًا أو تجربة) قبل أي صفقة يكون فيها بديلًا قائمًا."}],
+    objections:[{q:"«كنف مجاني للبدء.»", a:"اطلب رؤيته مباشرة — لا تكاد توجد معلومات عامة للتحقق من عمق الميزات أو الحجم أو الموثوقية. أداة مجانية بلا منهج ظاهر ولا أدوات للموظفين ولا هيكل دعم هي مخاطرة حقيقية على العميل، وليست مجرد خيار أرخص."}],
+    landmines:["هل يمكنني رؤية عرض مباشر أو حساب تجريبي؟ المعلومات العامة قليلة جدًا."],
+    note:"يوجد تطبيق آخر غير مرتبط يحمل اسم «Kanaf» في App Store (أداة لتنظيم زيارات الأبناء بين الوالدين المنفصلين من مطوّر مختلف) — لا تخلط بينهما في أي عرض أو ادعاء."
+  },
+  banan:{
+    name:"بنان",
+    tagline:"سوق ثنائي الجانب + نظام إدارة للمزوّدين/المراكز",
+    threatLabel:"الأكثر اكتمالًا بين التهديدات المحلية السعودية",
+    scale:"السوق: أكثر من 1,500 مزوّد، وأكثر من 30 مدينة، وأكثر من 10 آلاف أسرة، وتقييم التطبيق 4.8. نظام الإدارة: أكثر من 20 حضانة، وأكثر من 800 طفل، وأكثر من 1,400 ولي أمر، وأكثر من 35 ألف حدث يوميًا.",
+    target:"ثنائي الجانب: أولياء أمور يبحثون عن مزوّدي رعاية وأنشطة للأطفال ويحجزون لديهم، ومزوّدون يريدون اكتشاف أسر جديدة وإدارة العمليات الخلفية معًا.",
+    recent:"أُعيد تأكيد أرقام مستوى السوق مباشرة على usebanan.com في أغسطس 2026. أما أرقام نظام الإدارة فمنقولة من البحث الأصلي ولم يُعاد التحقق منها بصورة مستقلة في هذه الجولة.",
+    win:[
+      "اللاعب المحلي السعودي الوحيد الذي يملك سوقًا حقيقيًا موجّهًا لأولياء الأمور يجلب تسجيلات جديدة — وليس مجرد إدارة للأسر الحالية",
+      "تخطيط الدروس + تسجيل إنجازات الأطفال ومشاركتها",
+      "طبقة موظفين/موارد بشرية تشمل طلبات الإجازة وصولًا إلى احتساب الرواتب",
+      "مبنيّ صراحةً بما يتوافق مع لوائح HRSD، مع تقارير جاهزة للتفتيش",
+      "وسائل دفع محلية (مدى و STC Pay و Apple Pay)، ودعم من داخل السعودية، وواجهة عربية بالكامل",
+      "طبقة ذكاء اصطناعي خفيفة: مطابقة المزوّدين، وتقارير تُولَّد آليًا، ورؤى النمو"
+    ],
+    lose:[
+      "لا منهج مسمّى أو إطار اعتماد (لا نظير لـ EYFS ولا مكتبة تضم أكثر من 25 إطارًا)",
+      "حجم أصغر لنظام الإدارة نفسه (نحو 20 مركزًا و800 طفل) مقابل قاعدة إيلومين العالمية",
+      "لا لوحات تحكم مؤسسية متعددة الدول ظاهرة ولا عمق في تقارير المراكز المتعددة",
+      "ميزات الذكاء الاصطناعي أخف من مجموعة إيلومين المؤكدة (الترجمة + تنبيهات النسب)"
+    ],
+    pricing:"غير مفصّل علنًا لجانب المزوّد/الإدارة.",
+    talk:[{label:"الطرح الصريح", text:"هذا هو المنافس الذي يجب أخذه على محمل الجد. إن كان العميل يختار بنان لأجل ظهور سوقه، فكن صريحًا: تتفوق إيلومين في عمق المنهج والأدوات المؤسسية متعددة المراكز والتواصل مع أولياء الأمور بمساعدة الذكاء الاصطناعي — لكن زاوية اكتشاف العملاء الجدد لدى بنان حقيقية، ولا نقدّم حاليًا ما يعادلها. اعرضها كفجوة فعلية في الميزات بدل التقليل منها."}],
+    objections:[{q:"«بنان يجلب لنا أسرًا جديدة عبر سوقه.»", a:"هذه نقطة حقيقية ومنصفة — تستحق أن تُرفع داخليًا كفجوة فعلية. وفي الأثناء، اسأل كيف يوثّقون تقدم الطفل وفق منهج مسمّى، وكيف يتوسع نظامهم بعد نحو 20 مركزًا."}],
+    landmines:[
+      "كيف يساعد بنان معلميكم على توثيق تقدم الطفل وفق منهج مثل EYFS أو مونتيسوري؟",
+      "عندما تتجاوزون 20 مركزًا، كيف تتوسع لوحة تحكم بنان وتقاريره عبرها جميعًا؟",
+      "هل يقدّم بنان ترجمة بالذكاء الاصطناعي للتواصل مع أولياء الأمور بعدة لغات؟"
+    ],
+  },
+  naashah:{
+    name:"نشأة",
+    tagline:"منصة سعودية شاملة للحضانات/رياض الأطفال — رُصدت حديثًا وحضورها العام محدود",
+    threatLabel:"رُصدت حديثًا — تعامل معها بصورة مؤقتة",
+    scale:"لم نجد أعداد عملاء أو شهادات أو قوائم في متاجر التطبيقات أو أسعارًا أو معلومات تمويل معلنة. الحضور العام يقتصر على صفحة رئيسية تسويقية.",
+    target:"مشغّلو الحضانات ومديرو رياض الأطفال ومديرو منشآت رعاية الطفولة في السعودية الراغبون في منصة رقمية واحدة للإدارة.",
+    recent:"منافس رُصد حديثًا ضمن هذا الملخص (أغسطس 2026) — لا سجل متابعة سابق.",
+    win:[
+      "تجمع الإدارة والتواصل والفوترة والتقييم وادعاء الذكاء الاصطناعي في منتج واحد بعلامة سعودية",
+      "هوية عربية أولًا واضحة وبسيطة"
+    ],
+    lose:[
+      "لا حجم أو قاعدة عملاء أو تمويل يمكن التحقق منه",
+      "لا تفاصيل ظاهرة عن المنهج أو الإطار التربوي خلف ادعاء «التقييمات»",
+      "لم نجد موظفين/موارد بشرية أو فروعًا متعددة أو ميزات مؤسسية",
+      "لم نجد ادعاءات امتثال لـ ZATCA/HRSD أو غيرهما من متطلبات السوق السعودي",
+      "«تكامل الذكاء الاصطناعي» مذكور بالاسم دون وصف علني — لا يمكن إثباته"
+    ],
+    pricing:"غير معروض علنًا.",
+    talk:[{label:"إن ذُكرت", text:"منافس رُصد حديثًا بملف عام لا يقل ضآلة عن ملف كنف. تعامل معه بصورة مؤقتة — وتحقق مباشرةً من الميزات والحجم والسعر (مثلًا بطلب عرض مباشر) قبل الاستشهاد بأي شيء محدد عن نشأة في صفقة."}],
+    objections:[{q:"«نشأة فيها ذكاء اصطناعي مدمج.»", a:"اطلب منهم عرضه مباشرة — «تكامل الذكاء الاصطناعي» مذكور في موقعهم لكنه لا يُوصف أبدًا. وإلى أن يثبت العكس، اعتبره ادعاءً تسويقيًا غير مدعوم لا ميزة تنافسية."}],
+    landmines:[
+      "ماذا يفعل «الذكاء الاصطناعي» في منصتكم تحديدًا — هل يمكنكم عرض مثال مباشر؟",
+      "ما المنهج أو إطار التقييم المسمّى الذي تقوم عليه ميزة «التقييمات» لديكم؟"
+    ],
+  },
+  bounce:{
+    name:"باونس",
+    tagline:"منصة SaaS عالمية لإدارة رعاية الطفولة، موجّهة للجوال أولًا، بحضور خليجي فعلي",
+    threatLabel:"أقرب منافس ميزةً بميزة",
+    scale:"يذكر بنفسه «آلاف» المراكز حول العالم؛ ويسوّق لنموذج بيانات مبني على خبرة مع أكثر من 100,000 مركز رعاية أطفال (ادعاء بحثي سوقي وليس عدد عملاء معلنًا — لا تكرره كقاعدة عملاء). عملاء خليجيون مسمّون (أُعيد التحقق منهم في أغسطس 2026): Little House Nursery و Kids Gardens Nursery (السعودية)، و Al Basateen Kindergarten (دبي، الإمارات)، و Little Stars (عُمان)، و Little Scholars Nursery (البحرين).",
+    target:"يقسّم قمع مبيعاته بحسب موقع واحد / مواقع متعددة / مؤسسات / رعاية منزلية — وهو نطاق الحجم نفسه الذي تستهدفه إيلومين.",
+    recent:"ارتفعت قائمة العملاء الخليجيين المسمّين من 2 إلى 5 عند إعادة التحقق (أغسطس 2026)، وأُكدت مباشرة على hellobounce.com.",
+    win:[
+      "اتساع حقيقي يضاهي إيلومين على الورق: إدارة المناهج وتخطيط الدروس وتتبع المراحل النمائية والفصول الافتراضية والحضور والفوترة وجدولة الموظفين — كلها في منتج واحد",
+      "لديه فعلًا عملاء معروفون بالاسم يمكن التحقق منهم داخل السعودية والخليج",
+      "يقسّم قمع مبيعاته بحسب حجم/نوع الموقع، وهو النطاق نفسه الذي تستهدفه إيلومين",
+      "العربية والإنجليزية والإسبانية؛ ويدّعي تهيئة خلال 24 ساعة؛ وقناة مبيعات مؤسسية مخصصة"
+    ],
+    lose:[
+      "لم نجد أي ميزات ذكاء اصطناعي في موقعه — لا مساعد كتابة ولا ترجمة ولا تقييم عملاء محتملين",
+      "لا منهج أو إطار اعتماد مسمّى (لا نظير لـ EYFS ولا ادعاء بعدد الأطر)",
+      "لا رسائل امتثال خاصة بالسعودية أو بالفوترة الإلكترونية (ZATCA)",
+      "لا طبقة سوق/اكتشاف لأولياء الأمور",
+      "رقم «أكثر من 100,000 مركز رعاية أطفال» أساس لحاسبة وليس عدد عملاء معلنًا"
+    ],
+    pricing:"بيع B2B قائم على العرض التوضيحي لأصحاب المراكز؛ يدّعي تهيئة خلال 24 ساعة؛ لا تسعير ذاتي الخدمة معلن.",
+    talk:[{label:"خذه على محمل الجد لا كهامش", text:"من بين كل ما جرى بحثه، باونس هو أقرب منافس لإيلومين ميزةً بميزة، ولديه فعلًا عملاء سعوديون. نقاط تفوق إيلومين: التواصل مع أولياء الأمور بمساعدة الذكاء الاصطناعي ومكتبة أطر اعتماد مسمّاة. نقطة تفوق باونس: ثبوت نجاحه داخل الحضانات الخليجية بشهادات علنية يمكن الاستشهاد بها. استخدم تقسيم باونس نفسه (موقع واحد / مواقع متعددة / مؤسسات / رعاية منزلية) كإشارة لصياغة رسائل باقاتنا."}],
+    objections:[{q:"«باونس لديه عملاء سعوديون وميزات مماثلة.»", a:"صحيح، ويستحق أخذه على محمل الجد. اطلب منهم تسمية إطارهم المنهجي تحديدًا (EYFS أو مونتيسوري أو غيرهما) وكيف يتعاملون مع مراسلة أولياء الأمور متعددة اللغات بالذكاء الاصطناعي — وكلاهما غير موثّق علنًا لدى باونس."}],
+    landmines:[
+      "أي إطار منهجي مسمّى — EYFS أو مونتيسوري أو غيرهما — يستخدمه باونس لتخطيط الدروس؟",
+      "هل يترجم باونس رسائل أولياء الأمور تلقائيًا، أم أن ذلك عمل يدوي لأسركم الناطقة بالعربية والإنجليزية؟",
+      "هل يوجد فريق دعم سعودي محلي، أم يمرّ الدعم عبر الولايات المتحدة؟"
+    ],
+  },
+  classdojo:{
+    name:"كلاس دوجو",
+    tagline:"تطبيق مجاني لتواصل الصفوف الدراسية (K-12) يتبنّاه المعلمون — وليس منصة أعمال",
+    threatLabel:"خطر إحلال من القاعدة إلى القمة، وليس بندًا في مناقصة",
+    scale:"يُستخدم في 95% من المدارس الأمريكية (أُعيد التحقق منه في أغسطس 2026، ولم يعد محصورًا في K-8)؛ «يحبه أكثر من 45 مليون طالب وولي أمر»؛ وتُترجم الرسائل تلقائيًا إلى أكثر من 190 لغة. تأسس عام 2011.",
+    target:"معلمو الصفوف الفردية في K-12 (غالبًا K-8) الذين يتبنّونه من القاعدة مجانًا؛ ويحقق إيراداته عبر اشتراك «Plus» يدفعه أولياء الأمور، لا عبر بيع للمؤسسة.",
+    recent:"أُعيد التحقق في أغسطس 2026: حُدّثت أرقام الاستخدام إلى 95% من المدارس الأمريكية + أكثر من 45 مليون مستخدم؛ وأُعيد تأكيد الترجمة إلى أكثر من 190 لغة.",
+    win:[
+      "تجربة تواصل مع أولياء الأمور قوية للغاية وبلا احتكاك",
+      "بلا تكلفة على المعلمين — تبنٍّ سلس من القاعدة",
+      "شهرة علامة عالمية ضخمة بين المعلمين وأولياء الأمور"
+    ],
+    lose:[
+      "ليس منصة إدارة أعمال إطلاقًا: لا تسجيل ولا فوترة ولا نظام حضور حقيقي ولا موظفين/موارد بشرية ولا تقارير فروع متعددة",
+      "لا منهج أو إطار تقييم نمائي — «Big Ideas» محتوى اجتماعي-عاطفي وليس منهج طفولة مبكرة",
+      "يُتبنّى فصلًا فصلًا ولا يُباع لملّاك المركز/المدرسة — فلا صفقة مؤسسية تُكسب أو تُخسر بالمعنى المعتاد",
+      "يحقق إيراداته عبر إضافة يدفعها أولياء الأمور، لا عبر البيع للمؤسسة"
+    ],
+    pricing:"مجاني للمعلمين دائمًا؛ وتأتي الإيرادات من اشتراك «Plus» الاختياري الذي يدفعه أولياء الأمور — نموذج دخول سوق مختلف جذريًا عن البيع المؤسسي.",
+    talk:[{label:"أعد الصياغة ولا تنافس على المراسلة", text:"لن يظهر كلاس دوجو عمليًا بندًا يختار صاحب الحضانة بينه وبين إيلومين — فهو لا يفعل ما تفعله إيلومين. الخطر الحقيقي أضيق: إن كان معلمو المركز المحتمل يستخدمونه مجانًا لتحديثات أولياء الأمور، فقد يُضعف ذلك جزء التواصل مع أولياء الأمور في عرضك. أعِد الصياغة نحو ما لا يستطيع كلاس دوجو فعله: التسجيل والفوترة والحضور وإدارة الموظفين والمنهج."}],
+    objections:[{q:"«معلمونا يستخدمون كلاس دوجو مجانًا — فلماذا ندفع مقابل مراسلة إيلومين؟»", a:"ممتاز — فهذه ميزة واحدة من ميزات كثيرة. اسأل: كيف تتتبعون التسجيل، وتصدرون الفواتير لأولياء الأمور، وتديرون نسب الموظفين، أو توثّقون التقدم في المنهج؟ كلاس دوجو لا يفعل شيئًا من ذلك."}],
+    landmines:[
+      "كيف تتعاملون حاليًا مع القبول والفوترة وجدولة الموظفين — فكلاس دوجو لا يفعل شيئًا من ذلك؟",
+      "هل يتتبع أحد تقدم كل طفل وفق إطار منهجي، أم أن كلاس دوجو للتحديثات اليومية فقط؟"
+    ],
+  },
+};
+
+const MATRIX_FEAT_AR = [
+  "منهج إطاري مسمّى (مونتيسوري، EYFS، إلخ)",
+  "تخطيط الدروس / سجلات الملاحظة",
+  "مقاييس تقييم سريري / احتياجات خاصة معتمدة",
+  "تتبع الحضور / تسجيل الدخول والخروج",
+  "تنبيهات نسبة الأطفال إلى الموظفين بالذكاء الاصطناعي",
+  "إدارة الموظفين/الموارد البشرية (الإجازات، الجدولة)",
+  "احتساب الرواتب",
+  "أتمتة الفوترة وإصدار الفواتير",
+  "الفوترة الإلكترونية ZATCA (السعودية)",
+  "وسائل الدفع السعودية المحلية (مدى / STC Pay / تمارا / تابي)",
+  "إدارة الفروع المتعددة (داخل دولة واحدة)",
+  "أدوات مؤسسية متعددة الدول (تسجيل دخول ولوحة تحكم موحّدة)",
+  "إدارة الاستفسارات / التقاط العملاء المحتملين (CRM)",
+  "سوق / قناة اكتشاف موجّهة لأولياء الأمور",
+  "تواصل متعدد اللغات مع أولياء الأمور بالذكاء الاصطناعي",
+  "امتثال تنظيمي محلي مسمّى (مثل HRSD)",
+  "فصول افتراضية",
+  "مجاني للبدء / باقة مجانية",
+];
+const MATRIX_COLS_AR = ["إيلومين","ركاز","ينمو","كنف","بنان","نشأة","باونس","كلاس دوجو"];
+
+// ======================= UI STRINGS =======================
+const UI = {
+en:{
+  title:"Illumine (GCA) — KSA Competitive Battlecard",
+  h1:"Illumine — KSA Competitive Battlecard",
+  sub:"Prepared for Arabian Child / Global Childhood Academy (GCA) — Illumine reseller (VAR), Saudi Arabia",
+  meta:[["Generated","August 19, 2026"],["Owner","Noora Amer"],["Competitors tracked","7 (Rekaz, Ynmo, Kanaf, Banan, Naashah, Bounce, ClassDojo)"],["Sources","internal KSA reseller sheet + live competitor site re-checks, Aug 19 2026"]],
+  footer:"Built from Illumine's official KSA reseller Feature Matrix & pricing sheet (Aug 2026), the Illumine KSA Competitors brief, the Illumine KSA Competitive Brief (re-verified Aug 19 2026), the Illumine product deck, and 6 demo-call transcripts (15 Jun–16 Jul 2026). Every competitor “✗” means “not found in public sources as of this check,” not “confirmed absent.” Refresh monthly for new entrants/announcements, quarterly for a full revision.",
+  langBtn:"العربية", langAria:"Switch to Arabic",
+  themeLight:"Light", themeDark:"Dark",
+  tabMatrix:"Comparison Matrix", tabIllumine:"Illumine (Us)", watch:"watch",
+  q:["\"","\""],
+  mTitle:"Comparison Matrix",
+  mSub:"Illumine vs. all 7 tracked KSA-market competitors. ¹ Business tier and up on Illumine, not Standard. ² Enterprise tier only on Illumine.",
+  execTitle:"Executive Summary",
+  exec1:"Seven competitors show up around Illumine in the KSA early-childhood market. Four are KSA-local, admin-and-payments-first tools built for a single Saudi nursery owner — <b class=\"hl\">Rekaz, Ynmo, Kanaf, and Banan</b> — strong on local plumbing (ZATCA e-invoicing, Mada/STC Pay/Apple Pay, Tamara/Tabby BNPL) but mostly silent on named pedagogy and multi-center enterprise operations, Illumine's core strengths. <b class=\"hl\">Naashah</b> is a newly flagged fifth local player with a thin public profile. Two sit outside the KSA-local set: <b class=\"hl\">Bounce</b> is a genuine global competitor with real, verifiable Gulf traction and the closest feature-for-feature overlap with Illumine; <b class=\"hl\">ClassDojo</b> is a free communication app that can quietly undercut the parent-comms part of a pitch without ever appearing as an RFP line item.",
+  exec2:"<b class=\"hl\">Biggest opportunity:</b> none of the seven combines Illumine's pedagogy depth (25+ named curricula, customizable frameworks, observation records) with multi-center enterprise tooling (3,000+ centers, 50+ countries) — that combination remains uncontested. <b class=\"hl\">Biggest threats:</b> Banan (marketplace + HRSD compliance + center management), Bounce (closest global feature match with named Saudi customers), and Ynmo (200+ real customers, transparent pricing with live promos, fuller admin than previously credited).",
+  exposure:"Illumine's exposure",
+  quickWins:"Quick wins (this week)",
+  qw:["Brief the sales team on tier-accurate talking points — 25+ curricula are Business/Enterprise only, not Standard","Build a one-page Banan objection-response — it's the most-watched, most complete KSA-local competitor","Add a ZATCA/HRSD-readiness talking point to the standard deck — acknowledge the gap directly, don't deflect","Prepare a short \"Illumine vs. ClassDojo\" reframe script focused on what ClassDojo can't do"],
+  threatTitle:"Threat Level by Competitor",
+  featTitle:"Feature-by-Feature Matrix",
+  thFeature:"Feature",
+  pricingTitle:"Pricing Snapshot",
+  perStudentTitle:"Illumine — per-student subscription",
+  thTier:"Tier", thUsd:"USD/student/mo", thSar:"SAR/student/mo",
+  centerFeeNote:"Plus a flat per-center fee banded by enrollment (see Illumine tab). ",
+  knownTitle:"Known competitor pricing",
+  known:[
+    "<b class=\"hl\">Rekaz:</b> flat annual subscription, zero commission (amount not public)",
+    "<b class=\"hl\">Ynmo:</b> flat annual by band — 1–50 kids SAR 6,440 · 51–100 SAR 11,270 · 101–200 SAR 15,410 (25%/40% 2-yr promos active)",
+    "<b class=\"hl\">Kanaf:</b> free-to-start (unverified depth)",
+    "<b class=\"hl\">Banan, Naashah, Bounce, ClassDojo:</b> not publicly disclosed (ClassDojo is free to teachers; monetizes via parent-paid add-on)"],
+  us:"Us",
+  illSub:"Enterprise childcare management platform, sold in three tiers — Standard / Business / Enterprise. GCA / Arabian Child is the authorized KSA reseller (VAR).",
+  statsCaveat:"Global company figures per public marketing (illumine.app) — treat as company-wide, not KSA-specific, unless reconfirmed.",
+  aiConfTitle:"AI — confirmed at KSA reseller tier",
+  aiUnconfTitle:"AI — global marketing, unconfirmed for KSA",
+  packagesTitle:"Packages", addons:"Add-ons",
+  bandTitle:"Per-center flat fee by enrollment band (excl. VAT)",
+  thBand:"Band (max enrolled)", thStd:"Standard", thBiz:"Business", thEnt:"Enterprise",
+  bandNote:". Tour management is an add-on on Standard, included on Business/Enterprise. Standard has no billing or CRM — any center invoicing parents or running admissions needs Business+.",
+  secTitle:"Security & Compliance", supTitle:"Support", custTitle:"Customers (proof points)",
+  objTitle:"Demo Objection Bank", objSub:"— compiled from 6 live demo transcripts, 15 Jun–16 Jul 2026",
+  target:"Target", scaleT:"Scale / maturity", recentT:"What's new / recently re-verified (Aug 2026)",
+  theyWin:"Where they win", weWin:"Where Illumine wins", pricingT:"Pricing intel",
+  talkT:"Talk tracks", objT:"Objection handling", landT:"Landmine questions", landSub:"— ask, don't badmouth", note:"Note",
+  illName:"Illumine",
+},
+ar:{
+  title:"إيلومين (GCA) — بطاقة المنافسة في السوق السعودي",
+  h1:"إيلومين — بطاقة المنافسة في السوق السعودي",
+  sub:"أُعدّت لصالح GCA (Arabian Child / Global Childhood Academy) — الموزّع المعتمد لإيلومين في المملكة العربية السعودية",
+  meta:[["تاريخ الإعداد","19 أغسطس 2026"],["المسؤولة","نورا عامر"],["المنافسون المتابَعون","7 (ركاز، ينمو، كنف، بنان، نشأة، باونس، كلاس دوجو)"],["المصادر","ورقة الموزّع الداخلية للسوق السعودي + مراجعة مباشرة لمواقع المنافسين بتاريخ 19 أغسطس 2026"]],
+  footer:"أُعدّت من ورقة مصفوفة الميزات والأسعار الرسمية لموزّعي إيلومين في السوق السعودي (أغسطس 2026)، وملخص منافسي إيلومين في السعودية، والملخص التنافسي لإيلومين في السعودية (أُعيد التحقق منه في 19 أغسطس 2026)، والعرض التعريفي للمنتج، و6 تسجيلات لمكالمات العروض التجريبية (15 يونيو – 16 يوليو 2026). كل علامة «✗» لدى المنافسين تعني «لم نجدها في المصادر العامة وقت المراجعة» وليس «ثبت غيابها». تُحدَّث شهريًا بحثًا عن منافسين جدد أو إعلانات جديدة، وتُراجَع بالكامل كل ربع سنة.",
+  langBtn:"English", langAria:"التبديل إلى الإنجليزية",
+  themeLight:"فاتح", themeDark:"داكن",
+  tabMatrix:"مصفوفة المقارنة", tabIllumine:"إيلومين (نحن)", watch:"مراقبة",
+  q:["«","»"],
+  mTitle:"مصفوفة المقارنة",
+  mSub:"إيلومين مقابل المنافسين السبعة المتابَعين في السوق السعودي. ¹ ضمن باقة الأعمال فما فوق في إيلومين، وليس الأساسية. ² ضمن باقة المؤسسات فقط في إيلومين.",
+  execTitle:"الملخص التنفيذي",
+  exec1:"يظهر سبعة منافسين حول إيلومين في سوق الطفولة المبكرة بالسعودية. أربعة منهم محليون، وهي أدوات إدارية ومدفوعات بالدرجة الأولى صُمّمت لمالك حضانة سعودية واحدة — <b class=\"hl\">ركاز وينمو وكنف وبنان</b> — قوية في البنية المحلية (الفوترة الإلكترونية ZATCA، ومدى / STC Pay / Apple Pay، والدفع الآجل عبر تمارا / تابي) لكنها شبه صامتة عن المناهج المسمّاة والعمليات المؤسسية متعددة المراكز، وهما أبرز نقاط قوة إيلومين. أما <b class=\"hl\">نشأة</b> فهي لاعب محلي خامس رُصد حديثًا بحضور عام محدود. ويقع اثنان خارج المجموعة المحلية: <b class=\"hl\">باونس</b> منافس عالمي حقيقي له حضور خليجي موثّق وهو الأقرب إلى إيلومين ميزةً بميزة؛ و<b class=\"hl\">كلاس دوجو</b> تطبيق تواصل مجاني قد يُضعف بهدوء جانب التواصل مع أولياء الأمور في العرض دون أن يظهر بندًا في أي مناقصة.",
+  exec2:"<b class=\"hl\">أكبر فرصة:</b> لا أحد من المنافسين السبعة يجمع بين عمق إيلومين التربوي (أكثر من 25 منهجًا مسمّى، وأطر قابلة للتخصيص، وسجلات ملاحظة) والأدوات المؤسسية متعددة المراكز (أكثر من 3,000 مركز في أكثر من 50 دولة) — وهذا الجمع لا يزال بلا منافس. <b class=\"hl\">أكبر التهديدات:</b> بنان (سوق + امتثال HRSD + إدارة المراكز)، وباونس (أقرب تطابق عالمي في الميزات مع عملاء سعوديين معروفين)، وينمو (أكثر من 200 عميل فعلي، وتسعير شفاف مع عروض ترويجية سارية، وإدارة أوسع مما كان يُعتقد).",
+  exposure:"نقاط انكشاف إيلومين",
+  quickWins:"مكاسب سريعة (هذا الأسبوع)",
+  qw:["أطلِع فريق المبيعات على نقاط حوار دقيقة بحسب الباقة — المناهج الـ25+ متاحة في الأعمال والمؤسسات فقط، وليس في الأساسية","أعدّ ورقة ردود من صفحة واحدة على اعتراضات بنان — فهو أكثر المنافسين المحليين اكتمالًا وأكثرهم مراقبة","أضف نقطة جاهزية ZATCA / HRSD إلى العرض القياسي — اعترف بالفجوة مباشرةً ولا تتهرّب منها","جهّز نصًا قصيرًا لإعادة الصياغة بعنوان «إيلومين مقابل كلاس دوجو» يركّز على ما لا يستطيع كلاس دوجو فعله"],
+  threatTitle:"مستوى التهديد بحسب المنافس",
+  featTitle:"المصفوفة ميزةً بميزة",
+  thFeature:"الميزة",
+  pricingTitle:"لمحة عن الأسعار",
+  perStudentTitle:"إيلومين — اشتراك شهري لكل طالب",
+  thTier:"الباقة", thUsd:"دولار لكل طالب شهريًا", thSar:"ر.س لكل طالب شهريًا",
+  centerFeeNote:"بالإضافة إلى رسم ثابت لكل مركز بحسب شريحة التسجيل (انظر تبويب إيلومين). ",
+  knownTitle:"أسعار المنافسين المعروفة",
+  known:[
+    "<b class=\"hl\">ركاز:</b> اشتراك سنوي ثابت دون عمولة (المبلغ غير معلن)",
+    "<b class=\"hl\">ينمو:</b> سنوي ثابت بحسب الشريحة — من 1 إلى 50 طفلًا 6,440 ر.س · من 51 إلى 100: 11,270 ر.س · من 101 إلى 200: 15,410 ر.س (عروض خصم 25% / 40% لمدة سنتين سارية)",
+    "<b class=\"hl\">كنف:</b> مجاني للبدء (عمق الميزات غير مؤكد)",
+    "<b class=\"hl\">بنان ونشأة وباونس وكلاس دوجو:</b> غير معلنة للعموم (كلاس دوجو مجاني للمعلمين ويحقق إيراداته عبر إضافة يدفعها أولياء الأمور)"],
+  us:"نحن",
+  illSub:"منصة مؤسسية لإدارة رعاية الطفولة، تُباع في ثلاث باقات — الأساسية / الأعمال / المؤسسات. GCA / Arabian Child هي الموزّع المعتمد في السعودية.",
+  statsCaveat:"أرقام الشركة العالمية بحسب التسويق العام (illumine.app) — تُعامَل كأرقام على مستوى الشركة لا السعودية تحديدًا ما لم يُعاد تأكيدها.",
+  aiConfTitle:"الذكاء الاصطناعي — مؤكَّد ضمن باقات الموزّع السعودي",
+  aiUnconfTitle:"الذكاء الاصطناعي — تسويق عالمي، غير مؤكَّد للسعودية",
+  packagesTitle:"الباقات", addons:"الإضافات",
+  bandTitle:"الرسم الثابت لكل مركز بحسب شريحة التسجيل (غير شامل ضريبة القيمة المضافة)",
+  thBand:"الشريحة (الحد الأقصى للمسجّلين)", thStd:"الأساسية", thBiz:"الأعمال", thEnt:"المؤسسات",
+  bandNote:". إدارة الجولات التعريفية إضافة في الأساسية ومضمّنة في الأعمال والمؤسسات. لا تتضمن الأساسية فوترة ولا CRM — أي مركز يُصدر فواتير لأولياء الأمور أو يدير القبول يحتاج الأعمال فما فوق.",
+  secTitle:"الأمان والامتثال", supTitle:"الدعم", custTitle:"العملاء (شواهد نجاح)",
+  objTitle:"بنك الاعتراضات في العروض التجريبية", objSub:"— مُجمَّع من 6 تسجيلات لعروض مباشرة، 15 يونيو – 16 يوليو 2026",
+  target:"الفئة المستهدفة", scaleT:"الحجم / النضج", recentT:"الجديد / ما أُعيد التحقق منه مؤخرًا (أغسطس 2026)",
+  theyWin:"حيث يتفوقون", weWin:"حيث تتفوق إيلومين", pricingT:"معلومات التسعير",
+  talkT:"نقاط الحوار", objT:"التعامل مع الاعتراضات", landT:"أسئلة الألغام", landSub:"— اسأل ولا تنتقص", note:"ملاحظة",
+  illName:"إيلومين",
+}};
+
+// ======================= STATE & DATA ACCESSORS =======================
+let LANG = "en", THEME = null, ACTIVE = "matrix";
+const isAr = () => LANG === "ar";
+const ui = () => UI[LANG];
+const D = () => isAr() ? {...ILLUMINE, ...ILLUMINE_AR} : ILLUMINE;
+const COMPS = () => COMPETITORS.map(c => isAr() ? {...c, ...COMPETITORS_AR[c.id]} : c);
+const FEATS = () => MATRIX_ROWS.map((r,i) => ({...r, feat: isAr() ? MATRIX_FEAT_AR[i] : r.feat}));
+const COLS = () => isAr() ? MATRIX_COLS_AR : MATRIX_COLS;
+
 function symbol(v){
-  if(v==="y"||v==="y1"||v==="y2") return '<span class="yes">✓</span>'+(v==="y1"?'<sup style="color:var(--text-muted)">1</sup>':v==="y2"?'<sup style="color:var(--text-muted)">2</sup>':"");
+  if(v==="y"||v==="y1"||v==="y2") return '<span class="yes">✓</span>'+(v==="y1"?'<sup class="fn">1</sup>':v==="y2"?'<sup class="fn">2</sup>':"");
   if(v==="n") return '<span class="no">✗</span>';
   if(v==="p") return '<span class="partial">~</span>';
   return v;
 }
-
 function threatPill(t,label){
   const cls = t==="high"?"threat-high":t==="med"?"threat-med":"threat-low";
   return `<span class="pill ${cls}">${label}</span>`;
 }
 
+// ======================= TAB RENDERERS =======================
 function renderMatrixTab(){
-  let rows = MATRIX_ROWS.map(r=>`<tr><td>${r.feat}</td>${r.vals.map(v=>`<td class="center">${symbol(v)}</td>`).join("")}</tr>`).join("");
-  let head = MATRIX_COLS.map(c=>`<th class="center">${c==="Illumine"?'<span class="pill us">Illumine</span>':c}</th>`).join("");
-
-  let threatCards = COMPETITORS.map(c=>`
+  const T = ui(), d = D(), comps = COMPS();
+  const rows = FEATS().map(r=>`<tr><td>${r.feat}</td>${r.vals.map(v=>`<td class="center">${symbol(v)}</td>`).join("")}</tr>`).join("");
+  const head = COLS().map((c,i)=>`<th class="center">${i===0?`<span class="pill us">${c}</span>`:c}</th>`).join("");
+  const threatCards = comps.map(c=>`
     <div class="card">
       <h3><span class="dot" style="background:${c.threat==='high'?'var(--they-win)':c.threat==='med'?'var(--tie)':'var(--text-muted)'}"></span>${c.name} ${threatPill(c.threat,c.threatLabel)}</h3>
       <p style="color:var(--text-secondary);font-size:13px;margin:0 0 8px;">${c.tagline}</p>
@@ -372,131 +824,114 @@ function renderMatrixTab(){
     </div>`).join("");
 
   return `
-    <h2 class="section-title">Comparison Matrix</h2>
-    <p class="section-sub">Illumine vs. all 7 tracked KSA-market competitors. ¹ Business tier and up on Illumine, not Standard. ² Enterprise tier only on Illumine.</p>
+    <h2 class="section-title">${T.mTitle}</h2>
+    <p class="section-sub">${T.mSub}</p>
 
     <div class="card">
-      <h3><span class="dot" style="background:var(--accent)"></span>Executive Summary</h3>
-      <p style="font-size:13.5px;color:var(--text-secondary)">Seven competitors show up around Illumine in the KSA early-childhood market. Four are KSA-local, admin-and-payments-first tools built for a single Saudi nursery owner — <b style="color:#fff">Rekaz, Ynmo, Kanaf, and Banan</b> — strong on local plumbing (ZATCA e-invoicing, Mada/STC Pay/Apple Pay, Tamara/Tabby BNPL) but mostly silent on named pedagogy and multi-center enterprise operations, Illumine's core strengths. <b style="color:#fff">Naashah</b> is a newly flagged fifth local player with a thin public profile. Two sit outside the KSA-local set: <b style="color:#fff">Bounce</b> is a genuine global competitor with real, verifiable Gulf traction and the closest feature-for-feature overlap with Illumine; <b style="color:#fff">ClassDojo</b> is a free communication app that can quietly undercut the parent-comms part of a pitch without ever appearing as an RFP line item.</p>
-      <p style="font-size:13.5px;color:var(--text-secondary)"><b style="color:#fff">Biggest opportunity:</b> none of the seven combines Illumine's pedagogy depth (25+ named curricula, customizable frameworks, observation records) with multi-center enterprise tooling (3,000+ centers, 50+ countries) — that combination remains uncontested. <b style="color:#fff">Biggest threats:</b> Banan (marketplace + HRSD compliance + center management), Bounce (closest global feature match with named Saudi customers), and Ynmo (200+ real customers, transparent pricing with live promos, fuller admin than previously credited).</p>
+      <h3><span class="dot" style="background:var(--accent)"></span>${T.execTitle}</h3>
+      <p class="body">${T.exec1}</p>
+      <p class="body">${T.exec2}</p>
     </div>
 
     <div class="grid2" style="margin-bottom:18px;">
       <div class="card">
-        <h3><span class="dot" style="background:var(--you-win)"></span>Illumine's exposure</h3>
-        <ul class="clean mine">
-          ${ILLUMINE.gaps.map(g=>`<li>${g}</li>`).join("")}
-        </ul>
+        <h3><span class="dot" style="background:var(--you-win)"></span>${T.exposure}</h3>
+        <ul class="clean mine">${d.gaps.map(g=>`<li>${g}</li>`).join("")}</ul>
       </div>
       <div class="card">
-        <h3><span class="dot" style="background:var(--accent2)"></span>Quick wins (this week)</h3>
-        <ul class="clean plain">
-          <li>Brief the sales team on tier-accurate talking points — 25+ curricula are Business/Enterprise only, not Standard</li>
-          <li>Build a one-page Banan objection-response — it's the most-watched, most complete KSA-local competitor</li>
-          <li>Add a ZATCA/HRSD-readiness talking point to the standard deck — acknowledge the gap directly, don't deflect</li>
-          <li>Prepare a short "Illumine vs. ClassDojo" reframe script focused on what ClassDojo can't do</li>
-        </ul>
+        <h3><span class="dot" style="background:var(--accent2)"></span>${T.quickWins}</h3>
+        <ul class="clean plain">${T.qw.map(x=>`<li>${x}</li>`).join("")}</ul>
       </div>
     </div>
 
-    <h3 style="margin-top:28px;">Threat Level by Competitor</h3>
+    <h3 class="sect-lg">${T.threatTitle}</h3>
     <div class="grid3">${threatCards}</div>
 
-    <h3 style="margin-top:28px;">Feature-by-Feature Matrix</h3>
+    <h3 class="sect-lg">${T.featTitle}</h3>
     <div class="card" style="overflow-x:auto;">
       <table>
-        <thead><tr><th>Feature</th>${head}</tr></thead>
+        <thead><tr><th>${T.thFeature}</th>${head}</tr></thead>
         <tbody>${rows}</tbody>
       </table>
     </div>
 
-    <h3 style="margin-top:28px;">Pricing Snapshot</h3>
+    <h3 class="sect-lg">${T.pricingTitle}</h3>
     <div class="grid2">
       <div class="card">
-        <h3>Illumine — per-student subscription</h3>
+        <h3>${T.perStudentTitle}</h3>
         <table>
-          <thead><tr><th>Tier</th><th>USD/student/mo</th><th>SAR/student/mo</th></tr></thead>
-          <tbody>${ILLUMINE.pricingTiers.map(t=>`<tr><td>${t.tier}</td><td>${t.usd}</td><td>${t.sar}</td></tr>`).join("")}</tbody>
+          <thead><tr><th>${T.thTier}</th><th>${T.thUsd}</th><th>${T.thSar}</th></tr></thead>
+          <tbody>${d.pricingTiers.map(t=>`<tr><td>${t.tier}</td><td>${t.usd}</td><td>${t.sar}</td></tr>`).join("")}</tbody>
         </table>
-        <p class="caveat">Plus a flat per-center fee banded by enrollment (see Illumine tab). ${ILLUMINE.discounts}</p>
+        <p class="caveat">${T.centerFeeNote}${d.discounts}</p>
       </div>
       <div class="card">
-        <h3>Known competitor pricing</h3>
-        <ul class="clean plain">
-          <li><b style="color:#fff">Rekaz:</b> flat annual subscription, zero commission (amount not public)</li>
-          <li><b style="color:#fff">Ynmo:</b> flat annual by band — 1–50 kids SAR 6,440 · 51–100 SAR 11,270 · 101–200 SAR 15,410 (25%/40% 2-yr promos active)</li>
-          <li><b style="color:#fff">Kanaf:</b> free-to-start (unverified depth)</li>
-          <li><b style="color:#fff">Banan, Naashah, Bounce, ClassDojo:</b> not publicly disclosed (ClassDojo is free to teachers; monetizes via parent-paid add-on)</li>
-        </ul>
+        <h3>${T.knownTitle}</h3>
+        <ul class="clean plain">${T.known.map(k=>`<li>${k}</li>`).join("")}</ul>
       </div>
     </div>
   `;
 }
 
 function renderIllumineTab(){
+  const T = ui(), d = D();
   return `
     <div class="profile-head">
       <div>
-        <h2>Illumine <span class="pill us">Us</span></h2>
-        <p class="sub">Enterprise childcare management platform, sold in three tiers — Standard / Business / Enterprise. GCA / Arabian Child is the authorized KSA reseller (VAR).</p>
+        <h2>${T.illName} <span class="pill us">${T.us}</span></h2>
+        <p class="sub">${T.illSub}</p>
       </div>
     </div>
 
     <div class="grid3" style="margin-bottom:8px;">
-      ${ILLUMINE.proofStats.map(s=>`<div class="stat-tile"><div class="num">${s.num}</div><div class="label">${s.label}</div></div>`).join("")}
+      ${d.proofStats.map(s=>`<div class="stat-tile"><div class="num">${s.num}</div><div class="label">${s.label}</div></div>`).join("")}
     </div>
-    <p class="caveat">Global company figures per public marketing (illumine.app) — treat as company-wide, not KSA-specific, unless reconfirmed.</p>
+    <p class="caveat">${T.statsCaveat}</p>
 
     <div class="grid2">
       <div class="card">
-        <h3><span class="dot" style="background:var(--you-win)"></span>AI — confirmed at KSA reseller tier</h3>
-        <ul class="clean win">${ILLUMINE.aiConfirmedKSA.map(a=>`<li>${a}</li>`).join("")}</ul>
+        <h3><span class="dot" style="background:var(--you-win)"></span>${T.aiConfTitle}</h3>
+        <ul class="clean win">${d.aiConfirmedKSA.map(a=>`<li>${a}</li>`).join("")}</ul>
       </div>
       <div class="card">
-        <h3><span class="dot" style="background:var(--tie)"></span>AI — global marketing, unconfirmed for KSA</h3>
-        <ul class="clean mine">${ILLUMINE.aiGlobalUnconfirmed.map(a=>`<li>${a}</li>`).join("")}</ul>
+        <h3><span class="dot" style="background:var(--tie)"></span>${T.aiUnconfTitle}</h3>
+        <ul class="clean mine">${d.aiGlobalUnconfirmed.map(a=>`<li>${a}</li>`).join("")}</ul>
       </div>
     </div>
 
-    <h3 style="margin-top:24px;">Packages</h3>
+    <h3 class="sect">${T.packagesTitle}</h3>
     <div class="grid3">
-      ${ILLUMINE.packages.map(p=>`
+      ${d.packages.map(p=>`
         <div class="card">
           <h3>${p.name}</h3>
           <p style="color:var(--text-muted);font-size:12.5px;margin-top:-6px;">${p.desc}</p>
           <ul class="clean plain">${p.items.map(i=>`<li>${i}</li>`).join("")}</ul>
-          <p style="font-size:12px;color:var(--accent2);margin:10px 0 4px;font-weight:700;">Add-ons</p>
+          <p class="addons-label">${T.addons}</p>
           <ul class="clean plain">${p.addons.map(i=>`<li>${i}</li>`).join("")}</ul>
         </div>`).join("")}
     </div>
 
     <div class="card" style="margin-top:8px;">
-      <h3>Per-center flat fee by enrollment band (excl. VAT)</h3>
+      <h3>${T.bandTitle}</h3>
       <table>
-        <thead><tr><th>Band (max enrolled)</th><th>Standard</th><th>Business</th><th>Enterprise</th></tr></thead>
-        <tbody>${ILLUMINE.bands.map(b=>`<tr><td>${b.band}</td><td>${b.std}</td><td>${b.biz}</td><td>${b.ent}</td></tr>`).join("")}</tbody>
+        <thead><tr><th>${T.thBand}</th><th>${T.thStd}</th><th>${T.thBiz}</th><th>${T.thEnt}</th></tr></thead>
+        <tbody>${d.bands.map(b=>`<tr><td>${b.band}</td><td>${b.std}</td><td>${b.biz}</td><td>${b.ent}</td></tr>`).join("")}</tbody>
       </table>
-      <p class="caveat">${ILLUMINE.discounts}. Tour management is an add-on on Standard, included on Business/Enterprise. Standard has no billing or CRM — any center invoicing parents or running admissions needs Business+.</p>
+      <p class="caveat">${d.discounts}${T.bandNote}</p>
     </div>
 
     <div class="grid2" style="margin-top:8px;">
-      <div class="card">
-        <h3>Security & Compliance</h3>
-        <ul class="clean plain">${ILLUMINE.security.map(s=>`<li>${s}</li>`).join("")}</ul>
-      </div>
-      <div class="card">
-        <h3>Support</h3>
-        <ul class="clean plain">${ILLUMINE.support.map(s=>`<li>${s}</li>`).join("")}</ul>
-      </div>
+      <div class="card"><h3>${T.secTitle}</h3><ul class="clean plain">${d.security.map(s=>`<li>${s}</li>`).join("")}</ul></div>
+      <div class="card"><h3>${T.supTitle}</h3><ul class="clean plain">${d.support.map(s=>`<li>${s}</li>`).join("")}</ul></div>
     </div>
 
     <div class="card">
-      <h3>Customers (proof points)</h3>
-      <div class="logo-strip">${ILLUMINE.customers.map(c=>`<span class="logo-chip">${c}</span>`).join("")}</div>
+      <h3>${T.custTitle}</h3>
+      <div class="logo-strip">${d.customers.map(c=>`<span class="logo-chip">${c}</span>`).join("")}</div>
     </div>
 
-    <h3 style="margin-top:24px;">Demo Objection Bank <span style="color:var(--text-muted);font-size:12px;font-weight:400;">— compiled from 6 live demo transcripts, 15 Jun–16 Jul 2026</span></h3>
-    ${ILLUMINE.faqs.map(cat=>`
+    <h3 class="sect">${T.objTitle} <span class="hint">${T.objSub}</span></h3>
+    ${d.faqs.map(cat=>`
       <div class="card">
         <h3>${cat.cat}</h3>
         ${cat.qs.map(q=>`<div class="objection"><div class="q">${q.q}</div><div class="a">${q.a}</div></div>`).join("")}
@@ -505,77 +940,119 @@ function renderIllumineTab(){
 }
 
 function renderCompetitorTab(c){
+  const T = ui();
   return `
     <div class="profile-head">
       <div>
         <h2>${c.name}</h2>
-        <p class="sub">${c.tagline} — <a href="https://${c.website}" target="_blank">${c.website}</a></p>
+        <p class="sub">${c.tagline} — <a class="site" href="https://${c.website}" target="_blank" rel="noopener">${c.website}</a></p>
       </div>
       ${threatPill(c.threat,c.threatLabel)}
     </div>
 
-    <div class="badge-row">
-      <span class="badge">Target: <b>${c.target}</b></span>
-    </div>
+    <div class="badge-row"><span class="badge">${T.target}: <b>${c.target}</b></span></div>
 
-    <div class="card"><h3>Scale / maturity</h3><p style="font-size:13.5px;color:var(--text-secondary);margin:0">${c.scale}</p></div>
-    <div class="card"><h3>What's new / recently re-verified (Aug 2026)</h3><p style="font-size:13.5px;color:var(--text-secondary);margin:0">${c.recent}</p></div>
+    <div class="card"><h3>${T.scaleT}</h3><p class="body">${c.scale}</p></div>
+    <div class="card"><h3>${T.recentT}</h3><p class="body">${c.recent}</p></div>
 
     <div class="grid2">
       <div class="card">
-        <h3><span class="dot" style="background:var(--they-win)"></span>Where they win</h3>
+        <h3><span class="dot" style="background:var(--they-win)"></span>${T.theyWin}</h3>
         <ul class="clean lose">${c.win.map(w=>`<li>${w}</li>`).join("")}</ul>
       </div>
       <div class="card">
-        <h3><span class="dot" style="background:var(--you-win)"></span>Where Illumine wins</h3>
+        <h3><span class="dot" style="background:var(--you-win)"></span>${T.weWin}</h3>
         <ul class="clean win">${c.lose.map(l=>`<li>${l}</li>`).join("")}</ul>
       </div>
     </div>
 
-    <div class="card"><h3>Pricing intel</h3><p style="font-size:13.5px;color:var(--text-secondary);margin:0">${c.pricing}</p></div>
+    <div class="card"><h3>${T.pricingT}</h3><p class="body">${c.pricing}</p></div>
 
-    <h3 style="margin-top:24px;">Talk tracks</h3>
+    <h3 class="sect">${T.talkT}</h3>
     ${c.talk.map(t=>`<div class="talk-track"><b>${t.label}:</b> ${t.text}</div>`).join("")}
 
-    ${c.objections?`<h3 style="margin-top:20px;">Objection handling</h3>${c.objections.map(o=>`<div class="objection"><div class="q">${o.q}</div><div class="a">${o.a}</div></div>`).join("")}`:""}
+    ${c.objections?`<h3 class="sect">${T.objT}</h3>${c.objections.map(o=>`<div class="objection"><div class="q">${o.q}</div><div class="a">${o.a}</div></div>`).join("")}`:""}
 
-    <h3 style="margin-top:20px;">Landmine questions <span style="color:var(--text-muted);font-size:12px;font-weight:400;">— ask, don't badmouth</span></h3>
-    ${c.landmines.map(l=>`<div class="landmine">"${l}"</div>`).join("")}
+    <h3 class="sect">${T.landT} <span class="hint">${T.landSub}</span></h3>
+    ${c.landmines.map(l=>`<div class="landmine">${T.q[0]}${l}${T.q[1]}</div>`).join("")}
 
-    ${c.note?`<p class="caveat">Note: ${c.note}</p>`:""}
+    ${c.note?`<p class="caveat">${T.note}: ${c.note}</p>`:""}
   `;
 }
 
-// ---- render tabs & content ----
+// ======================= RENDER / LANGUAGE / THEME =======================
 const nav = document.getElementById("tabnav");
 const main = document.getElementById("maincontent");
+const hdr = document.getElementById("hdr");
+const ftr = document.getElementById("ftr");
 
-const TABS = [
-  {id:"matrix", label:"Comparison Matrix", render: renderMatrixTab},
-  {id:"illumine", label:"Illumine (Us)", render: renderIllumineTab},
-  ...COMPETITORS.map(c=>({id:c.id, label:c.name, flag: c.threat==="high"?"watch":null, render: ()=>renderCompetitorTab(c)})),
-];
+function effectiveTheme(){
+  return THEME || (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+}
+function store(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+function load(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
 
-TABS.forEach((t,i)=>{
-  const btn = document.createElement("button");
-  btn.className = "tab" + (i===0?" active":"");
-  btn.dataset.tab = t.id;
-  btn.innerHTML = t.label + (t.flag?` <span class="flag watch">watch</span>`:"");
-  btn.onclick = ()=> activate(t.id);
-  nav.appendChild(btn);
+function render(){
+  const T = ui(), comps = COMPS();
+  const root = document.documentElement;
+  root.lang = LANG; root.dir = isAr() ? "rtl" : "ltr";
+  document.title = T.title;
+  if(THEME) root.dataset.theme = THEME; else delete root.dataset.theme;
 
-  const sec = document.createElement("div");
-  sec.className = "tab-content" + (i===0?" active":"");
-  sec.id = "panel-"+t.id;
-  sec.innerHTML = t.render();
-  main.appendChild(sec);
-});
+  const nextTheme = effectiveTheme()==="dark" ? "light" : "dark";
+  hdr.innerHTML = `
+    <div class="brandrow">
+      <div class="logo-glyph"></div>
+      <h1>${T.h1}</h1>
+      <div class="toolbar">
+        <button class="tbtn" id="themeBtn" type="button">${nextTheme==="dark"?T.themeDark:T.themeLight}</button>
+        <button class="tbtn" id="langBtn" type="button" lang="${isAr()?'en':'ar'}" aria-label="${T.langAria}">${T.langBtn}</button>
+      </div>
+    </div>
+    <p>${T.sub}</p>
+    <div class="meta">${T.meta.map(([k,v])=>`<span>${k}: <b>${v}</b></span>`).join("")}</div>`;
+  document.getElementById("langBtn").onclick = ()=>{ LANG = isAr()?"en":"ar"; store("bc-lang",LANG); render(); };
+  document.getElementById("themeBtn").onclick = ()=>{ THEME = nextTheme; store("bc-theme",THEME); render(); };
+  ftr.textContent = T.footer;
+
+  const TABS = [
+    {id:"matrix", label:T.tabMatrix, html:renderMatrixTab()},
+    {id:"illumine", label:T.tabIllumine, html:renderIllumineTab()},
+    ...comps.map(c=>({id:c.id, label:c.name, flag:c.threat==="high", html:renderCompetitorTab(c)})),
+  ];
+  nav.innerHTML = ""; main.innerHTML = "";
+  TABS.forEach(t=>{
+    const on = t.id===ACTIVE;
+    const btn = document.createElement("button");
+    btn.className = "tab"+(on?" active":"");
+    btn.type = "button"; btn.dataset.tab = t.id;
+    btn.setAttribute("role","tab"); btn.setAttribute("aria-selected", on);
+    btn.innerHTML = t.label + (t.flag?` <span class="flag">${T.watch}</span>`:"");
+    btn.onclick = ()=> activate(t.id);
+    nav.appendChild(btn);
+    const sec = document.createElement("div");
+    sec.className = "tab-content"+(on?" active":"");
+    sec.id = "panel-"+t.id;
+    sec.innerHTML = t.html;
+    main.appendChild(sec);
+  });
+}
 
 function activate(id){
-  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active", b.dataset.tab===id));
+  ACTIVE = id;
+  document.querySelectorAll(".tab").forEach(b=>{const on=b.dataset.tab===id; b.classList.toggle("active",on); b.setAttribute("aria-selected",on);});
   document.querySelectorAll(".tab-content").forEach(p=>p.classList.toggle("active", p.id==="panel-"+id));
   window.scrollTo({top:0,behavior:"smooth"});
 }
+
+(function init(){
+  const l = load("bc-lang"), t = load("bc-theme");
+  LANG = (l==="ar"||l==="en") ? l : ((navigator.language||"").toLowerCase().startsWith("ar") ? "ar" : "en");
+  if(t==="light"||t==="dark") THEME = t;
+  const q = new URLSearchParams(location.search).get("lang");
+  if(q==="ar"||q==="en") LANG = q;
+  render();
+})();
 </script>
 </body>
 </html>
