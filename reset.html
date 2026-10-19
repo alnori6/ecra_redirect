@@ -630,171 +630,214 @@
     </div>
   </div>
 
-  <script>
-    const SUPABASE_URL = "https://qnfeempfsfymbkysnoik.supabase.co";
-    const SUPABASE_ANON_KEY = "YOUR_ANON_PUBLIC_KEY";
+<script>
+  const SUPABASE_URL = "https://qnfeempfsfymbkysnoik.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "REPLACE_WITH_YOUR_PUBLIC_PUBLISHABLE_KEY";
 
-    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true
+  let sb = null;
+
+  function showStatusError(messageEn, messageAr) {
+    const area = document.getElementById("statusArea");
+    area.replaceChildren();
+
+    const en = document.createElement("p");
+    en.className = "error";
+    en.style.cssText =
+      "margin:0 0 8px;font-size:16px;font-weight:700;text-align:center";
+    en.textContent = messageEn;
+
+    const ar = document.createElement("p");
+    ar.className = "error";
+    ar.dir = "rtl";
+    ar.style.cssText =
+      "margin:0;font-size:14px;text-align:center;font-family:'Noto Kufi Arabic',sans-serif";
+    ar.textContent = messageAr;
+
+    area.append(en, ar);
+    document.getElementById("form").style.display = "none";
+    document.getElementById("postSuccessInfo").style.display = "none";
+  }
+
+  function showInvalidLink() {
+    showStatusError(
+      "This link is invalid, expired, or already used. Request a new password link.",
+      "هذا الرابط غير صالح أو منتهي الصلاحية أو تم استخدامه. يرجى طلب رابط جديد."
+    );
+  }
+
+  function showReadyState() {
+    document.getElementById("statusArea").replaceChildren();
+    document.getElementById("form").style.display = "block";
+  }
+
+  function showMessage(text, type) {
+    const message = document.getElementById("message");
+    message.textContent = text;
+    message.className = type;
+  }
+
+  function togglePassword(inputId, buttonEl) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    const isPassword = input.type === "password";
+    input.type = isPassword ? "text" : "password";
+    buttonEl.textContent = isPassword ? "🙈" : "👁";
+  }
+
+  function withTimeout(promise, milliseconds) {
+    let timer;
+
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => {
+        timer = setTimeout(
+          () => reject(new Error("Authentication initialization timed out")),
+          milliseconds
+        );
+      })
+    ]).finally(() => clearTimeout(timer));
+  }
+
+  async function init() {
+    try {
+      if (!window.supabase?.createClient) {
+        throw new Error("Supabase JavaScript library did not load");
       }
-    });
 
-    function showInvalidLink() {
-      document.getElementById("statusArea").innerHTML = `
-        <div class="error-box">
-          <p class="error" style="margin:0 0 8px 0; font-size:16px; font-weight:700; font-family:'Rasa', serif;">
-            Invalid or expired invite link
-          </p>
-          <p class="error" dir="rtl" style="margin:0; font-size:14px; font-family:'Noto Kufi Arabic', sans-serif;">
-            رابط الدعوة غير صالح أو منتهي الصلاحية
-          </p>
-        </div>
-      `;
-      document.getElementById("form").style.display = "none";
-      document.getElementById("postSuccessInfo").style.display = "none";
-    }
+      if (
+        !SUPABASE_PUBLISHABLE_KEY ||
+        SUPABASE_PUBLISHABLE_KEY.startsWith("REPLACE_")
+      ) {
+        throw new Error("Set the project's public/publishable key in this page");
+      }
 
-    function showReadyState() {
-      document.getElementById("statusArea").innerHTML = "";
-      document.getElementById("form").style.display = "block";
-    }
+      sb = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+          }
+        }
+      );
 
-    function showMessage(text, type) {
-      const message = document.getElementById("message");
-      message.innerText = text;
-      message.className = type;
-    }
+      // Support custom email links containing ?token_hash=...&type=recovery/invite.
+      // Your currently reported link uses tokens in the URL fragment instead;
+      // detectSessionInUrl above lets Supabase JS process that format.
+      const url = new URL(window.location.href);
+      const tokenHash = url.searchParams.get("token_hash");
+      const type = url.searchParams.get("type");
 
-    function togglePassword(inputId, buttonEl) {
-      const input = document.getElementById(inputId);
-      if (!input) return;
+      if (tokenHash && (type === "recovery" || type === "invite")) {
+        const { error } = await withTimeout(
+          sb.auth.verifyOtp({ token_hash: tokenHash, type }),
+          12000
+        );
 
-      const isPassword = input.type === "password";
-      input.type = isPassword ? "text" : "password";
-      buttonEl.textContent = isPassword ? "🙈" : "👁";
-    }
-
-    async function init() {
-      try {
-        const { data, error } = await sb.auth.getSession();
-
-        if (error || !data.session) {
+        if (error) {
+          console.error("Password-link verification failed:", error.message);
           showInvalidLink();
           return;
         }
 
-        const currentUser = data.session.user;
-        const fullName =
-          currentUser?.user_metadata?.full_name ||
-          currentUser?.email ||
-          "there";
-
-        document.getElementById("userNameEn").textContent = fullName;
-        showReadyState();
-      } catch (err) {
-        console.error("Init failed:", err);
-        showInvalidLink();
-      }
-    }
-
-    async function setPassword() {
-      const password = document.getElementById("password").value.trim();
-      const confirmPassword = document.getElementById("confirmPassword").value.trim();
-      const saveBtn = document.getElementById("saveBtn");
-
-      if (!password) {
-        showMessage("Please enter a password.", "error");
-        return;
+        // Remove the one-time token from the address bar after verification.
+        url.searchParams.delete("token_hash");
+        url.searchParams.delete("type");
+        history.replaceState(
+          {},
+          document.title,
+          url.pathname + url.search + url.hash
+        );
       }
 
-      if (password.length < 6) {
-        showMessage("Password must be at least 6 characters.", "error");
-        return;
-      }
+      const { data, error } = await withTimeout(sb.auth.getSession(), 12000);
 
-      if (password !== confirmPassword) {
-        showMessage("Passwords do not match.", "error");
-        return;
-      }
-
-      saveBtn.disabled = true;
-      saveBtn.textContent = "Saving... | جارٍ الحفظ...";
-
-      try {
-        const { error } = await sb.auth.updateUser({ password });
-
-        if (error) {
-          showMessage(error.message, "error");
-          saveBtn.disabled = false;
-          saveBtn.textContent = "Save Password | حفظ كلمة المرور";
-          return;
-        }
-
-        document.getElementById("statusArea").innerHTML = `
-          <div class="success-box">
-            <p class="success" style="margin:0 0 8px 0; font-size:18px; font-weight:700; font-family:'Rasa', serif;">
-              Password set successfully
-            </p>
-            <p dir="rtl" style="margin:0; font-size:14px; color:green; font-family:'Noto Kufi Arabic', sans-serif;">
-              تم تعيين كلمة المرور بنجاح
-            </p>
-          </div>
-        `;
-
-        document.getElementById("form").style.display = "none";
-        document.getElementById("postSuccessInfo").style.display = "block";
-      } catch (err) {
-        console.error("Unexpected password update error:", err);
-        showMessage("Something went wrong. Please try again.", "error");
-        saveBtn.disabled = false;
-        saveBtn.textContent = "Save Password | حفظ كلمة المرور";
-      }
-    }
-
-    async function init() {
-  try {
-    const url = new URL(window.location.href);
-    const tokenHash = url.searchParams.get("token_hash");
-    const type = url.searchParams.get("type");
-
-    if (tokenHash && (type === "recovery" || type === "invite")) {
-      const { error } = await sb.auth.verifyOtp({
-        token_hash: tokenHash,
-        type
-      });
-
-      if (error) {
-        console.error("Link verification failed:", error.message);
+      if (error || !data?.session) {
+        console.error("No reset session was established:", error?.message || "No session");
         showInvalidLink();
         return;
       }
 
-      // Remove the one-time token from the address bar after verification.
-      url.searchParams.delete("token_hash");
-      url.searchParams.delete("type");
-      history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+      const user = data.session.user;
+      document.getElementById("userNameEn").textContent =
+        user?.user_metadata?.full_name || user?.email || "there";
+
+      showReadyState();
+    } catch (err) {
+      console.error("Password-page initialization failed:", err?.message || err);
+
+      showStatusError(
+        "Could not prepare the secure session. Check your connection and request a new link if needed.",
+        "تعذر تجهيز الجلسة الآمنة. تحقق من اتصالك واطلب رابطًا جديدًا عند الحاجة."
+      );
     }
+  }
 
-    const { data, error } = await sb.auth.getSession();
-
-    if (error || !data.session) {
-      showInvalidLink();
+  async function setPassword() {
+    if (!sb) {
+      showMessage("The secure session is not ready. Reload the page or request a new link.", "error");
       return;
     }
 
-    const currentUser = data.session.user;
-    document.getElementById("userNameEn").textContent =
-      currentUser?.user_metadata?.full_name || currentUser?.email || "there";
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const saveBtn = document.getElementById("saveBtn");
 
-    showReadyState();
-  } catch (err) {
-    console.error("Init failed:", err);
-    showInvalidLink();
+    if (!password) {
+      showMessage("Please enter a password.", "error");
+      return;
+    }
+
+    if (password.length < 6) {
+      showMessage("Password must be at least 6 characters.", "error");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      showMessage("Passwords do not match.", "error");
+      return;
+    }
+
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Saving... | جارٍ الحفظ...";
+
+    try {
+      const { error } = await sb.auth.updateUser({ password });
+
+      if (error) {
+        console.error("Password update failed:", error.message);
+        showMessage(error.message, "error");
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save Password | حفظ كلمة المرور";
+        return;
+      }
+
+      document.getElementById("statusArea").innerHTML = `
+        <div class="success-box">
+          <p class="success" style="margin:0 0 8px;font-size:18px;font-weight:700;text-align:center;font-family:'Rasa',serif">
+            Password set successfully
+          </p>
+          <p dir="rtl" style="margin:0;font-size:14px;color:green;text-align:center;font-family:'Noto Kufi Arabic',sans-serif">
+            تم تعيين كلمة المرور بنجاح
+          </p>
+        </div>
+      `;
+
+      document.getElementById("form").style.display = "none";
+      document.getElementById("postSuccessInfo").style.display = "block";
+    } catch (err) {
+      console.error("Unexpected password update error:", err?.message || err);
+      showMessage("Something went wrong. Please try again.", "error");
+      saveBtn.disabled = false;
+      saveBtn.textContent = "Save Password | حفظ كلمة المرور";
+    }
   }
-}
-  </script>
+
+  // This call was missing from the supplied code.
+  init();
+</script>
 </body>
 </html>
