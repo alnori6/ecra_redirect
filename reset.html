@@ -754,7 +754,47 @@
       }
     }
 
-    init();
+    async function init() {
+  try {
+    const url = new URL(window.location.href);
+    const tokenHash = url.searchParams.get("token_hash");
+    const type = url.searchParams.get("type");
+
+    if (tokenHash && (type === "recovery" || type === "invite")) {
+      const { error } = await sb.auth.verifyOtp({
+        token_hash: tokenHash,
+        type
+      });
+
+      if (error) {
+        console.error("Link verification failed:", error.message);
+        showInvalidLink();
+        return;
+      }
+
+      // Remove the one-time token from the address bar after verification.
+      url.searchParams.delete("token_hash");
+      url.searchParams.delete("type");
+      history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+    }
+
+    const { data, error } = await sb.auth.getSession();
+
+    if (error || !data.session) {
+      showInvalidLink();
+      return;
+    }
+
+    const currentUser = data.session.user;
+    document.getElementById("userNameEn").textContent =
+      currentUser?.user_metadata?.full_name || currentUser?.email || "there";
+
+    showReadyState();
+  } catch (err) {
+    console.error("Init failed:", err);
+    showInvalidLink();
+  }
+}
   </script>
 </body>
 </html>
