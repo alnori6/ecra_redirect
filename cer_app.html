@@ -1463,6 +1463,8 @@ let columns = [];
 
 let currentIndex = 0;
 
+let nameMappingManuallyChanged = false;
+
 
 const usedCertificateNumbers =
   new Set();
@@ -1690,6 +1692,9 @@ $("excelFile")
         currentIndex =
           0;
 
+        nameMappingManuallyChanged =
+          false;
+
 
         populateMappingDropdowns();
 
@@ -1867,30 +1872,40 @@ function normalizeString(
 ========================================================= */
 
 function findColumn(
-  keywords
+  keywords,
+  preferredKeywords = []
 ) {
 
-  return columns.find(
-    column => {
+  const matches =
+    searchKeywords =>
+      columns.find(
+        column => {
 
 
-      const normalizedColumn =
-        normalizeString(
-          column
-        );
-
-
-      return keywords.some(
-        keyword =>
-          normalizedColumn.includes(
+          const normalizedColumn =
             normalizeString(
-              keyword
-            )
-          )
+              column
+            );
+
+
+          return searchKeywords.some(
+            keyword =>
+              normalizedColumn.includes(
+                normalizeString(
+                  keyword
+                )
+              )
+          );
+
+
+        }
       );
 
 
-    }
+  return (
+    matches(preferredKeywords)
+    ||
+    matches(keywords)
   );
 
 }
@@ -1902,12 +1917,14 @@ function findColumn(
 
 function setSelectIfFound(
   id,
-  keywords
+  keywords,
+  preferredKeywords = []
 ) {
 
   const match =
     findColumn(
-      keywords
+      keywords,
+      preferredKeywords
     );
 
 
@@ -1929,6 +1946,35 @@ function setSelectIfFound(
 
 function autoGuessColumns() {
 
+  const isArabic =
+    $("language").value
+    ===
+    "ar";
+
+  const arabicFirstNameKeywords = [
+    "arabic first name",
+    "first name arabic",
+    "الاسم الأول",
+    "الاسم الاول"
+  ];
+
+  const arabicLastNameKeywords = [
+    "arabic last name",
+    "last name arabic",
+    "اسم العائلة",
+    "العائلة"
+  ];
+
+  const arabicFullNameKeywords = [
+    "arabic full name",
+    "full name arabic",
+    "arabic name",
+    "name arabic",
+    "الاسم الكامل",
+    "الاسم الثلاثي",
+    "اسم كامل"
+  ];
+
 
   /* =======================================================
      FIRST NAME
@@ -1949,8 +1995,12 @@ function autoGuessColumns() {
       "given name",
 
       "الاسم الأول"
-
-    ]
+    ],
+    isArabic
+      ?
+      arabicFirstNameKeywords
+      :
+      []
   );
 
 
@@ -1977,8 +2027,12 @@ function autoGuessColumns() {
       "اسم العائلة",
 
       "العائلة"
-
-    ]
+    ],
+    isArabic
+      ?
+      arabicLastNameKeywords
+      :
+      []
   );
 
 
@@ -2005,8 +2059,12 @@ function autoGuessColumns() {
       "الاسم الكامل",
 
       "الاسم"
-
-    ]
+    ],
+    isArabic
+      ?
+      arabicFullNameKeywords
+      :
+      []
   );
 
 
@@ -2026,8 +2084,12 @@ function autoGuessColumns() {
         "firstname",
 
         "given name"
-
-      ]
+      ],
+      isArabic
+        ?
+        arabicFirstNameKeywords
+        :
+        []
     );
 
 
@@ -2044,36 +2106,104 @@ function autoGuessColumns() {
         "surname",
 
         "family name"
-
-      ]
+      ],
+      isArabic
+        ?
+        arabicLastNameKeywords
+        :
+        []
     );
 
 
+  const arabicFullNameColumn =
+    isArabic
+      ?
+      findColumn(
+        [],
+        arabicFullNameKeywords
+      )
+      :
+      null;
+
+
+  const arabicSplitNameAvailable =
+    isArabic
+    &&
+    findColumn(
+      [],
+      arabicFirstNameKeywords
+    )
+    &&
+    findColumn(
+      [],
+      arabicLastNameKeywords
+    );
+
+
+  const setNameMode =
+    mode => {
+
+      document
+        .querySelector(
+          `input[name="nameMode"][value="${mode}"]`
+        )
+        .checked =
+          true;
+
+
+      $("fullNameFields")
+        .style
+        .display =
+          mode
+          ===
+          "full"
+            ?
+            "block"
+            :
+            "none";
+
+
+      $("splitNameFields")
+        .style
+        .display =
+          mode
+          ===
+          "split"
+            ?
+            "block"
+            :
+            "none";
+
+    };
+
+
   if (
+    arabicSplitNameAvailable
+  ) {
+
+    setNameMode(
+      "split"
+    );
+
+  }
+  else if (
+    arabicFullNameColumn
+  ) {
+
+    setNameMode(
+      "full"
+    );
+
+  }
+  else if (
     firstColumn
     &&
     lastColumn
   ) {
 
-
-    document
-      .querySelector(
-        'input[name="nameMode"][value="split"]'
-      )
-      .checked =
-        true;
-
-
-    $("fullNameFields")
-      .style
-      .display =
-        "none";
-
-
-    $("splitNameFields")
-      .style
-      .display =
-        "block";
+    setNameMode(
+      "split"
+    );
 
 
   }
@@ -3050,6 +3180,9 @@ document
         "change",
         () => {
 
+          nameMappingManuallyChanged =
+            true;
+
 
           const mode =
             document
@@ -3128,6 +3261,9 @@ document
           "change",
           () => {
 
+            nameMappingManuallyChanged =
+              true;
+
 
             if (
               rows.length
@@ -3171,7 +3307,6 @@ document
               rows.length
             ) {
 
-
               updatePreview();
 
 
@@ -3199,6 +3334,14 @@ $("language")
       if (
         rows.length
       ) {
+
+        if (
+          !nameMappingManuallyChanged
+        ) {
+
+          autoGuessColumns();
+
+        }
 
 
         updatePreview();
