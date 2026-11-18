@@ -20,10 +20,6 @@
     src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"
   ></script>
 
-  <!-- HTML → Canvas -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"
-  ></script>
 
   <!-- PDF -->
   <script
@@ -564,6 +560,9 @@
 
       text-align: center;
 
+      /* Explicit line-height so canvas export matches preview */
+      line-height: 1.25;
+
       color: #222f33;
     }
 
@@ -599,6 +598,9 @@
         serif;
 
       font-weight: 700;
+
+      /* Naskh has tall ascenders/descenders */
+      line-height: 1.7;
     }
 
 
@@ -1444,7 +1446,7 @@ const layouts = {
     },
 
     details: {
-      y: 1600,
+      y: 1650,
       size: 32
     }
 
@@ -3525,109 +3527,475 @@ function waitForImage(
 
 
 /* =========================================================
-   RENDER CERTIFICATE → CANVAS
+   FONT LOADING
+
+   Canvas text only uses a web font once it is loaded,
+   so explicitly request every weight we draw with.
 ========================================================= */
 
+const CERTIFICATE_FONTS = [
+
+  '700 80px "Noto Naskh Arabic"',
+
+  '400 80px "Noto Naskh Arabic"'
+
+];
+
+
+async function ensureCertificateFonts() {
+
+  if (
+    !document.fonts
+  ) {
+
+    return;
+
+  }
+
+
+  try {
+
+    await Promise.all(
+      CERTIFICATE_FONTS.map(
+        font =>
+          document.fonts.load(
+            font,
+            "شهادة"
+          )
+      )
+    );
+
+  }
+  catch (
+    error
+  ) {
+
+    console.warn(
+      "Font preload failed:",
+      error
+    );
+
+  }
+
+
+  await document.fonts.ready;
+
+}
+
+
+/* =========================================================
+   RENDER CERTIFICATE → CANVAS
+
+   Text is drawn with the native Canvas 2D API
+   (ctx.fillText) instead of html2canvas.
+
+   html2canvas paints text in separate measured pieces,
+   which breaks Arabic letter joining (letters appear
+   disconnected / scattered). fillText uses the browser's
+   own text shaper, so Arabic renders correctly.
+========================================================= */
+
+const CERTIFICATE_FIELD_IDS = [
+
+  "learnerName",
+
+  "courseName",
+
+  "certificateNumber",
+
+  "issueDate",
+
+  "learningHours"
+
+];
+
+
 async function renderCertificateCanvas() {
-
-
-  const certificate =
-    $("certificate");
 
 
   const background =
     $("certificateBackground");
 
 
-  /* =======================================================
-     WAIT FOR BACKGROUND
-  ======================================================== */
-
   await waitForImage(
     background
   );
 
 
-  /* =======================================================
-     WAIT FOR WEB FONTS
-  ======================================================== */
+  await ensureCertificateFonts();
 
-  if (
-    document.fonts
-    &&
-    document.fonts.ready
+
+  /*
+    Re-fit with final fonts so the size used for
+    drawing matches the loaded font metrics.
+  */
+
+  fitDynamicText();
+
+
+  const canvas =
+    document.createElement(
+      "canvas"
+    );
+
+
+  canvas.width =
+    CERTIFICATE_WIDTH;
+
+
+  canvas.height =
+    CERTIFICATE_HEIGHT;
+
+
+  const ctx =
+    canvas.getContext(
+      "2d"
+    );
+
+
+  ctx.fillStyle =
+    "#ffffff";
+
+
+  ctx.fillRect(
+    0,
+    0,
+    CERTIFICATE_WIDTH,
+    CERTIFICATE_HEIGHT
+  );
+
+
+  ctx.drawImage(
+    background,
+    0,
+    0,
+    CERTIFICATE_WIDTH,
+    CERTIFICATE_HEIGHT
+  );
+
+
+  for (
+    const id
+    of CERTIFICATE_FIELD_IDS
   ) {
 
-
-    await document.fonts.ready;
-
+    drawFieldText(
+      ctx,
+      $(id)
+    );
 
   }
 
 
-  /* =======================================================
-     TEMPORARILY REMOVE PREVIEW SCALE
-  ======================================================== */
+  return canvas;
 
-  const previousTransform =
-    certificate.style.transform;
+}
 
 
-  certificate.style.transform =
-    "none";
+/* =========================================================
+   DRAW ONE FIELD
+
+   Reproduces the preview box: centered horizontally
+   and vertically, wrapped by words, clipped to the box.
+========================================================= */
+
+function drawFieldText(
+  ctx,
+  element
+) {
 
 
-  /* =======================================================
-     RENDER AT NATIVE 1810 × 2560
-  ======================================================== */
-
-  const canvas =
-    await html2canvas(
-      certificate,
-      {
-
-
-        width:
-          CERTIFICATE_WIDTH,
-
-
-        height:
-          CERTIFICATE_HEIGHT,
+  const text =
+    (
+      element.textContent
+      ||
+      ""
+    )
+      .replace(
+        /\s+/g,
+        " "
+      )
+      .trim();
 
 
-        scale:
-          1,
+  if (
+    !text
+  ) {
+
+    return;
+
+  }
 
 
-        useCORS:
-          true,
-
-
-        allowTaint:
-          false,
-
-
-        backgroundColor:
-          "#ffffff",
-
-
-        logging:
-          false
-
-
-      }
+  const style =
+    getComputedStyle(
+      element
     );
 
 
-  /* =======================================================
-     RESTORE SCREEN SCALE
-  ======================================================== */
-
-  certificate.style.transform =
-    previousTransform;
+  const left =
+    parseFloat(
+      element.style.left
+    );
 
 
-  return canvas;
+  const top =
+    parseFloat(
+      element.style.top
+    );
+
+
+  const width =
+    parseFloat(
+      element.style.width
+    );
+
+
+  const height =
+    parseFloat(
+      element.style.height
+    );
+
+
+  const fontSize =
+    parseFloat(
+      style.fontSize
+    );
+
+
+  const lineHeight =
+    style.lineHeight === "normal"
+      ?
+      fontSize * 1.25
+      :
+      parseFloat(
+        style.lineHeight
+      );
+
+
+  ctx.save();
+
+
+  ctx.font =
+    `${style.fontStyle} ${style.fontWeight} ${fontSize}px ${style.fontFamily}`;
+
+
+  ctx.fillStyle =
+    style.color;
+
+
+  ctx.direction =
+    style.direction === "rtl"
+      ?
+      "rtl"
+      :
+      "ltr";
+
+
+  ctx.textAlign =
+    "center";
+
+
+  ctx.textBaseline =
+    "alphabetic";
+
+
+  const lines =
+    style.whiteSpace === "nowrap"
+      ?
+      [
+        text
+      ]
+      :
+      wrapCanvasText(
+        ctx,
+        text,
+        width
+      );
+
+
+  /*
+    Place the baseline exactly where CSS does:
+    centre of the line box, shifted by half the
+    difference between font ascent and descent.
+  */
+
+  const metrics =
+    ctx.measureText(
+      text
+    );
+
+
+  const ascent =
+    metrics.fontBoundingBoxAscent
+    ??
+    fontSize * 0.8;
+
+
+  const descent =
+    metrics.fontBoundingBoxDescent
+    ??
+    fontSize * 0.2;
+
+
+  const baselineOffset =
+    (
+      ascent
+      -
+      descent
+    )
+    /
+    2;
+
+
+  const centerX =
+    left
+    +
+    width / 2;
+
+
+  const firstLineCenterY =
+    top
+    +
+    height / 2
+    -
+    (
+      (
+        lines.length - 1
+      )
+      *
+      lineHeight
+    )
+    /
+    2;
+
+
+  ctx.beginPath();
+
+
+  ctx.rect(
+    left,
+    top,
+    width,
+    height
+  );
+
+
+  ctx.clip();
+
+
+  lines.forEach(
+    (
+      line,
+      index
+    ) => {
+
+      ctx.fillText(
+        line,
+        centerX,
+        firstLineCenterY
+        +
+        index * lineHeight
+        +
+        baselineOffset
+      );
+
+    }
+  );
+
+
+  ctx.restore();
+
+}
+
+
+/* =========================================================
+   WORD WRAP FOR CANVAS
+
+   Splits on spaces only, so Arabic words are never
+   broken apart (each line is shaped as a whole).
+========================================================= */
+
+function wrapCanvasText(
+  ctx,
+  text,
+  maxWidth
+) {
+
+
+  const words =
+    text.split(
+      " "
+    );
+
+
+  const lines =
+    [];
+
+
+  let current =
+    "";
+
+
+  for (
+    const word
+    of words
+  ) {
+
+
+    const candidate =
+      current
+        ?
+        `${current} ${word}`
+        :
+        word;
+
+
+    if (
+      current
+      &&
+      ctx.measureText(
+        candidate
+      ).width
+      >
+      maxWidth
+    ) {
+
+
+      lines.push(
+        current
+      );
+
+
+      current =
+        word;
+
+
+    }
+    else {
+
+
+      current =
+        candidate;
+
+
+    }
+
+  }
+
+
+  if (
+    current
+  ) {
+
+    lines.push(
+      current
+    );
+
+  }
+
+
+  return lines;
 
 }
 
@@ -3735,6 +4103,11 @@ $("downloadCurrent")
       try {
 
 
+        setExportBusy(
+          true
+        );
+
+
         showStatus(
           "Generating certificate..."
         );
@@ -3799,6 +4172,11 @@ $("downloadCurrent")
         );
 
 
+        setExportBusy(
+          false
+        );
+
+
       }
       catch (
         error
@@ -3812,6 +4190,11 @@ $("downloadCurrent")
 
         showStatus(
           "PDF generation failed."
+        );
+
+
+        setExportBusy(
+          false
         );
 
 
@@ -3848,6 +4231,11 @@ $("downloadAll")
       try {
 
 
+        setExportBusy(
+          true
+        );
+
+
         const zip =
           new JSZip();
 
@@ -3871,7 +4259,7 @@ $("downloadAll")
           */
 
           await delay(
-            120
+            30
           );
 
 
@@ -3978,6 +4366,11 @@ $("downloadAll")
         );
 
 
+        setExportBusy(
+          false
+        );
+
+
       }
       catch (
         error
@@ -3998,6 +4391,11 @@ $("downloadAll")
 
         showStatus(
           "Bulk certificate generation failed."
+        );
+
+
+        setExportBusy(
+          false
         );
 
 
@@ -4069,6 +4467,36 @@ function sanitizeFilename(
       " "
     )
     .trim();
+
+}
+
+
+/* =========================================================
+   EXPORT BUSY STATE
+
+   Prevents double-clicks from starting a second
+   export while one is still running.
+========================================================= */
+
+function setExportBusy(
+  busy
+) {
+
+  for (
+    const id
+    of [
+      "downloadCurrent",
+      "downloadAll",
+      "previousStudent",
+      "nextStudent",
+      "language"
+    ]
+  ) {
+
+    $(id).disabled =
+      busy;
+
+  }
 
 }
 
@@ -4216,6 +4644,28 @@ function downloadBlob(
 setTimeout(
   resizeCertificate,
   100
+);
+
+
+/* =========================================================
+   PRELOAD ARABIC FONT
+
+   Re-fit the preview once the web font arrives so the
+   preview and the exported PDF use the same metrics.
+========================================================= */
+
+ensureCertificateFonts().then(
+  () => {
+
+    if (
+      rows.length
+    ) {
+
+      fitDynamicText();
+
+    }
+
+  }
 );
 
 
